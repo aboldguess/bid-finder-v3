@@ -23,7 +23,7 @@ cd bid-finder-v3
 ./scripts/install-pi.sh
 ```
 
-That installs Node.js 22 if needed, installs dependencies and starts a `bidfinder` systemd service on port 3000. Open `http://<pi-address>:3000`, register, and you are the admin. The first fetch from every source starts automatically.
+That installs Node.js 22 if needed, installs dependencies and starts a `bidfinder` systemd service on port 3000. To use another port, for example because something else already runs on 3000, pass it in: `./scripts/install-pi.sh --port 3001`. The port is saved to `.env`, so later re-runs keep it. Open `http://<pi-address>:3000`, register, and you are the admin. The first fetch from every source starts automatically.
 
 Settings live in `.env` (see `.env.example`). They're all optional. The main ones are `SMTP_URL` and `MAIL_FROM` to send emails, and `BASE_URL` for links in emails. When serving over HTTPS, for example behind Caddy or a Cloudflare Tunnel, set `SECURE_COOKIES=true`.
 
