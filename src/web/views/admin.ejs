@@ -1,0 +1,41 @@
+<%- include('partials/head', { title: 'Admin' }) %>
+<h1>Platform admin</h1>
+<h2>Sources</h2>
+<% if (ingesting) { %><p class="notice">A refresh is running.</p><% } %>
+<form method="post" action="/admin/ingest"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="button small">Refresh all sources now</button></form>
+<table class="table">
+  <thead><tr><th>Source</th><th>Open now</th><th>Last run (UTC)</th><th>Result</th><th></th></tr></thead>
+  <tbody>
+  <% sources.forEach(s => { %>
+    <tr class="<%= s.enabled ? '' : 'disabled' %>">
+      <td><%= s.name %></td>
+      <td><%= s.open_count %></td>
+      <td><%= s.last_run_at || 'Never' %></td>
+      <td><%= s.last_status === 'error' ? 'Error: ' + s.last_error : s.last_status ? `${s.last_found} found, ${s.last_new} new` : '' %></td>
+      <td class="row">
+        <form method="post" action="/admin/ingest"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="source" value="<%= s.key %>"><button class="link">Run</button></form>
+        <form method="post" action="/admin/sources/<%= s.key %>/toggle"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link"><%= s.enabled ? 'Disable' : 'Enable' %></button></form>
+      </td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
+<h2>Organisations</h2>
+<table class="table">
+  <thead><tr><th>Name</th><th>Kind</th><th>Owner</th><th>Members</th><th>Joined</th><th>Plan</th></tr></thead>
+  <tbody>
+  <% orgs.forEach(o => { %>
+    <tr>
+      <td><%= o.name %></td><td><%= o.kind %></td><td><%= o.owner_email %></td><td><%= o.members %></td><td><%= o.created_at.slice(0, 10) %></td>
+      <td>
+        <form method="post" action="/admin/orgs/<%= o.id %>/plan" class="row">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <select name="plan"><% ['trial', 'solo', 'hub', 'suspended'].forEach(p => { %><option <%= o.plan === p ? 'selected' : '' %>><%= p %></option><% }) %></select>
+          <button class="link">Set</button>
+        </form>
+      </td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
+<%- include('partials/foot') %>

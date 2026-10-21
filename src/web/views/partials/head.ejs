@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= typeof title !== 'undefined' ? title + ' · ' : '' %>Bid Finder</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/">Bid Finder</a>
+  <% if (user) { %>
+    <nav>
+      <a href="/feed" class="<%= path === '/feed' ? 'active' : '' %>">Opportunities</a>
+      <a href="/profile" class="<%= path === '/profile' ? 'active' : '' %>">Profile</a>
+      <a href="/digests" class="<%= path.startsWith('/digests') ? 'active' : '' %>">Digests</a>
+      <% if (user.is_platform_admin) { %><a href="/admin" class="<%= path === '/admin' ? 'active' : '' %>">Admin</a><% } %>
+    </nav>
+    <div class="who">
+      <span><%= org.name %> <span class="badge"><%= org.plan %></span></span>
+      <form method="post" action="/logout"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link">Sign out</button></form>
+    </div>
+  <% } else { %>
+    <nav class="right"><a href="/login">Sign in</a><a class="button small" href="/register">Start free</a></nav>
+  <% } %>
+</header>
+<main>
+<% if (flash) { %><p class="flash"><%= flash %></p><% } %>

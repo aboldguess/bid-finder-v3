@@ -1,0 +1,34 @@
+<%- include('partials/head', { title: 'Profile' }) %>
+<% const lines = (s) => (s || '').split('\n').filter(Boolean); %>
+<section class="narrow wide">
+  <h1>What are you looking for?</h1>
+  <p class="muted">We score every opportunity against this. One item per line, or separate with commas.</p>
+  <form method="post" action="/profile" class="stack">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <% if (org.role === 'owner') { %><label>Organisation name <input name="org_name" value="<%= org.name %>"></label><% } %>
+    <label>Keywords that describe your work <textarea name="keywords" rows="5" placeholder="e.g. aerospace&#10;composite materials&#10;net zero&#10;AI"><%= profile.keywords %></textarea><small>Matches in a title count most.</small></label>
+    <label>Rule out anything mentioning <textarea name="exclude_keywords" rows="2" placeholder="e.g. farming, schools"><%= profile.exclude_keywords %></textarea></label>
+    <label>Where you are based <textarea name="regions" rows="2" placeholder="e.g. South East England"><%= profile.regions %></textarea><small>UK-wide schemes always count.</small></label>
+    <label>What kind of organisation you are <textarea name="applicant_types" rows="2" placeholder="e.g. Private Sector, SME, Business"><%= profile.applicant_types %></textarea></label>
+    <fieldset>
+      <legend>Opportunity types</legend>
+      <% const types = lines(profile.types); %>
+      <label class="inline"><input type="checkbox" name="types" value="grant" <%= types.includes('grant') ? 'checked' : '' %>> Grants and competitions</label>
+      <label class="inline"><input type="checkbox" name="types" value="tender" <%= types.includes('tender') ? 'checked' : '' %>> Public contracts (tenders)</label>
+    </fieldset>
+    <div class="row">
+      <label>Smallest award worth your time (£) <input name="min_award" inputmode="numeric" value="<%= profile.min_award ?? '' %>"></label>
+      <label>Largest you could deliver (£) <input name="max_award" inputmode="numeric" value="<%= profile.max_award ?? '' %>"></label>
+    </div>
+    <label>Only show matches scoring at least <input type="number" name="min_score" min="0" max="100" value="<%= profile.min_score %>"></label>
+    <fieldset>
+      <legend>Email digest</legend>
+      <% [['daily', 'Daily'], ['weekly', 'Weekly'], ['off', 'Off']].forEach(([v, label]) => { %>
+        <label class="inline"><input type="radio" name="digest_frequency" value="<%= v %>" <%= profile.digest_frequency === v ? 'checked' : '' %>> <%= label %></label>
+      <% }) %>
+      <label>Send to <textarea name="digest_emails" rows="2"><%= profile.digest_emails %></textarea></label>
+    </fieldset>
+    <button class="button">Save and re-rank</button>
+  </form>
+</section>
+<%- include('partials/foot') %>

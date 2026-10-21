@@ -1,0 +1,23 @@
+<%# One opportunity in a list. Expects: o (row with .match), csrfToken, interactive %>
+<article class="card <%= o.starred ? 'starred' : '' %>" data-id="<%= o.id %>">
+  <div class="card-head">
+    <span class="score <%= o.match.score >= 60 ? 'high' : o.match.score >= 30 ? 'mid' : 'low' %>" title="Fit score"><%= o.match.score %></span>
+    <div class="card-title">
+      <a href="<%= interactive ? '/o/' + o.id : o.url %>" <%= interactive ? '' : 'rel=noopener target=_blank' %>><%= o.title %></a>
+      <div class="meta">
+        <span class="type <%= o.type %>"><%= o.type %></span>
+        <span><%= o.funder || sourceNames[o.source_key] %></span>
+        <% if (o.award_text || o.award_max) { %><span><%= o.award_text || ('up to £' + Number(o.award_max).toLocaleString('en-GB')) %></span><% } %>
+        <% if (o.closes_at) { %><span class="deadline" data-closes="<%= o.closes_at %>">Closes <%= new Date(o.closes_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Europe/London' }) %></span><% } %>
+      </div>
+    </div>
+    <% if (interactive) { %>
+      <div class="actions">
+        <button class="icon star" data-action="starred" aria-pressed="<%= o.starred ? 'true' : 'false' %>" title="Shortlist">★</button>
+        <button class="icon hide" data-action="hidden" aria-pressed="<%= o.hidden ? 'true' : 'false' %>" title="Hide">✕</button>
+      </div>
+    <% } %>
+  </div>
+  <% if (o.summary) { %><p class="summary"><%= o.summary.length > 280 ? o.summary.slice(0, 277) + '…' : o.summary %></p><% } %>
+  <% if (o.match.reasons.length) { %><ul class="reasons"><% o.match.reasons.forEach(r => { %><li><%= r %></li><% }) %></ul><% } %>
+</article>
