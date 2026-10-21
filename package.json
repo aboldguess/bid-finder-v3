@@ -1,0 +1,32 @@
+{
+  "name": "bid-finder",
+  "version": "3.0.0",
+  "description": "Funding and tender finder for UK SMEs and the business-support hubs that serve them.",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "ingest": "node src/cli.js ingest",
+    "digest": "node src/cli.js digest",
+    "test": "node --test \"test/*.test.js\""
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^13.0.3",
+    "cheerio": "^1.2.0",
+    "ejs": "^7.0.2",
+    "express": "^4.22.3",
+    "express-session": "^1.19.0",
+    "helmet": "^8.3.0",
+    "node-cron": "^4.6.0",
+    "nodemailer": "^10.1.7"
+  },
+  "devDependencies": {
+    "supertest": "^7.3.1"
+  }
+}

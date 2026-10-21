@@ -1,0 +1,20 @@
+<%- include('partials/head', { title: 'Create your account' }) %>
+<section class="narrow">
+  <h1>Create your account</h1>
+  <% if (error) { %><p class="error"><%= error %></p><% } %>
+  <form method="post" action="/register" class="stack">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label>Your name <input name="name" required value="<%= form.name || '' %>" autocomplete="name"></label>
+    <label>Work email <input type="email" name="email" required value="<%= form.email || '' %>" autocomplete="email"></label>
+    <label>Password <input type="password" name="password" required minlength="10" autocomplete="new-password"><small>At least 10 characters.</small></label>
+    <label>Organisation name <input name="orgName" required value="<%= form.orgName || '' %>" autocomplete="organization"></label>
+    <fieldset>
+      <legend>Which describes you?</legend>
+      <label class="inline"><input type="radio" name="kind" value="company" <%= form.kind !== 'hub' ? 'checked' : '' %>> A business looking for funding or contracts</label>
+      <label class="inline"><input type="radio" name="kind" value="hub" <%= form.kind === 'hub' ? 'checked' : '' %>> A hub that shares opportunities with members</label>
+    </fieldset>
+    <button class="button">Create account</button>
+  </form>
+  <p class="muted">Already have an account? <a href="/login">Sign in</a></p>
+</section>
+<%- include('partials/foot') %>

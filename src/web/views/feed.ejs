@@ -1,0 +1,39 @@
+<%- include('partials/head', { title: 'Opportunities' }) %>
+<% if (profileEmpty) { %>
+  <p class="notice">Your feed is not personalised yet. <a href="/profile">Add a few keywords to your profile</a> and we will rank everything by fit.</p>
+<% } %>
+<% if (ingesting) { %><p class="notice">Fetching the latest opportunities now. Refresh in a minute.</p><% } %>
+<form class="filters" method="get" action="/feed">
+  <input type="search" name="q" value="<%= filters.q %>" placeholder="Search titles, funders, descriptions" aria-label="Search">
+  <select name="view" aria-label="View">
+    <% [['matches', 'Best matches'], ['all', 'Everything open'], ['starred', 'Shortlist'], ['hidden', 'Hidden']].forEach(([v, label]) => { %>
+      <option value="<%= v %>" <%= filters.view === v ? 'selected' : '' %>><%= label %></option>
+    <% }) %>
+  </select>
+  <select name="type" aria-label="Type">
+    <option value="">Grants and tenders</option>
+    <option value="grant" <%= filters.type === 'grant' ? 'selected' : '' %>>Grants only</option>
+    <option value="tender" <%= filters.type === 'tender' ? 'selected' : '' %>>Tenders only</option>
+  </select>
+  <select name="source" aria-label="Source">
+    <option value="">All sources</option>
+    <% Object.entries(sourceNames).forEach(([k, name]) => { %><option value="<%= k %>" <%= filters.source === k ? 'selected' : '' %>><%= name %></option><% }) %>
+  </select>
+  <button class="button small">Apply</button>
+</form>
+<% if (filters.view === 'starred') { %>
+  <div class="share">
+    <% if (org.share_token) { %>
+      <p>Shared shortlist: <a href="/s/<%= org.share_token %>">/s/<%= org.share_token %></a> (anyone with the link can view it)</p>
+      <form method="post" action="/share"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="enable" value="0"><button class="link">Stop sharing</button></form>
+    <% } else { %>
+      <form method="post" action="/share"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="enable" value="1"><button class="button small ghost">Share this shortlist as a public page</button></form>
+    <% } %>
+  </div>
+<% } %>
+<p class="muted"><%= total %> <%= total === 1 ? 'opportunity' : 'opportunities' %><%= total > items.length ? `, showing the top ${items.length}` : '' %></p>
+<div class="cards" data-csrf="<%= csrfToken %>">
+  <% items.forEach(o => { %><%- include('partials/card', { o, interactive: true }) %><% }) %>
+  <% if (!items.length) { %><p class="empty">Nothing here yet. Try "Everything open", or widen your profile.</p><% } %>
+</div>
+<%- include('partials/foot') %>

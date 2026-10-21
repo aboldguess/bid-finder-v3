@@ -1,0 +1,9 @@
+<%- include('partials/head', { title: sharedOrg.name + ' shortlist' }) %>
+<h1>Opportunities shortlisted by <%= sharedOrg.name %></h1>
+<p class="muted">Curated from UK public funding and contract sources. Links go to the funder's own pages.</p>
+<div class="cards">
+  <% items.forEach(o => { %><%- include('partials/card', { o, interactive: false }) %><% }) %>
+  <% if (!items.length) { %><p class="empty">Nothing on the shortlist right now.</p><% } %>
+</div>
+<p class="muted">Want your own ranked feed? <a href="/register">Try Bid Finder</a>.</p>
+<%- include('partials/foot') %>

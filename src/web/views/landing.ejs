@@ -1,0 +1,28 @@
+<%- include('partials/head', { title: 'Funding opportunities, ranked for you' }) %>
+<section class="hero">
+  <h1>Every UK grant and public contract that fits you, in one morning email.</h1>
+  <p>Bid Finder watches Find a Grant, Innovate UK, UKRI and Contracts Finder every day, scores each opportunity against your profile, and tells you why it fits. No more trawling five portals.</p>
+  <p><a class="button" href="/register">Start your free trial</a> <a class="button ghost" href="/login">Sign in</a></p>
+  <% if (stats.open) { %><p class="muted"><%= stats.open.toLocaleString('en-GB') %> open opportunities tracked right now.</p><% } %>
+</section>
+<section class="plans">
+  <div class="plan">
+    <h2>For SMEs and startups</h2>
+    <p class="muted">Solo plan</p>
+    <ul>
+      <li>Ranked feed of grants and contracts that match your business</li>
+      <li>Daily or weekly email digest</li>
+      <li>Shortlist, notes and deadlines in one place</li>
+    </ul>
+  </div>
+  <div class="plan featured">
+    <h2>For business-support hubs</h2>
+    <p class="muted">Hub plan · LEPs, Catapults, growth hubs, trade associations</p>
+    <ul>
+      <li>Stop collating opportunities by hand for your members</li>
+      <li>Curate a shortlist and share it as a public page</li>
+      <li>Profile tuned to your sector or region</li>
+    </ul>
+  </div>
+</section>
+<%- include('partials/foot') %>

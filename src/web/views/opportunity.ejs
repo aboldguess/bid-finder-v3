@@ -1,0 +1,31 @@
+<%- include('partials/head', { title: opp.title }) %>
+<p><a href="/feed">← Back to opportunities</a></p>
+<article class="detail">
+  <h1><%= opp.title %></h1>
+  <p class="meta"><span class="type <%= opp.type %>"><%= opp.type %></span> <span><%= sourceNames[opp.source_key] %></span> <span class="score <%= match.score >= 60 ? 'high' : match.score >= 30 ? 'mid' : 'low' %>">Fit <%= match.score %></span></p>
+  <dl class="facts">
+    <% const fmt = (d) => new Date(d).toLocaleString('en-GB', { dateStyle: 'long', timeStyle: 'short', timeZone: 'Europe/London' }); %>
+    <% const money = (n) => '£' + Number(n).toLocaleString('en-GB'); %>
+    <% if (opp.funder) { %><dt>Funder</dt><dd><%= opp.funder %></dd><% } %>
+    <% if (opp.status) { %><dt>Status</dt><dd><%= opp.status %></dd><% } %>
+    <% if (opp.award_text || opp.award_max) { %><dt>Award</dt><dd><%= opp.award_text || [opp.award_min && money(opp.award_min), opp.award_max && money(opp.award_max)].filter(Boolean).join(' to ') %></dd><% } %>
+    <% if (opp.total_fund) { %><dt>Total fund</dt><dd><%= money(opp.total_fund) %></dd><% } %>
+    <% if (opp.location) { %><dt>Location</dt><dd><%= opp.location %></dd><% } %>
+    <% if (opp.eligibility) { %><dt>Who can apply</dt><dd><%= opp.eligibility %></dd><% } %>
+    <% if (opp.opens_at) { %><dt>Opens</dt><dd><%= fmt(opp.opens_at) %></dd><% } %>
+    <% if (opp.closes_at) { %><dt>Closes</dt><dd class="deadline" data-closes="<%= opp.closes_at %>"><%= fmt(opp.closes_at) %></dd><% } %>
+  </dl>
+  <% if (opp.summary) { %><p><%= opp.summary %></p><% } %>
+  <% if (match.reasons.length) { %><h2>Why it scored <%= match.score %></h2><ul class="reasons"><% match.reasons.forEach(r => { %><li><%= r %></li><% }) %></ul><% } %>
+  <p><a class="button" href="<%= opp.url %>" rel="noopener" target="_blank">Read the full details on the funder's site</a></p>
+  <form method="post" action="/o/<%= opp.id %>/state" class="stack">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="back" value="/o/<%= opp.id %>">
+    <label>Team notes <textarea name="note" rows="4" placeholder="Partners, eligibility questions, bid/no-bid reasoning"><%= state.note || '' %></textarea></label>
+    <div class="row">
+      <button class="button small" name="starred" value="<%= state.starred ? 0 : 1 %>"><%= state.starred ? 'Remove from shortlist' : 'Add to shortlist' %></button>
+      <button class="button small ghost">Save notes</button>
+    </div>
+  </form>
+</article>
+<%- include('partials/foot') %>

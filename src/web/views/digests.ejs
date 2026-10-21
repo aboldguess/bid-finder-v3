@@ -1,0 +1,14 @@
+<%- include('partials/head', { title: 'Digests' }) %>
+<h1>Digests</h1>
+<% if (!smtp) { %><p class="notice">Email sending is not set up on this server yet, so digests are kept here for you to read.</p><% } %>
+<form method="post" action="/digests/now"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="button small">Build a digest now</button></form>
+<table class="table">
+  <thead><tr><th>Date</th><th>Opportunities</th><th>Sent to</th><th></th></tr></thead>
+  <tbody>
+    <% digests.forEach(d => { %>
+      <tr><td><%= d.created_at %> UTC</td><td><%= d.item_count %></td><td><%= d.delivered ? d.recipients : 'Not emailed' %></td><td><a href="/digests/<%= d.id %>">Open</a></td></tr>
+    <% }) %>
+    <% if (!digests.length) { %><tr><td colspan="4" class="empty">No digests yet.</td></tr><% } %>
+  </tbody>
+</table>
+<%- include('partials/foot') %>
