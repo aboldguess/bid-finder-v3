@@ -6,6 +6,8 @@ import { config } from '../config.js';
 import { log } from '../log.js';
 import { parseRobots, robotsDecision } from './robots.js';
 import { assertPublicUrl } from './ssrf.js';
+import { INCOMPLETE_CHAIN, agentForIncompleteChain, resetAiaCache } from './aia.js';
+import { fetch as undiciFetch } from 'undici';
 
 export class HttpError extends Error {
   constructor(message, status) {
@@ -20,6 +22,7 @@ export const redact = (url) => String(url).replace(/([?&](?:api_?key|key|token|a
 const realSleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const nextSlot = new Map(); // host -> earliest time of the next request
 const robotsCache = new Map(); // origin -> { groups, at }
+const chainFixed = new Map(); // host -> agent trusting the intermediate it leaves out
 const RETRYABLE = new Set([408, 425, 429, 500, 502, 503, 504]);
 const MAX_BYTES = 60 * 1024 * 1024;
 
@@ -58,37 +61,63 @@ export function createHttp({
 
   async function robotsFor(origin) {
     const hit = robotsCache.get(origin);
-    if (hit && Date.now() - hit.at < 24 * 3600e3) return hit.groups;
+    if (hit && Date.now() - hit.at < 24 * 3600e3) return hit;
     let groups = [];
+    let note = '';
     try {
       const res = await fetchImpl(`${origin}/robots.txt`, { headers: { 'User-Agent': userAgent }, signal: AbortSignal.timeout(15000) });
       // 4xx means "no restrictions"; 5xx means "assume disallowed" (RFC 9309).
       if (res.ok) groups = parseRobots(await res.text());
-      else if (res.status >= 500) groups = parseRobots('User-agent: *\nDisallow: /');
+      else if (res.status >= 500) {
+        groups = parseRobots('User-agent: *\nDisallow: /');
+        note = ` (its robots.txt could not be read: HTTP ${res.status}${res.redirected ? ` after a redirect to ${new URL(res.url).host}` : ''}, which means "assume everything is disallowed")`;
+      }
     } catch {
       groups = [];
     }
-    robotsCache.set(origin, { groups, at: Date.now() });
-    return groups;
+    const entry = { groups, note, at: Date.now() };
+    robotsCache.set(origin, entry);
+    return entry;
   }
 
   async function once(url, { method, headers, body, timeoutMs, jar }) {
     const target = guard ? await assertPublicUrl(url, lookup ? { lookup } : undefined) : new URL(url);
     let delay = minDelayMs;
     if (respectRobots) {
-      const { allowed, crawlDelay } = robotsDecision(await robotsFor(target.origin), 'BidFinder', target.pathname + target.search);
-      if (!allowed) throw new HttpError(`robots.txt at ${target.host} disallows ${target.pathname}`, 0);
+      const robots = await robotsFor(target.origin);
+      const { allowed, crawlDelay } = robotsDecision(robots.groups, 'BidFinder', target.pathname + target.search);
+      if (!allowed) throw new HttpError(`robots.txt at ${target.host} disallows ${target.pathname}${robots.note}`, 0);
       if (crawlDelay) delay = Math.max(delay, Math.min(crawlDelay, 60) * 1000);
     }
     await throttle(target.host, delay);
     const cookie = jar ? cookieHeader(jar, target.host) : '';
-    const res = await fetchImpl(target.href, {
+    const init = {
       method,
       body,
       headers: { 'User-Agent': userAgent, ...(cookie ? { Cookie: cookie } : {}), ...headers },
       signal: AbortSignal.timeout(timeoutMs),
       redirect: 'manual',
-    });
+    };
+    let res;
+    if (chainFixed.has(target.host)) {
+      res = await undiciFetch(target.href, { ...init, dispatcher: chainFixed.get(target.host) });
+    } else {
+      try {
+        res = await fetchImpl(target.href, init);
+      } catch (err) {
+        // A server that leaves out its intermediate certificate: fetch it as a browser would, then try once more.
+        if (target.protocol !== 'https:' || !INCOMPLETE_CHAIN.has(err.cause?.code)) throw err;
+        let agent;
+        try {
+          agent = await agentForIncompleteChain(target.hostname, { port: Number(target.port) || 443 });
+        } catch (why) {
+          throw new HttpError(`${target.host} sent an incomplete certificate chain and it could not be completed: ${why.message}`, 0);
+        }
+        chainFixed.set(target.host, agent);
+        log.info(`${target.host} sends an incomplete certificate chain; completed it from the certificate's issuer address`);
+        res = await undiciFetch(target.href, { ...init, signal: AbortSignal.timeout(timeoutMs), dispatcher: agent });
+      }
+    }
     if (jar) storeCookies(jar, target.host, res.headers);
     return res;
   }
@@ -110,7 +139,9 @@ export function createHttp({
           failure = new HttpError(`HTTP ${res.status} from ${redact(current)}`, res.status);
         } catch (err) {
           if (err instanceof HttpError || /not allowed|Not a valid URL|Could not resolve/.test(err.message)) throw err;
-          failure = new HttpError(`${err.name === 'TimeoutError' ? 'Timed out' : err.message} fetching ${redact(current)}`, 0);
+          // fetch() reports network faults as "fetch failed"; the cause says which (DNS, TLS, refused).
+          const cause = err.cause?.code || err.cause?.message;
+          failure = new HttpError(`${err.name === 'TimeoutError' ? 'Timed out' : err.message}${cause && err.name !== 'TimeoutError' ? ` (${cause})` : ''} fetching ${redact(current)}`, 0);
         }
         if (attempt >= retries) throw failure;
         const retryAfter = Number(res?.headers.get('retry-after'));
@@ -140,4 +171,6 @@ export function createHttp({
 export function resetHttpState() {
   nextSlot.clear();
   robotsCache.clear();
+  chainFixed.clear();
+  resetAiaCache();
 }

@@ -18,7 +18,9 @@ import { portalConnector } from './portal.js';
 // slowly, and only where robots.txt allows.
 const html = (c) => ({ access: 'Public listing pages', respectRobots: true, minDelayMs: 2000, intervalMinutes: 720, ...c });
 
-export const connectors = [findATender, contractsFinder, publicContractsScotland, sell2Wales, ted, samGov, html(findAGrant), html(innovateUk), html(ukri)];
+// Innovate UK is off by default: its robots.txt redirects to a sign-in service
+// that fails, and the standard says to treat that as "disallow everything".
+export const connectors = [findATender, contractsFinder, publicContractsScotland, sell2Wales, ted, samGov, html(findAGrant), html({ ...innovateUk, enabledByDefault: false }), html(ukri)];
 
 export const connectorByKey = (key) => connectors.find((c) => c.key === key);
 

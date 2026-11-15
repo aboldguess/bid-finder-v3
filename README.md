@@ -8,7 +8,7 @@ It was built for a small engineering company, and the defaults reflect that: pro
 
 ## What you get
 
-- **Sources.** Find a Tender, Contracts Finder, Public Contracts Scotland, Sell2Wales, TED (EU), SAM.gov (US), Find a Grant, Innovate UK and UKRI. Official APIs are used wherever one exists. See [docs/CONNECTORS.md](docs/CONNECTORS.md).
+- **Sources.** Find a Tender, Contracts Finder, Public Contracts Scotland, TED (EU), SAM.gov (US), Find a Grant and UKRI, with Sell2Wales and Innovate UK ready for when their sites allow it. Official APIs are used wherever one exists, and every source is checked against the live service weekly. See [docs/CONNECTORS.md](docs/CONNECTORS.md).
 - **Your own portals.** Add any RSS or Atom feed, or any listing page, from the Admin screen with no code. Portals behind a login work too; their passwords and API keys are encrypted at rest.
 - **One notice, shown once.** The same tender on three portals appears as one entry that links to the others.
 - **Fit scoring.** Keywords, CPV codes, countries, regions, contract value and deadline. Every score lists its reasons.
@@ -122,4 +122,4 @@ npm test        # node:test; connectors are tested against recorded fixtures
 npm run lint
 ```
 
-CI runs the linter, the tests, a dependency audit and a Docker build on every pull request.
+CI runs the linter, the tests, a dependency audit and a Docker build on every pull request. A separate workflow checks every source against the live portals each week (`npm run check:sources` runs it locally).

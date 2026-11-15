@@ -7,16 +7,20 @@
 | Find a Tender (UK) | `find-a-tender` | Official OCDS API | On | 3 hours | 11 s |
 | Contracts Finder (UK) | `contracts-finder` | Official OCDS API | On | 3 hours | 1 s |
 | Public Contracts Scotland | `public-contracts-scotland` | Official OCDS API | On | 6 hours | 2 s |
-| Sell2Wales | `sell2wales` | Official OCDS API | On | 6 hours | 2 s |
+| Sell2Wales | `sell2wales` | Official OCDS API | Off (see below) | 6 hours | 2 s |
 | TED (EU tenders) | `ted` | Official search API | Off | 6 hours | 2 s |
 | SAM.gov (US federal) | `sam-gov` | Official API, needs a key | Off | 24 hours | 2 s |
 | Find a Grant (GOV.UK) | `find-a-grant` | Public listing pages | On | 12 hours | 2 s |
-| Innovate UK competitions | `innovate-uk` | Public listing pages | On | 12 hours | 2 s |
+| Innovate UK competitions | `innovate-uk` | Public listing pages | Off (see below) | 12 hours | 2 s |
 | UKRI Funding Finder | `ukri` | Public listing pages | On | 12 hours | 2 s |
 
 The administrator can switch each one on or off, change how often it runs, run it now, and see its recent runs and errors on the Admin page.
 
 **TED** is off by default because it is large. Switch it on and, ideally, narrow it with the "Extra query filter" setting, for example `classification-cpv IN (71000000 42000000) AND buyer-country IN (IRL NLD DEU)`.
+
+**Sell2Wales** is off because, when last checked (November 2026), its API answered every request with an HTTP 500 server error. Above-threshold Welsh tenders also appear on Find a Tender. The weekly live check (below) says when it works again.
+
+**Innovate UK** is off because its robots.txt address redirects to a sign-in service that fails with a server error. The robots.txt standard says to treat that as "everything is disallowed", so Bid Finder stays away. If you are satisfied the site's terms permit it, you can switch it on in Admin, but it will keep refusing until the site's robots.txt can be read.
 
 **SAM.gov** needs a free API key from your SAM.gov account (Account Details, then Public API Key). Add it under Admin, Credentials as an API key, attach it to the SAM.gov source and switch the source on. Personal keys allow only a few requests a day, so it runs once a day and takes at most five pages.
 
@@ -92,6 +96,23 @@ Each opportunity has `external_id`, `title`, `summary`, `url`, `funder` (the buy
 
 Add it to the list in `src/connectors/index.js`, and add a test that feeds a recorded response to it; see `test/platform.test.js` and `test/fixtures/`. If the portal publishes OCDS, `src/connectors/ocds.js` already does the mapping.
 
-## How the connectors were verified
+## How the connectors are verified
 
-The connectors are tested against recorded and hand-built fixtures in the format each API documents. The API connectors for Find a Tender, Public Contracts Scotland, Sell2Wales, TED and SAM.gov were written from the publishers' documentation and have not yet been run against the live services from a development machine with access to them. Run `bidfinder ingest <key>` after installing and check the Admin page; an API that has drifted from its documentation shows up there as a clear error for that one source, and does not affect the others.
+Each connector has tests against recorded responses (`test/fixtures/`), which run on every change.
+
+They are also checked against the live services. `npm run check:sources` (or `node scripts/check-sources.js find-a-tender ted`) fetches one page from each built-in source, saves nothing, and fails if a source errors or returns opportunities with missing titles, bad links, unreadable dates or impossible values. GitHub Actions runs it every Monday, on demand from the Actions tab, and on any pull request that changes a connector, so a portal changing its API is noticed within a week. Add a `SAM_API_KEY` repository secret to include SAM.gov.
+
+The first live run (November 2026) found:
+
+| Source | Live result |
+| --- | --- |
+| Find a Tender | Working: every notice had a deadline and CPV codes, most a value |
+| Contracts Finder | Working |
+| Public Contracts Scotland | Working, after a fix: the site sends its certificate without the intermediate that links it to a trusted root. Bid Finder now completes such chains the way browsers do (see below) |
+| TED | Working |
+| Find a Grant, UKRI | Working |
+| Sell2Wales | Their API fails for every request; switched off |
+| Innovate UK | Refused by robots.txt as described above; switched off |
+| SAM.gov | Needs an API key; not yet checked live |
+
+**Incomplete certificate chains.** Some servers leave out the intermediate certificate. Browsers download it from the address in the server's certificate; Node does not, and refuses to connect. Bid Finder does what browsers do, and accepts the downloaded certificate only if it really issued the server's certificate and is itself signed by a root that Node already trusts. It logs the first time it does this for a site.

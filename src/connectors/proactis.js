@@ -53,11 +53,13 @@ export const publicContractsScotland = proactisConnector({
   region: 'Scotland',
 });
 
-export const sell2Wales = proactisConnector({
+// Off by default: in November 2026 its API answered every request with HTTP 500.
+// Above-threshold Welsh notices also appear on Find a Tender, so little is lost.
+export const sell2Wales = { ...proactisConnector({
   key: 'sell2wales',
   name: 'Sell2Wales',
   api: 'https://api.sell2wales.gov.wales',
   site: 'https://www.sell2wales.gov.wales',
   hostPattern: /sell2wales\.gov\.wales/i,
   region: 'Wales',
-});
+}), enabledByDefault: false };

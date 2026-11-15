@@ -14,7 +14,8 @@
     "digest": "node src/cli.js digest",
     "demo": "node scripts/demo.js",
     "lint": "eslint .",
-    "test": "node --test \"test/*.test.js\""
+    "test": "node --test \"test/*.test.js\"",
+    "check:sources": "node scripts/check-sources.js"
   },
   "license": "UNLICENSED",
   "private": true,
@@ -27,7 +28,8 @@
     "express-session": "^1.19.0",
     "helmet": "^8.3.0",
     "node-cron": "^4.6.0",
-    "nodemailer": "^10.5.0"
+    "nodemailer": "^10.5.0",
+    "undici": "^7.30.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
