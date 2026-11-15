@@ -30,3 +30,17 @@ jobs:
         env:
           SAM_API_KEY: ${{ secrets.SAM_API_KEY }}
           LOG_LEVEL: debug
+      - name: Diagnose (temporary)
+        if: always()
+        run: |
+          for u in "https://api.publiccontractsscotland.gov.uk/v1/Notices?dateFrom=10-2026&noticeType=2&outputType=0" \
+                   "https://api.sell2wales.gov.wales/v1/Notices?dateFrom=10-2026&noticeType=2&outputType=0" \
+                   "https://api.sell2wales.gov.wales/v1/Notices?dateFrom=10-2026&noticeType=2" \
+                   "https://api.sell2wales.gov.wales/v1/Notices?noticeType=2&outputType=0" \
+                   "https://api.sell2wales.gov.wales/v1/Notices?dateFrom=11-2026&noticeType=2&outputType=0"; do
+            echo "=== $u"; curl -sS -m 30 -v "$u" 2>&1 | grep -E '^(< HTTP|\* (SSL|TLS|Could|Failed|Connected|Trying|subject|issuer|  subject|  issuer)|curl:)' | head -12
+            curl -sS -m 30 "$u" 2>&1 | head -c 600; echo
+          done
+          echo "=== IFS robots"; curl -sS -m 20 https://apply-for-innovation-funding.service.gov.uk/robots.txt | head -40
+          echo "=== PCS DNS"; getent hosts api.publiccontractsscotland.gov.uk www.publiccontractsscotland.gov.uk || true
+          echo "=== PCS www API"; curl -sS -m 30 -o /dev/null -w '%{http_code}\n' "https://www.publiccontractsscotland.gov.uk/api/v1/Notices?dateFrom=10-2026&noticeType=2&outputType=0" || true

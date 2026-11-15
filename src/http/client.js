@@ -110,7 +110,9 @@ export function createHttp({
           failure = new HttpError(`HTTP ${res.status} from ${redact(current)}`, res.status);
         } catch (err) {
           if (err instanceof HttpError || /not allowed|Not a valid URL|Could not resolve/.test(err.message)) throw err;
-          failure = new HttpError(`${err.name === 'TimeoutError' ? 'Timed out' : err.message} fetching ${redact(current)}`, 0);
+          // fetch() reports network faults as "fetch failed"; the cause says which (DNS, TLS, refused).
+          const cause = err.cause?.code || err.cause?.message;
+          failure = new HttpError(`${err.name === 'TimeoutError' ? 'Timed out' : err.message}${cause && err.name !== 'TimeoutError' ? ` (${cause})` : ''} fetching ${redact(current)}`, 0);
         }
         if (attempt >= retries) throw failure;
         const retryAfter = Number(res?.headers.get('retry-after'));
