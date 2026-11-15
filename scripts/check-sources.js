@@ -9,6 +9,12 @@ import { connectors } from '../src/connectors/index.js';
 import { createHttp } from '../src/http/client.js';
 
 const wanted = process.argv.slice(2);
+
+// Sources whose service is broken at their end. They are still checked, so we
+// notice when they recover, but they do not fail the run.
+const KNOWN_ISSUES = {
+  sell2wales: 'the API answers every request with HTTP 500 "Error converting data type nvarchar to float" (seen November 2026)',
+};
 const isoOk = (v) => v == null || (typeof v === 'string' && !Number.isNaN(Date.parse(v)));
 
 function problems(items) {
@@ -41,10 +47,13 @@ for (const c of connectors) {
     const withCpv = items.filter((o) => o.cpv_codes).length;
     rows.push({ source: c.key, result: issues.length ? 'FAIL' : 'ok', found: items.length, deadline: withDeadline, value: withValue, cpv: withCpv, seconds: Math.round((Date.now() - started) / 1000) });
     if (issues.length) { failed++; console.error(`\n${c.key}:\n  ${issues.join('\n  ')}`); }
+    if (!issues.length && KNOWN_ISSUES[c.key]) console.log(`\n${c.key} works again: remove it from KNOWN_ISSUES and switch it back on by default.`);
     if (items[0]) console.log(`\n${c.key} sample: ${items[0].title} | ${items[0].funder} | closes ${items[0].closes_at} | ${items[0].award_max ?? '-'} ${items[0].currency || ''} | ${items[0].url}`);
   } catch (err) {
-    failed++;
-    rows.push({ source: c.key, result: 'ERROR', seconds: Math.round((Date.now() - started) / 1000) });
+    const known = KNOWN_ISSUES[c.key];
+    if (!known) failed++;
+    rows.push({ source: c.key, result: known ? 'known issue' : 'ERROR', seconds: Math.round((Date.now() - started) / 1000) });
+    if (known) console.log(`\n${c.key}: ${known}`);
     console.error(`\n${c.key}: ${err.message}`);
   }
 }

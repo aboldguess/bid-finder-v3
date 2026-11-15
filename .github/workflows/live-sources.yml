@@ -34,18 +34,6 @@ jobs:
         if: always()
         run: |
           set +e
-          echo "=== PCS chain"; echo | openssl s_client -connect api.publiccontractsscotland.gov.uk:443 -servername api.publiccontractsscotland.gov.uk -showcerts 2>/dev/null | grep -E '^ *[0-9] s:|^ *i:'
-          echo | openssl s_client -connect api.publiccontractsscotland.gov.uk:443 -servername api.publiccontractsscotland.gov.uk 2>/dev/null | openssl x509 -noout -ext authorityInfoAccess
-          for u in "https://api.publiccontractsscotland.gov.uk/v1/Notices?dateFrom=10-2026&noticeType=2&outputType=0" \
-                   "https://api.sell2wales.gov.wales/v1/Notices" \
-                   "https://api.sell2wales.gov.wales/v1/Notices?dateFrom=10-2026&noticeType=2&outputType=1" \
-                   "https://api.sell2wales.gov.wales/v1/Notices?dateFrom=10-2026&noticeType=102&outputType=0" \
-                   "https://api.sell2wales.gov.wales/v1/Notices?dateFrom=10-2026&outputType=0" \
-                   "https://api.sell2wales.gov.wales/v1/Notices?dateFrom=01-10-2026&noticeType=2&outputType=0" \
-                   "https://api.sell2wales.gov.wales/v1/Notices?dateFrom=10-2025&noticeType=2&outputType=0" \
-                   "https://api.sell2wales.gov.wales/" ; do
-            echo "=== $u"; curl -ksS -m 40 -o /tmp/b -w '%{http_code} %{content_type}\n' "$u"; head -c 300 /tmp/b | tr '\n' ' '; echo
-          done
-          echo "=== IFS robots"; curl -sS -m 20 -o /tmp/r -w '%{http_code}\n' -A 'BidFinder/4.0.0' https://apply-for-innovation-funding.service.gov.uk/robots.txt; head -c 800 /tmp/r
-          curl -sS -m 20 -o /tmp/r -w '%{http_code}\n' https://apply-for-innovation-funding.service.gov.uk/robots.txt; head -c 800 /tmp/r
-          echo "=== IFS search"; curl -sS -m 20 -o /dev/null -w '%{http_code}\n' https://apply-for-innovation-funding.service.gov.uk/competition/search
+          echo "=== IFS robots"; curl -sSIL -m 20 -A 'BidFinder/4.0.0' https://apply-for-innovation-funding.service.gov.uk/robots.txt | grep -iE '^(HTTP|location)'
+          curl -sSL -m 20 -A 'BidFinder/4.0.0' https://apply-for-innovation-funding.service.gov.uk/robots.txt | head -c 1500
+          echo; echo "=== IFS search headers"; curl -sSI -m 20 https://apply-for-innovation-funding.service.gov.uk/competition/search | grep -iE '^(HTTP|x-robots)'

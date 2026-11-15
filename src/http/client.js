@@ -6,6 +6,8 @@ import { config } from '../config.js';
 import { log } from '../log.js';
 import { parseRobots, robotsDecision } from './robots.js';
 import { assertPublicUrl } from './ssrf.js';
+import { INCOMPLETE_CHAIN, agentForIncompleteChain, resetAiaCache } from './aia.js';
+import { fetch as undiciFetch } from 'undici';
 
 export class HttpError extends Error {
   constructor(message, status) {
@@ -20,6 +22,7 @@ export const redact = (url) => String(url).replace(/([?&](?:api_?key|key|token|a
 const realSleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const nextSlot = new Map(); // host -> earliest time of the next request
 const robotsCache = new Map(); // origin -> { groups, at }
+const chainFixed = new Map(); // host -> agent trusting the intermediate it leaves out
 const RETRYABLE = new Set([408, 425, 429, 500, 502, 503, 504]);
 const MAX_BYTES = 60 * 1024 * 1024;
 
@@ -82,13 +85,33 @@ export function createHttp({
     }
     await throttle(target.host, delay);
     const cookie = jar ? cookieHeader(jar, target.host) : '';
-    const res = await fetchImpl(target.href, {
+    const init = {
       method,
       body,
       headers: { 'User-Agent': userAgent, ...(cookie ? { Cookie: cookie } : {}), ...headers },
       signal: AbortSignal.timeout(timeoutMs),
       redirect: 'manual',
-    });
+    };
+    let res;
+    if (chainFixed.has(target.host)) {
+      res = await undiciFetch(target.href, { ...init, dispatcher: chainFixed.get(target.host) });
+    } else {
+      try {
+        res = await fetchImpl(target.href, init);
+      } catch (err) {
+        // A server that leaves out its intermediate certificate: fetch it as a browser would, then try once more.
+        if (target.protocol !== 'https:' || !INCOMPLETE_CHAIN.has(err.cause?.code)) throw err;
+        let agent;
+        try {
+          agent = await agentForIncompleteChain(target.hostname, { port: Number(target.port) || 443 });
+        } catch (why) {
+          throw new HttpError(`${target.host} sent an incomplete certificate chain and it could not be completed: ${why.message}`, 0);
+        }
+        chainFixed.set(target.host, agent);
+        log.info(`${target.host} sends an incomplete certificate chain; completed it from the certificate's issuer address`);
+        res = await undiciFetch(target.href, { ...init, signal: AbortSignal.timeout(timeoutMs), dispatcher: agent });
+      }
+    }
     if (jar) storeCookies(jar, target.host, res.headers);
     return res;
   }
@@ -142,4 +165,6 @@ export function createHttp({
 export function resetHttpState() {
   nextSlot.clear();
   robotsCache.clear();
+  chainFixed.clear();
+  resetAiaCache();
 }

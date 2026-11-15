@@ -279,7 +279,7 @@ test('every built-in connector declares how it accesses its source', () => {
     assert.ok(['tender', 'grant'].includes(c.type));
     if (/listing pages/.test(c.access)) assert.equal(c.respectRobots, true, `${c.key} scrapes HTML so must respect robots.txt`);
   }
-  assert.deepEqual(connectors.filter((c) => c.enabledByDefault === false).map((c) => c.key), ['ted', 'sam-gov']);
+  assert.deepEqual(connectors.filter((c) => c.enabledByDefault === false).map((c) => c.key), ['sell2wales', 'ted', 'sam-gov']);
 });
 
 // --- Ingest, dedupe, scoring ---------------------------------------------------------
