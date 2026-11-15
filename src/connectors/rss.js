@@ -22,6 +22,7 @@ export function parseFeed(xml, { baseUrl = '' } = {}) {
     const first = (...names) => { for (const n of names) { const t = node.children(n).first().text(); if (clean(t)) return t; } return ''; };
     const linkEl = node.children('link').filter((_, l) => !$(l).attr('rel') || $(l).attr('rel') === 'alternate').first();
     let link = clean(linkEl.attr('href') || linkEl.text() || first('guid', 'id'));
+    if (!link) return;
     try { link = new URL(link, baseUrl || undefined).href; } catch { return; }
     if (!/^https?:/.test(link)) return;
     const body = stripHtml(first('description', 'summary', 'content', 'content\\:encoded'));

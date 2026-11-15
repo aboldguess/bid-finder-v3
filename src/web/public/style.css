@@ -221,3 +221,9 @@ details > summary { cursor: pointer; }
 .method.patch, .method.post { background: var(--mid); color: var(--mid-ink); }
 
 .footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 0 16px 28px; }
+
+[hidden] { display: none !important; }
+main > h2, section > h2:not(:first-child) { margin-top: 26px; }
+.list.panel + .panel, .table-wrap + .panel { margin-top: 14px; }
+details > summary .inline-h { margin: 0; }
+main > details { margin-top: 26px; }

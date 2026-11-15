@@ -2,7 +2,6 @@
 // alerts and digests, and does nightly housekeeping and backups.
 import fs from 'node:fs';
 import path from 'node:path';
-import cron from 'node-cron';
 import { config } from './config.js';
 import { log } from './log.js';
 import { prune, runAll } from './ingest/run.js';
@@ -29,7 +28,9 @@ export async function tick(db) {
   return results;
 }
 
-export function startScheduler(db) {
+export async function startScheduler(db) {
+  // Imported here so that loading this module (for the health check) starts no timers.
+  const { default: cron } = await import('node-cron');
   const safely = (name, fn) => () => fn().catch((err) => log.error(`${name} failed`, err));
   const opts = { timezone: config.timezone };
   // Sources that are due run on the next minute; a fresh install starts straight away.

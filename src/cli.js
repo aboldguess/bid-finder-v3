@@ -83,14 +83,11 @@ if (values.help || command === 'help') {
   if (command === 'version') {
     console.log(config.version);
   } else if (command === 'ingest') {
-    const { runAll } = await import('./ingest/run.js');
+    const { runAll, ensureSources } = await import('./ingest/run.js');
     const { runAlerts } = await import('./notify/alerts.js');
     const db = getDb();
-    if (arg && !db.prepare('SELECT 1 FROM sources WHERE key = ?').get(arg)) {
-      const { ensureSources } = await import('./ingest/run.js');
-      ensureSources(db);
-      if (!db.prepare('SELECT 1 FROM sources WHERE key = ?').get(arg)) fail(`No source called "${arg}". Run "bidfinder sources" to list them.`);
-    }
+    ensureSources(db);
+    if (arg && !db.prepare('SELECT 1 FROM sources WHERE key = ?').get(arg)) fail(`No source called "${arg}". Run "bidfinder sources" to list them.`);
     const results = await runAll(db, { only: arg });
     console.table(results);
     await runAlerts(db);

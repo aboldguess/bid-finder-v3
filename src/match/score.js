@@ -108,7 +108,8 @@ export function scoreOpportunity(opp, profile, now = Date.now()) {
 
   const { min_award: lo, max_award: hi } = profile;
   const oppMax = opp.award_max ?? opp.award_min;
-  const oppMin = opp.award_min ?? 0;
+  // A tender's single figure is the contract value; a grant's is usually a ceiling.
+  const oppMin = opp.award_min ?? (opp.type === 'tender' ? oppMax : 0);
   if (oppMax != null && (lo != null || hi != null)) {
     const fits = (lo == null || oppMax >= lo) && (hi == null || oppMin <= hi);
     if (fits) {

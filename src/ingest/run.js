@@ -23,7 +23,7 @@ const norm = (s) => String(s || '').toLowerCase().normalize('NFKD').replace(/[^a
 // The same notice often appears on several portals (a Scottish tender on
 // PCS, Find a Tender and TED). Title, buyer and closing day identify it.
 export function dedupeKey(item) {
-  const title = norm(item.title);
+  const title = norm(item.title).replace(/\band\b/g, ' ').replace(/\s+/g, ' ').trim();
   const buyer = norm(item.funder).replace(/\b(ltd|limited|plc|the|council|of)\b/g, '').replace(/\s+/g, ' ').trim();
   if (title.length < 12 || !buyer || !item.closes_at) return null;
   return `${title}|${buyer}|${item.closes_at.slice(0, 10)}`;

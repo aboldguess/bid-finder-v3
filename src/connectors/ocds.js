@@ -9,7 +9,7 @@ const CLOSED = new Set(['complete', 'cancelled', 'unsuccessful', 'withdrawn']);
 
 // Some portals emit numbers JSON cannot hold (seen on Find a Tender).
 export const parseOcdsJson = (text) =>
-  (typeof text === 'string' ? JSON.parse(text.replace(/\b1e9999\b/g, '9999999')) : text);
+  (typeof text === 'string' ? JSON.parse(text.replace(/\b1e9999\b/g, 'null')) : text);
 
 export const isOpenRelease = (r) => !CLOSED.has(String(r.tender?.status || '').toLowerCase());
 
