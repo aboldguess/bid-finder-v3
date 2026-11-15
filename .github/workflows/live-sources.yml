@@ -33,7 +33,7 @@ jobs:
       - name: Diagnose (temporary)
         if: always()
         run: |
-          set +e
-          echo "=== IFS robots"; curl -sSIL -m 20 -A 'BidFinder/4.0.0' https://apply-for-innovation-funding.service.gov.uk/robots.txt | grep -iE '^(HTTP|location)'
-          curl -sSL -m 20 -A 'BidFinder/4.0.0' https://apply-for-innovation-funding.service.gov.uk/robots.txt | head -c 1500
-          echo; echo "=== IFS search headers"; curl -sSI -m 20 https://apply-for-innovation-funding.service.gov.uk/competition/search | grep -iE '^(HTTP|x-robots)'
+          node -e "
+          let u='https://apply-for-innovation-funding.service.gov.uk/robots.txt';
+          (async()=>{for(let i=0;i<6;i++){const r=await fetch(u,{redirect:'manual',headers:{'User-Agent':'BidFinder/4.0.0'}});const t=await r.text();console.log(r.status,r.headers.get('content-type'),u.slice(0,120));if(r.status>=300&&r.status<400){u=new URL(r.headers.get('location'),u).href;continue}console.log(t.slice(0,400));break}
+          const r=await fetch('https://apply-for-innovation-funding.service.gov.uk/robots.txt',{headers:{'User-Agent':'BidFinder/4.0.0'}});console.log('followed:',r.status,r.url.slice(0,100));})()"
