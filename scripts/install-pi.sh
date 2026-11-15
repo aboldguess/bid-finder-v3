@@ -58,7 +58,7 @@ Wants=network-online.target
 User=$APP_USER
 WorkingDirectory=$APP_DIR
 EnvironmentFile=-$APP_DIR/.env
-ExecStart=$(command -v node) src/server.js
+ExecStart=$(command -v node) src/cli.js serve --strict-port
 Restart=on-failure
 RestartSec=5
 
@@ -70,5 +70,5 @@ sudo systemctl daemon-reload
 sudo systemctl enable bidfinder
 sudo systemctl restart bidfinder
 echo "Bid Finder is running on http://$(hostname -I | awk '{print $1}'):$PORT"
-echo "The first account you register becomes the platform admin."
+echo "The first account you register becomes the administrator."
 echo "Logs: journalctl -u bidfinder -f"

@@ -126,7 +126,7 @@ export function createApp(db) {
   adminRoutes(app, ctx);
 
   app.use((req, res) => res.status(404).render('error', { message: 'Page not found.' }));
-  // eslint-disable-next-line no-unused-vars
+   
   app.use((err, req, res, next) => {
     log.error(`Unhandled error on ${req.method} ${req.path}`, err, { id: req.id });
     res.status(500).render('error', { message: 'Something went wrong. It has been logged.' });

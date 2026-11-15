@@ -1,0 +1,16 @@
+# Caddy terminates HTTPS for Bid Finder. Certificates come from Let's Encrypt
+# automatically once DOMAIN points at this server and ports 80 and 443 are open.
+{$DOMAIN} {
+	encode zstd gzip
+
+	# Metrics are for your monitoring on the private network, never the internet.
+	@metrics path /metrics
+	respond @metrics 404
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		-Server
+	}
+
+	reverse_proxy app:3000
+}

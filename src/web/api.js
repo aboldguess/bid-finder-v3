@@ -135,7 +135,7 @@ export function apiRouter(ctx) {
   });
 
   api.use((req, res) => fail(res, 404, 'No such endpoint. See /api/v1/openapi.json.'));
-  // eslint-disable-next-line no-unused-vars
+   
   api.use((err, req, res, next) => {
     if (err.type === 'entity.parse.failed') return fail(res, 400, 'Request body is not valid JSON.');
     log.error('API error', err);

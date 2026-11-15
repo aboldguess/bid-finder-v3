@@ -1,5 +1,10 @@
-name: test
-on: [push, pull_request]
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -10,4 +15,26 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run lint
       - run: npm test
+      - run: npm audit --omit=dev --audit-level=high
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the image
+        run: docker build -t bid-finder:ci .
+      - name: Start it and wait until it is healthy
+        run: |
+          docker run -d --name bf --read-only --tmpfs /tmp -e DISABLE_SCHEDULER=true bid-finder:ci
+          for i in $(seq 1 30); do
+            [ "$(docker inspect -f '{{.State.Health.Status}}' bf)" = healthy ] && exit 0
+            sleep 2
+          done
+          docker logs bf
+          exit 1
+      - name: Check the Compose file and Caddy configuration
+        run: |
+          DOMAIN=bids.example.com docker compose --env-file /dev/null config -q
+          docker run --rm -e DOMAIN=bids.example.com -v "$PWD/deploy/Caddyfile:/etc/caddy/Caddyfile:ro" caddy:2 caddy validate --config /etc/caddy/Caddyfile

@@ -1,63 +1,125 @@
 # Bid Finder
 
-Public funding and contract opportunities for UK SMEs, and for the business-support hubs (LEPs, growth hubs, Catapults, trade associations) that collate them for their members.
+Finds tenders and grants that fit your firm, so you stop trawling portals.
 
-Every day Bid Finder reads the main UK sources, scores each opportunity against an organisation's profile, explains the score in plain English, and sends a ranked email digest. It runs comfortably on a Raspberry Pi with no external services.
+Bid Finder watches public procurement portals and your private supplier portals, folds copies of the same notice together, scores every opportunity against your firm's profile, explains the score, and tells you by email, Slack or webhook when something worth bidding for appears. It is self-hosted: one small container and a SQLite file, with no external services.
 
-## What it does
+It was built for a small engineering company, and the defaults reflect that: profile presets for engineering disciplines, CPV code matching and UK sources switched on from the start.
 
-- **Sources:** Find a Grant (GOV.UK), Innovate UK competitions, UKRI Funding Finder and Contracts Finder, refreshed daily and de-duplicated.
-- **Fit scoring:** keywords (title matches count most), exclusions, region, applicant type, award size and deadline. Every score comes with its reasons.
-- **Triage:** shortlist (star), hide, team notes and full-text search.
-- **Digests:** daily or weekly email of new matches. Digests are also kept in the app, so it works before email is set up.
-- **Shared shortlist:** an organisation can publish its shortlist as a read-only public page. This is the first hub feature: curate once, share the link with members.
-- **Multi-tenant:** each organisation (company or hub) has its own profile, triage state and plan. The first account on a fresh install is the platform admin, who can refresh sources and set plans.
+## What you get
 
-## Install on a Raspberry Pi
+- **Sources.** Find a Tender, Contracts Finder, Public Contracts Scotland, Sell2Wales, TED (EU), SAM.gov (US), Find a Grant, Innovate UK and UKRI. Official APIs are used wherever one exists. See [docs/CONNECTORS.md](docs/CONNECTORS.md).
+- **Your own portals.** Add any RSS or Atom feed, or any listing page, from the Admin screen with no code. Portals behind a login work too; their passwords and API keys are encrypted at rest.
+- **One notice, shown once.** The same tender on three portals appears as one entry that links to the others.
+- **Fit scoring.** Keywords, CPV codes, countries, regions, contract value and deadline. Every score lists its reasons.
+- **Saved searches and alerts.** Instant, daily or weekly, to email, Slack or any webhook.
+- **Pipeline.** Shortlist, hide, add notes and move bids through qualifying, bidding, submitted, won, lost and no bid.
+- **Team.** Invite colleagues by link. Sign-up is closed after the first account unless you open it.
+- **API.** A read and triage API with bearer tokens, described at `/api/docs`.
+- **Operations.** Health and readiness checks, Prometheus metrics, structured logs, an audit trail, nightly backups.
 
-Needs Raspberry Pi OS 64-bit (or any Debian/Ubuntu) and a network connection.
+## Try it in two minutes
+
+Needs Node.js 22 or later.
 
 ```bash
 git clone https://github.com/aboldguess/bid-finder-v3.git
 cd bid-finder-v3
-./scripts/install-pi.sh
+npm install
+npm run demo
 ```
 
-That installs Node.js 22 if needed, installs dependencies and starts a `bidfinder` systemd service on port 3000. To use another port, for example because something else already runs on 3000, pass it in: `./scripts/install-pi.sh --port 3001`. The port is saved to `.env`, so later re-runs keep it. Open `http://<pi-address>:3000`, register, and you are the admin. The first fetch from every source starts automatically.
+The demo loads sample tenders into a separate `data-demo` folder and prints the address and a sign-in. It fetches nothing from the internet.
 
-Settings live in `.env` (see `.env.example`). They're all optional. The main ones are `SMTP_URL` and `MAIL_FROM` to send emails, and `BASE_URL` for links in emails. When serving over HTTPS, for example behind Caddy or a Cloudflare Tunnel, set `SECURE_COOKIES=true`.
-
-## Run it anywhere else
+## Run it for real
 
 ```bash
 npm install
-npm start               # web app + daily schedule, http://localhost:3000
-npm run ingest          # fetch every source now (or: npm run ingest -- ukri)
-npm run digest          # build and send due digests now
-npm test
+npm link            # optional: makes the `bidfinder` command available everywhere
+bidfinder serve     # or: npm start
 ```
 
-Data (the SQLite database and a generated session secret) is kept in `./data`, or wherever `DATA_DIR` points. Back that folder up.
+Open the address it prints and register. The first account is the administrator, and the first fetch from every enabled source starts within a minute. Then fill in your profile, which is what the scoring works from.
+
+### Choosing the port and who can connect
+
+```bash
+bidfinder serve --port 8080     # listen on port 8080 (default 3000, or PORT in .env)
+bidfinder serve --lan           # reachable from other devices on your network (the default)
+bidfinder serve --local         # this machine only
+bidfinder serve --host 192.168.1.20   # one specific network address
+bidfinder serve --strict-port   # fail if the port is busy
+```
+
+If the port is already in use, Bid Finder moves to the next free one (3000, then 3001, and so on, up to 20 tries) and prints the address it ended up on. Pass `--strict-port` if you would rather it stopped with an error, which is what you want behind a reverse proxy.
+
+On start it prints every address you can use:
+
+```
+Bid Finder 4.0.0 is running at http://localhost:3000
+On your network: http://192.168.1.20:3000
+```
+
+Other devices on your network use the second address. If they cannot connect, allow the port through the machine's firewall. Without `npm link`, use `npm start -- --port 8080 --local`, or `node src/cli.js serve --port 8080`.
+
+### The command line
+
+| Command | What it does |
+| --- | --- |
+| `bidfinder serve` | Start the web app and the background scheduler |
+| `bidfinder ingest [source]` | Fetch every enabled source now, or just one, for example `bidfinder ingest find-a-tender` |
+| `bidfinder alerts` | Send saved-search alerts that are due |
+| `bidfinder digest` | Build and send the digests that are due |
+| `bidfinder sources` | List sources with the result of their last run |
+| `bidfinder backup` | Back up the database into the data folder |
+| `bidfinder reset-password <email>` | Set a new random password for a user and print it |
+| `bidfinder version` | Print the version |
+| `bidfinder help` | Show all commands and options |
+
+Settings are read from the environment or a `.env` file in the current folder. Every one is optional; [.env.example](.env.example) lists them. The ones you are most likely to want are `SMTP_URL` and `MAIL_FROM` for email, and `BASE_URL` for the links in emails.
+
+## Put it on your own domain
+
+On any server with Docker:
+
+```bash
+git clone https://github.com/aboldguess/bid-finder-v3.git
+cd bid-finder-v3
+./scripts/setup.sh --domain bids.example.co.uk
+```
+
+That generates the secrets, builds the image and starts Bid Finder behind Caddy, which obtains and renews the HTTPS certificate by itself. [docs/DEPLOY.md](docs/DEPLOY.md) walks through it from buying the domain onwards.
+
+For a Raspberry Pi or other small Linux box without Docker, `./scripts/install-pi.sh [--port 3001]` installs Node.js and runs Bid Finder as a systemd service.
+
+## Documentation
+
+- [docs/DEPLOY.md](docs/DEPLOY.md): domain, DNS, HTTPS, email, updating.
+- [docs/CONNECTORS.md](docs/CONNECTORS.md): every source, how politely each is fetched, private portals, writing a connector.
+- [docs/OPERATIONS.md](docs/OPERATIONS.md): backups and restore, monitoring, security, troubleshooting.
+- `/api/docs` in the running app: the API.
 
 ## How it fits together
 
 ```
 src/
-  connectors/   one file per source: fetch pages, return normalised opportunities
-  ingest/       runs connectors one at a time and upserts into SQLite
-  match/        fit scoring and the per-organisation ranked feed
-  notify/       email digests
-  web/          Express app, EJS views, CSS
-  db/           schema (SQLite with FTS5 full-text search)
+  cli.js        the bidfinder command
+  server.js     starts the web app and scheduler; listen.js picks the port
+  connectors/   one file per source, plus the generic feed and portal connectors
+  http/         the one outbound HTTP client: throttling, retries, robots.txt, private-network guard
+  ingest/       runs connectors, normalises, de-duplicates across sources
+  match/        fit scoring, engineering presets, the ranked feed
+  notify/       alerts, digests, email, Slack and webhook channels
+  secrets/      the encrypted credential vault
+  web/          Express app, EJS views, API
+  db/           SQLite schema and migrations
 ```
 
-To add a source, write a connector exporting `{ key, name, type, fetch() }` with a `parsePage()` that a fixture test can exercise, then add it to `src/connectors/index.js`.
+## Development
 
-## Notes on sources
+```bash
+npm test        # node:test; connectors are tested against recorded fixtures
+npm run lint
+```
 
-Find a Grant, Innovate UK and UKRI have no public API, so their connectors read the public listing pages. They use label-based parsing ("Closing date", "How much you can get", and so on) rather than brittle CSS classes, but a site redesign can still break one. The admin page shows each source's last run and any error.
-
-## Roadmap
-
-- **Phase 2:** hub bulletins (curated email to a member list), team invites, a pipeline board (qualifying, bidding, submitted, won or lost), plan limits and billing.
-- **Backlog:** AI summaries and fit explanations, Find a Tender and TED, Horizon Europe, a re-tender radar from award data.
+CI runs the linter, the tests, a dependency audit and a Docker build on every pull request.
