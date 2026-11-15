@@ -1,16 +1,19 @@
 {
   "name": "bid-finder",
-  "version": "3.0.0",
-  "description": "Funding and tender finder for UK SMEs and the business-support hubs that serve them.",
+  "version": "4.0.0",
+  "description": "Self-hosted tender and grant finder: watches public and private procurement portals, scores every opportunity against your firm, and alerts you.",
   "type": "module",
   "main": "src/server.js",
   "engines": {
     "node": ">=22"
   },
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node src/cli.js serve",
+    "serve": "node src/cli.js serve",
     "ingest": "node src/cli.js ingest",
     "digest": "node src/cli.js digest",
+    "demo": "node scripts/demo.js",
+    "lint": "eslint .",
     "test": "node --test \"test/*.test.js\""
   },
   "license": "UNLICENSED",
@@ -27,6 +30,12 @@
     "nodemailer": "^10.1.7"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0",
     "supertest": "^7.3.1"
+  },
+  "bin": {
+    "bidfinder": "src/cli.js"
   }
 }

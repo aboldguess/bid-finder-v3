@@ -1,0 +1,18 @@
+<%- include('partials/head', { title: 'Pipeline', wide: true }) %>
+<div class="pagehead"><h1>Pipeline</h1><span class="muted">Set a stage on any opportunity to track it here.</span></div>
+<div class="board">
+  <% columns.forEach(col => { %>
+    <section class="column">
+      <h2><%= col.label %> <span class="countpill"><%= col.items.length %></span></h2>
+      <% col.items.forEach(o => { %>
+        <a class="ticket" href="/o/<%= o.id %>">
+          <strong><%= o.title %></strong>
+          <span class="muted"><%= o.funder %></span>
+          <span class="ticket-foot"><% if (fmt.value(o)) { %><span><%= fmt.value(o) %></span><% } %><% if (o.closes_at) { %><span class="deadline <%= fmt.soon(o.closes_at) && Date.parse(o.closes_at) > Date.now() ? 'soon' : '' %>"><%= fmt.date(o.closes_at) %></span><% } %></span>
+        </a>
+      <% }) %>
+      <% if (!col.items.length) { %><p class="empty small">Nothing here</p><% } %>
+    </section>
+  <% }) %>
+</div>
+<%- include('partials/foot') %>

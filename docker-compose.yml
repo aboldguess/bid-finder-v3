@@ -1,0 +1,50 @@
+# Production deployment: Bid Finder behind Caddy, which obtains and renews
+# the HTTPS certificate for your domain by itself. Run ./scripts/setup.sh
+# to create .env, or see docs/DEPLOY.md.
+services:
+  app:
+    build: .
+    image: bid-finder:local
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      BASE_URL: https://${DOMAIN:?Set DOMAIN in .env, or run ./scripts/setup.sh}
+      # Caddy reaches the app over Docker's private network.
+      TRUST_PROXY: uniquelocal
+    volumes:
+      - data:/data
+    expose:
+      - "3000"
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    logging:
+      options: { max-size: "10m", max-file: "5" }
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      DOMAIN: ${DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    logging:
+      options: { max-size: "10m", max-file: "5" }
+
+volumes:
+  data:
+  caddy_data:
+  caddy_config:

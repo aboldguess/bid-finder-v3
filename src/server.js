@@ -1,24 +1,35 @@
-// Entry point: web server plus the daily ingest and digest schedule.
-import cron from 'node-cron';
+// Starts the web app and the background scheduler. Run through the CLI
+// (`bidfinder serve`) or directly (`node src/server.js`).
 import { config } from './config.js';
 import { getDb } from './db/index.js';
 import { log } from './log.js';
-import { runAll } from './ingest/run.js';
-import { runDigests } from './notify/digest.js';
+import { accessUrls, listen } from './listen.js';
+import { startScheduler } from './scheduler.js';
 import { createApp } from './web/app.js';
 
-const db = getDb();
-const app = createApp(db);
+export async function serve({ port = config.port, host = config.host, strictPort = false, scheduler = config.scheduler } = {}) {
+  const db = getDb();
+  const app = createApp(db);
+  const { server, port: actual } = await listen(app, { port, host, strict: strictPort });
+  if (actual !== port) log.warn(`Port ${port} is in use, so Bid Finder is using ${actual} instead.`);
+  // Links in emails and alerts should point at the port we really got, unless BASE_URL was set.
+  if (!process.env.BASE_URL) config.baseUrl = `http://localhost:${actual}`;
+  const urls = accessUrls({ host, port: actual });
+  log.info(`Bid Finder ${config.version} is running at ${urls.local}`);
+  if (urls.lan.length) log.info(`On your network: ${urls.lan.join(', ')}`);
+  else if (host === '127.0.0.1' || host === 'localhost') log.info('Only this machine can connect. Use --lan to allow other devices on your network.');
+  if (scheduler) await startScheduler(db);
 
-app.listen(config.port, config.host, () => {
-  log.info(`Bid Finder listening on http://${config.host}:${config.port}`);
-});
+  const stop = (signal) => {
+    log.info(`${signal} received, shutting down`);
+    server.close(() => { db.close(); process.exit(0); });
+    setTimeout(() => process.exit(0), 8000).unref();
+  };
+  process.once('SIGTERM', () => stop('SIGTERM'));
+  process.once('SIGINT', () => stop('SIGINT'));
+  return { server, port: actual, urls };
+}
 
-cron.schedule(config.ingestCron, () => runAll(db).catch((err) => log.error('Ingest failed', err)));
-cron.schedule(config.digestCron, () => runDigests(db).catch((err) => log.error('Digests failed', err)));
-
-// A fresh install has nothing to show, so fetch straight away.
-if (db.prepare('SELECT COUNT(*) AS n FROM opportunities').get().n === 0) {
-  log.info('Empty database: running first ingest now');
-  runAll(db).catch((err) => log.error('First ingest failed', err));
+if (import.meta.filename === process.argv[1]) {
+  serve().catch((err) => { log.error(err.message); process.exit(1); });
 }

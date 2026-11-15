@@ -1,0 +1,33 @@
+<%- include('partials/head', { title: 'Team' }) %>
+<section class="narrow wide">
+  <h1>Team</h1>
+  <p class="muted">Everyone in <%= org.name %> shares the same feed, shortlist, notes and pipeline.</p>
+  <div class="panel">
+    <ul class="list">
+      <% members.forEach(m => { %>
+        <li><span><strong><%= m.name %></strong> <span class="muted"><%= m.email %> · <%= m.role %></span></span>
+          <% if (org.role === 'owner' && m.role !== 'owner') { %><form method="post" action="/team/members/<%= m.id %>/remove"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link danger" data-confirm="Remove <%= m.name %> from the team?">Remove</button></form><% } %>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
+  <% if (org.role === 'owner') { %>
+    <div class="panel">
+      <h2>Invite a colleague</h2>
+      <% if (inviteLink) { %><div class="notice good"><strong>Send them this link. It works once and expires in 7 days.</strong><code class="secret"><%= inviteLink %></code></div><% } %>
+      <form method="post" action="/team/invites" class="row">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <label>Their email (optional) <input type="email" name="email" placeholder="colleague@example.com"></label>
+        <button class="button small">Create invitation link</button>
+      </form>
+      <% if (invites.length) { %>
+        <h3>Open invitations</h3>
+        <ul class="list">
+          <% invites.forEach(i => { %><li><span><%= i.email || 'Anyone with the link' %> <span class="muted">expires <%= fmt.date(i.expires_at) %></span></span>
+            <form method="post" action="/team/invites/revoke"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="id" value="<%= i.token_hash %>"><button class="link danger">Revoke</button></form></li><% }) %>
+        </ul>
+      <% } %>
+    </div>
+  <% } %>
+</section>
+<%- include('partials/foot') %>

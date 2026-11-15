@@ -1,0 +1,55 @@
+<%- include('partials/head', { title: source.name || 'New source' }) %>
+<p class="back"><a href="/admin">← Admin</a></p>
+<section class="narrow wide">
+  <h1><%= source.key ? source.name : source.kind === 'portal' ? 'Add a web portal' : 'Add an RSS feed' %></h1>
+  <% if (source.kind === 'portal' && !source.key) { %>
+    <p class="muted">For portals with no API or feed, including ones you sign in to. Describe where the list of opportunities is and how to read it, then press Test to check before saving. Only add portals whose terms allow you to do this with your own account.</p>
+  <% } else if (connector) { %>
+    <p class="muted"><%= connector.access %><% if (connector.homepage) { %> · <a href="<%= connector.homepage %>" rel="noopener noreferrer" target="_blank"><%= connector.homepage %></a><% } %></p>
+  <% } %>
+  <% if (error) { %><p class="error" role="alert"><%= error %></p><% } %>
+  <form method="post" action="<%= source.key ? '/admin/sources/' + source.key : '/admin/sources' %>" class="stack" autocomplete="off">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="kind" value="<%= source.kind %>">
+    <% if (source.kind !== 'builtin') { %>
+      <div class="row">
+        <label>Name <input name="name" required value="<%= source.name %>" placeholder="e.g. Acme supplier portal"></label>
+        <label>Lists <select name="type"><option value="tender" <%= source.type === 'tender' ? 'selected' : '' %>>Tenders</option><option value="grant" <%= source.type === 'grant' ? 'selected' : '' %>>Grants</option></select></label>
+      </div>
+    <% } %>
+    <% fields.forEach(f => { %>
+      <label><%= f.label %><%= f.required ? '' : ' (optional)' %>
+        <% if (f.multiline) { %><textarea name="<%= f.key %>" rows="2" placeholder="<%= f.placeholder || '' %>"><%= values[f.key] || '' %></textarea>
+        <% } else { %><input name="<%= f.key %>" value="<%= values[f.key] || '' %>" placeholder="<%= f.placeholder || '' %>"><% } %>
+        <% if (f.help) { %><small><%= f.help %></small><% } %>
+      </label>
+    <% }) %>
+    <div class="row">
+      <label>Credential
+        <select name="credential_id">
+          <option value="">None</option>
+          <% credentials.forEach(c => { %><option value="<%= c.id %>" <%= source.credential_id === c.id ? 'selected' : '' %>><%= c.name %></option><% }) %>
+        </select>
+        <small>Stored in the <a href="/admin#credentials">credential vault</a>.<%= connector?.auth === 'api-key' ? ' This source needs an API key.' : '' %></small>
+      </label>
+      <label>Check every (minutes) <input type="number" name="interval_minutes" min="15" max="10080" value="<%= source.interval_minutes %>"><small>At least 15. Be considerate: most portals publish a few times a day.</small></label>
+    </div>
+    <div class="row">
+      <button class="button">Save</button>
+      <button class="button ghost" name="action" value="test">Test without saving</button>
+    </div>
+  </form>
+  <% if (preview) { %>
+    <div class="panel">
+      <h2>Test result: <%= preview.length ? `first ${preview.length} items` : 'nothing found' %></h2>
+      <% if (!preview.length) { %><p class="muted">The request worked but no opportunities were read. Check the selectors, or whether everything listed has already closed.</p><% } %>
+      <ul class="list">
+        <% preview.forEach(p => { %><li><span><a href="<%= p.url %>" rel="noopener noreferrer" target="_blank"><%= p.title %></a><br><span class="muted"><%= [p.funder, p.closes_at && 'closes ' + fmt.date(p.closes_at), p.award_max && fmt.money(p.award_max, p.currency || 'GBP')].filter(Boolean).join(' · ') || 'No buyer, deadline or value read' %></span></span></li><% }) %>
+      </ul>
+    </div>
+  <% } %>
+  <% if (source.key && source.kind !== 'builtin') { %>
+    <form method="post" action="/admin/sources/<%= source.key %>/delete" class="danger-zone"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link danger" data-confirm="Delete this source and every opportunity it found?">Delete this source</button></form>
+  <% } %>
+</section>
+<%- include('partials/foot') %>

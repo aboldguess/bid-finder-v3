@@ -1,16 +1,9 @@
 // Email digests: new, well-matched opportunities since the last digest.
 // Without SMTP configured, digests are still built and readable in the app.
-import path from 'node:path';
-import ejs from 'ejs';
-import nodemailer from 'nodemailer';
-import { config } from '../config.js';
 import { log } from '../log.js';
+import { emailConfigured, renderEmail, sendEmail } from './channels.js';
 import { getFeed } from '../match/feed.js';
 import { splitList } from '../match/score.js';
-
-const template = path.join(config.root, 'src/web/views/digest-email.ejs');
-let transport;
-const mailer = () => (transport ??= config.smtp.url ? nodemailer.createTransport(config.smtp.url) : null);
 
 export function lastDigestAt(db, orgId) {
   return db.prepare('SELECT MAX(created_at) AS at FROM digests WHERE org_id = ?').get(orgId).at;
@@ -28,7 +21,7 @@ export async function buildDigest(db, org, { now = Date.now() } = {}) {
   const since = last || new Date(now - 7 * 864e5).toISOString().replace('T', ' ').slice(0, 19);
   const { items, profile } = getFeed(db, org.id, { since, limit: 25, now });
   if (!items.length) return null;
-  const html = await ejs.renderFile(template, { org, items, baseUrl: config.baseUrl });
+  const html = await renderEmail({ org, items });
   return { items, html, recipients: splitList(profile.digest_emails) };
 }
 
@@ -36,13 +29,11 @@ export async function sendDigest(db, org, opts = {}) {
   const digest = await buildDigest(db, org, opts);
   if (!digest) return null;
   let delivered = 0;
-  const transport = mailer();
-  if (transport && digest.recipients.length) {
+  if (emailConfigured() && digest.recipients.length) {
     try {
-      await transport.sendMail({
-        from: config.smtp.from,
-        to: digest.recipients.join(', '),
-        subject: `${digest.items.length} new funding ${digest.items.length === 1 ? 'opportunity' : 'opportunities'} for ${org.name}`,
+      await sendEmail({
+        to: digest.recipients,
+        subject: `${digest.items.length} new ${digest.items.length === 1 ? 'opportunity' : 'opportunities'} for ${org.name}`,
         html: digest.html,
       });
       delivered = 1;

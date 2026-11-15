@@ -1,0 +1,20 @@
+<%- include('partials/head', { title: 'Searches and alerts' }) %>
+<div class="pagehead"><h1>Searches and alerts</h1><a class="button small" href="/searches/new">New saved search</a></div>
+<p class="muted">A saved search watches for new matches and sends them to email, Slack or a webhook.</p>
+<% if (!smtp) { %><p class="notice">Email is not set up on this server yet (SMTP_URL), so email alerts will not be sent. Slack and webhook alerts work without it.</p><% } %>
+<div class="table-wrap"><table class="table">
+  <thead><tr><th>Search</th><th>Filters</th><th>Matches now</th><th>Alerts</th><th>Last alert</th></tr></thead>
+  <tbody>
+    <% searches.forEach(s => { %>
+      <tr>
+        <td><a href="/searches/<%= s.id %>"><strong><%= s.name %></strong></a></td>
+        <td class="muted"><%= [s.filters.q && `"${s.filters.q}"`, s.filters.type, s.filters.source && sourceNames[s.filters.source], s.filters.cpv && `CPV ${s.filters.cpv}`, s.filters.country, s.filters.min_value != null && `over ${fmt.money(s.filters.min_value)}`, s.filters.min_score != null && `fit ${s.filters.min_score}+`].filter(Boolean).join(' · ') || 'All matches' %></td>
+        <td><%= s.count %></td>
+        <td><%= s.frequency === 'off' ? 'Off' : s.frequency[0].toUpperCase() + s.frequency.slice(1) %> <span class="muted"><%= [s.emails && 'email', s.hasSlack && 'Slack', s.hasWebhook && 'webhook'].filter(Boolean).join(', ') %></span></td>
+        <td class="muted"><%= s.last_alert_at ? fmt.stamp(s.last_alert_at) : 'None yet' %></td>
+      </tr>
+    <% }) %>
+    <% if (!searches.length) { %><tr><td colspan="5" class="empty">No saved searches yet. Filter the opportunities list, then choose "Save this search".</td></tr><% } %>
+  </tbody>
+</table></div>
+<%- include('partials/foot') %>

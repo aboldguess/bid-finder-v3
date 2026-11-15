@@ -1,0 +1,41 @@
+<%- include('partials/head', { title: 'Dashboard', wide: true }) %>
+<div class="pagehead"><h1>Dashboard</h1><span class="muted"><%= org.name %></span></div>
+<% if (profileEmpty) { %><p class="notice">Your feed is not personalised yet. <a href="/profile">Add keywords and CPV categories to your profile</a> and everything will be ranked by fit.</p><% } %>
+<% if (ingesting) { %><p class="notice">Fetching the latest opportunities now. Numbers will fill in over the next few minutes.</p><% } %>
+<section class="kpis">
+  <a class="kpi" href="/feed"><span class="kpi-n"><%= summary.matches.toLocaleString('en-GB') %></span><span class="kpi-l">Open matches</span></a>
+  <a class="kpi" href="/feed?sort=newest"><span class="kpi-n"><%= summary.new24h %></span><span class="kpi-l">New in 24 hours</span><span class="kpi-s"><%= summary.new7d %> this week</span></a>
+  <a class="kpi <%= summary.closingSoonCount ? 'warn' : '' %>" href="/feed?sort=deadline"><span class="kpi-n"><%= summary.closingSoonCount %></span><span class="kpi-l">Closing within 7 days</span></a>
+  <a class="kpi" href="/feed?view=starred"><span class="kpi-n"><%= summary.shortlisted %></span><span class="kpi-l">Shortlisted</span></a>
+  <a class="kpi" href="/pipeline"><span class="kpi-n"><%= summary.pipelineValue ? fmt.value({ award_max: summary.pipelineValue, currency: 'GBP', type: 'tender' }) : '0' %></span><span class="kpi-l">Live pipeline value</span><span class="kpi-s"><%= (summary.stages.qualifying || 0) + (summary.stages.bidding || 0) + (summary.stages.submitted || 0) %> bids in progress</span></a>
+</section>
+<div class="columns">
+  <section>
+    <div class="sectionhead"><h2>New best matches</h2><a href="/feed?sort=newest">See all</a></div>
+    <div class="cards">
+      <% summary.newest.forEach(o => { %><%- include('partials/card', { o, interactive: true }) %><% }) %>
+      <% if (!summary.newest.length) { %><p class="empty">No new matches this week.</p><% } %>
+    </div>
+  </section>
+  <aside>
+    <div class="sectionhead"><h2>Closing soon</h2><a href="/feed?sort=deadline">See all</a></div>
+    <ul class="list panel">
+      <% summary.closingSoon.forEach(o => { %>
+        <li><a href="/o/<%= o.id %>"><%= o.title %></a><span class="deadline soon"><%= fmt.daysLeft(o.closes_at) %> · <%= fmt.date(o.closes_at) %></span></li>
+      <% }) %>
+      <% if (!summary.closingSoon.length) { %><li class="muted">Nothing closing in the next week.</li><% } %>
+    </ul>
+    <div class="sectionhead"><h2>Saved searches</h2><a href="/searches">Manage</a></div>
+    <ul class="list panel">
+      <% searches.forEach(s => { %><li><a href="/searches/<%= s.id %>"><%= s.name %></a><span class="muted"><%= s.frequency === 'off' ? 'No alerts' : s.frequency + ' alerts' %></span></li><% }) %>
+      <% if (!searches.length) { %><li class="muted">None yet. <a href="/searches/new">Create one</a> to get alerts.</li><% } %>
+    </ul>
+    <div class="sectionhead"><h2>Sources</h2><% if (user.is_platform_admin) { %><a href="/admin">Manage</a><% } %></div>
+    <ul class="list panel sources">
+      <% sources.forEach(s => { %>
+        <li title="<%= s.last_error || '' %>"><span><span class="dot <%= s.last_status === 'ok' ? 'ok' : s.last_status === 'error' ? 'bad' : '' %>"></span><%= s.name %></span><span class="muted"><%= s.last_status === 'error' ? 'Failing' : s.last_run_at ? fmt.stamp(s.last_run_at) : 'Not run yet' %></span></li>
+      <% }) %>
+    </ul>
+  </aside>
+</div>
+<%- include('partials/foot') %>

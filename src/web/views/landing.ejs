@@ -1,28 +1,17 @@
-<%- include('partials/head', { title: 'Funding opportunities, ranked for you' }) %>
+<%- include('partials/head', { title: 'Tenders and grants that fit your firm' }) %>
 <section class="hero">
-  <h1>Every UK grant and public contract that fits you, in one morning email.</h1>
-  <p>Bid Finder watches Find a Grant, Innovate UK, UKRI and Contracts Finder every day, scores each opportunity against your profile, and tells you why it fits. No more trawling five portals.</p>
-  <p><a class="button" href="/register">Start your free trial</a> <a class="button ghost" href="/login">Sign in</a></p>
-  <% if (stats.open) { %><p class="muted"><%= stats.open.toLocaleString('en-GB') %> open opportunities tracked right now.</p><% } %>
+  <p class="eyebrow">Self-hosted tender monitoring</p>
+  <h1>Every tender worth bidding for, found and ranked before your competitors open their inbox.</h1>
+  <p class="lead">Bid Finder watches Find a Tender, Contracts Finder, Public Contracts Scotland, Sell2Wales, TED, SAM.gov, the UK grant funders and the private portals you have accounts on. It scores every notice against your firm and tells you why it fits.</p>
+  <p class="row">
+    <% if (canRegister) { %><a class="button" href="/register">Set up this server</a><% } %>
+    <a class="button <%= canRegister ? 'ghost' : '' %>" href="/login">Sign in</a>
+  </p>
+  <% if (stats.open) { %><p class="muted"><%= stats.open.toLocaleString('en-GB') %> open opportunities tracked across <%= sources %> sources right now.</p><% } %>
 </section>
-<section class="plans">
-  <div class="plan">
-    <h2>For SMEs and startups</h2>
-    <p class="muted">Solo plan</p>
-    <ul>
-      <li>Ranked feed of grants and contracts that match your business</li>
-      <li>Daily or weekly email digest</li>
-      <li>Shortlist, notes and deadlines in one place</li>
-    </ul>
-  </div>
-  <div class="plan featured">
-    <h2>For business-support hubs</h2>
-    <p class="muted">Hub plan · LEPs, Catapults, growth hubs, trade associations</p>
-    <ul>
-      <li>Stop collating opportunities by hand for your members</li>
-      <li>Curate a shortlist and share it as a public page</li>
-      <li>Profile tuned to your sector or region</li>
-    </ul>
-  </div>
+<section class="features">
+  <div><h2>One ranked feed</h2><p>Keywords, CPV categories, contract value, region and deadline become a fit score out of 100, with the reasons spelled out.</p></div>
+  <div><h2>Alerts where you work</h2><p>Saved searches send new matches to email, Slack or a webhook as they appear, or as a daily or weekly round-up.</p></div>
+  <div><h2>From notice to bid</h2><p>Shortlist, take notes with your team and track each bid from qualifying through to won or lost.</p></div>
 </section>
 <%- include('partials/foot') %>

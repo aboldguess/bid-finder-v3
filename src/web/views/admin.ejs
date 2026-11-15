@@ -1,41 +1,93 @@
-<%- include('partials/head', { title: 'Admin' }) %>
-<h1>Platform admin</h1>
-<h2>Sources</h2>
-<% if (ingesting) { %><p class="notice">A refresh is running.</p><% } %>
-<form method="post" action="/admin/ingest"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="button small">Refresh all sources now</button></form>
-<table class="table">
-  <thead><tr><th>Source</th><th>Open now</th><th>Last run (UTC)</th><th>Result</th><th></th></tr></thead>
+<%- include('partials/head', { title: 'Admin', wide: true }) %>
+<div class="pagehead"><h1>Admin</h1>
+  <form method="post" action="/admin/ingest"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="button small" <%= ingesting ? 'disabled' : '' %>><%= ingesting ? 'Refresh running…' : 'Refresh all sources now' %></button></form>
+</div>
+<div class="sectionhead"><h2>Sources</h2>
+  <div class="row"><a class="button small ghost" href="/admin/sources/new?kind=rss">Add an RSS feed</a><a class="button small ghost" href="/admin/sources/new?kind=portal">Add a web portal</a></div>
+</div>
+<div class="table-wrap"><table class="table">
+  <thead><tr><th>Source</th><th>Access</th><th>Schedule</th><th>Open now</th><th>Last run</th><th>Result</th><th></th></tr></thead>
   <tbody>
   <% sources.forEach(s => { %>
     <tr class="<%= s.enabled ? '' : 'disabled' %>">
-      <td><%= s.name %></td>
-      <td><%= s.open_count %></td>
-      <td><%= s.last_run_at || 'Never' %></td>
-      <td><%= s.last_status === 'error' ? 'Error: ' + s.last_error : s.last_status ? `${s.last_found} found, ${s.last_new} new` : '' %></td>
-      <td class="row">
+      <td><span class="dot <%= !s.enabled ? '' : s.last_status === 'ok' ? 'ok' : s.last_status === 'error' ? 'bad' : '' %>"></span><a href="/admin/sources/<%= s.key %>"><%= s.name %></a><% if (s.credential_name) { %> <span class="chip small" title="Credential attached">🔑 <%= s.credential_name %></span><% } %></td>
+      <td class="muted"><%= s.connector?.access || s.kind %></td>
+      <td class="muted"><%= s.enabled ? fmt.every(s.interval_minutes) : 'Off' %></td>
+      <td><%= s.open_count.toLocaleString('en-GB') %></td>
+      <td class="muted"><%= s.last_run_at ? fmt.stamp(s.last_run_at) : 'Never' %></td>
+      <td class="<%= s.last_status === 'error' ? 'error' : '' %>"><%= s.last_status === 'error' ? s.last_error : s.last_status ? `${s.last_found} found, ${s.last_new} new` : '' %></td>
+      <td class="row nowrap">
         <form method="post" action="/admin/ingest"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="source" value="<%= s.key %>"><button class="link">Run</button></form>
         <form method="post" action="/admin/sources/<%= s.key %>/toggle"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link"><%= s.enabled ? 'Disable' : 'Enable' %></button></form>
+        <a href="/admin/sources/<%= s.key %>">Settings</a>
       </td>
     </tr>
   <% }) %>
   </tbody>
-</table>
+</table></div>
+
+<div class="columns even">
+  <section id="credentials">
+    <h2>Credential vault</h2>
+    <p class="muted">Logins and API keys for sources that need them. Encrypted at rest and never shown again after saving.</p>
+    <ul class="list panel">
+      <% credentials.forEach(c => { %>
+        <li><span><strong><%= c.name %></strong> <span class="muted"><%= { login: 'Username and password', 'api-key': 'API key', header: 'HTTP header' }[c.kind] %> · added <%= fmt.stamp(c.created_at) %></span></span>
+          <form method="post" action="/admin/credentials/<%= c.id %>/delete"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link danger" data-confirm="Delete this credential? Sources using it will stop working.">Delete</button></form></li>
+      <% }) %>
+      <% if (!credentials.length) { %><li class="muted">Nothing stored yet.</li><% } %>
+    </ul>
+    <form method="post" action="/admin/credentials" class="stack panel" autocomplete="off" data-credential-form>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <h3>Add a credential</h3>
+      <div class="row">
+        <label>Name <input name="name" required placeholder="e.g. Delta eSourcing login"></label>
+        <label>Kind <select name="kind"><option value="login">Username and password</option><option value="api-key">API key</option><option value="header">HTTP header</option></select></label>
+      </div>
+      <div class="row" data-kind="login"><label>Username <input name="username" autocomplete="off"></label><label>Password <input name="password" type="password" autocomplete="new-password"></label></div>
+      <div class="row" data-kind="api-key" hidden><label>API key <input name="key" type="password" autocomplete="off"></label></div>
+      <div class="row" data-kind="header" hidden><label>Header name <input name="header" placeholder="X-Api-Key"></label><label>Header value <input name="value" type="password" autocomplete="off"></label></div>
+      <button class="button small">Store encrypted</button>
+    </form>
+  </section>
+  <section>
+    <h2>Recent runs</h2>
+    <div class="table-wrap"><table class="table compact">
+      <thead><tr><th>When</th><th>Source</th><th>Result</th><th>Took</th></tr></thead>
+      <tbody>
+        <% runs.forEach(r => { %><tr><td class="muted nowrap"><%= fmt.stamp(r.started_at) %></td><td><%= r.name %></td><td class="<%= r.status === 'error' ? 'error' : '' %>"><%= r.status === 'ok' ? `${r.found} found, ${r.added} new` : r.status === 'error' ? r.error : 'Running' %></td><td class="muted nowrap"><%= r.duration_ms != null ? (r.duration_ms / 1000).toFixed(1) + ' s' : '' %></td></tr><% }) %>
+        <% if (!runs.length) { %><tr><td colspan="4" class="empty">No runs yet.</td></tr><% } %>
+      </tbody>
+    </table></div>
+  </section>
+</div>
+
 <h2>Organisations</h2>
-<table class="table">
-  <thead><tr><th>Name</th><th>Kind</th><th>Owner</th><th>Members</th><th>Joined</th><th>Plan</th></tr></thead>
+<div class="table-wrap"><table class="table">
+  <thead><tr><th>Name</th><th>Owner</th><th>Members</th><th>Joined</th><th>Access</th></tr></thead>
   <tbody>
   <% orgs.forEach(o => { %>
     <tr>
-      <td><%= o.name %></td><td><%= o.kind %></td><td><%= o.owner_email %></td><td><%= o.members %></td><td><%= o.created_at.slice(0, 10) %></td>
+      <td><%= o.name %></td><td><%= o.owner_email %></td><td><%= o.members %></td><td><%= o.created_at.slice(0, 10) %></td>
       <td>
         <form method="post" action="/admin/orgs/<%= o.id %>/plan" class="row">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-          <select name="plan"><% ['trial', 'solo', 'hub', 'suspended'].forEach(p => { %><option <%= o.plan === p ? 'selected' : '' %>><%= p %></option><% }) %></select>
+          <select name="plan"><option value="<%= o.plan === 'suspended' ? 'solo' : o.plan %>" <%= o.plan !== 'suspended' ? 'selected' : '' %>>Active</option><option value="suspended" <%= o.plan === 'suspended' ? 'selected' : '' %>>Suspended</option></select>
           <button class="link">Set</button>
         </form>
       </td>
     </tr>
   <% }) %>
   </tbody>
-</table>
+</table></div>
+
+<details><summary><h2 class="inline-h">Audit trail</h2></summary>
+<div class="table-wrap"><table class="table compact">
+  <thead><tr><th>When</th><th>Who</th><th>Action</th><th>Detail</th><th>From</th></tr></thead>
+  <tbody>
+    <% audit.forEach(a => { %><tr><td class="muted nowrap"><%= fmt.stamp(a.at) %></td><td><%= a.actor || 'Not signed in' %></td><td><%= a.action %></td><td class="muted"><%= a.detail %></td><td class="muted"><%= a.ip %></td></tr><% }) %>
+    <% if (!audit.length) { %><tr><td colspan="5" class="empty">Nothing recorded yet.</td></tr><% } %>
+  </tbody>
+</table></div>
+</details>
 <%- include('partials/foot') %>

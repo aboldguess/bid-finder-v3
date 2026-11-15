@@ -1,0 +1,4 @@
+{"notices":[
+{"publication-number":"712345-2026","notice-title":{"eng":"Ireland-Dublin: Engineering design services","fra":"Irlande-Dublin: Services de conception technique"},"buyer-name":{"eng":["Irish Water"]},"buyer-country":["IRL"],"classification-cpv":["71320000","71300000","71320000"],"publication-date":"2026-10-28+01:00","notice-type":"cn-standard","deadline-receipt-tender-date-lot":["2099-12-15+01:00"],"place-of-performance":["IRL"],"estimated-value-proc":"2500000","estimated-value-cur-proc":"EUR","description-proc":{"eng":"Framework for engineering design."}},
+{"publication-number":"712399-2026","notice-title":{"deu":"Deutschland-Berlin: Prüfstand"},"buyer-name":{"deu":["DB Netz AG"]},"buyer-country":["DEU"],"classification-cpv":["38500000"],"publication-date":"2026-10-29+01:00","notice-type":"cn-standard"}
+],"totalNoticeCount":2,"iterationNextToken":"tok-2"}

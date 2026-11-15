@@ -31,11 +31,22 @@ test('sign-up creates an org, makes the first user platform admin, and opens the
   assert.equal(res.headers.location, '/profile');
   assert.equal(db.prepare('SELECT is_platform_admin FROM users').get().is_platform_admin, 1);
 
-  const second = request.agent(app);
-  await signUp(second, 'sam@example.com', { orgName: 'Hub Co', kind: 'hub' });
-  assert.equal(db.prepare(`SELECT is_platform_admin FROM users WHERE email = 'sam@example.com'`).get().is_platform_admin, 0);
-  assert.equal((await second.get('/admin')).status, 403);
   assert.equal((await agent.get('/admin')).status, 200);
+
+  // Once the first account exists, sign-up is closed: others join by invitation.
+  assert.equal((await request(app).get('/register')).status, 403);
+  const team = await agent.get('/team');
+  const invited = await agent.post('/team/invites').type('form').send({ _csrf: token(team.text), email: 'sam@example.com' });
+  const link = invited.text.match(/\/invite\/[\w-]+/)[0];
+  const second = request.agent(app);
+  const form = await second.get(link);
+  assert.match(form.text, /Join Acme/);
+  const joined = await second.post(link).type('form').send({ _csrf: token(form.text), name: 'Sam', email: 'sam@example.com', password: 'another long password' });
+  assert.equal(joined.headers.location, '/dashboard');
+  assert.equal(db.prepare(`SELECT is_platform_admin FROM users WHERE email = 'sam@example.com'`).get().is_platform_admin, 0);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM memberships WHERE org_id = 1').get().n, 2);
+  assert.equal((await second.get('/admin')).status, 403);
+  assert.equal((await request(app).get(link)).status, 404, 'an invitation works once');
 });
 
 test('profile drives the ranked feed', async () => {
@@ -77,7 +88,7 @@ test('login rejects bad passwords and accepts good ones; pages need sign-in', as
   const bad = await agent.post('/login').type('form').send({ _csrf: token(page.text), email: 'pat@example.com', password: 'nope' });
   assert.equal(bad.status, 401);
   const good = await agent.post('/login').type('form').send({ _csrf: token(bad.text), email: 'PAT@example.com', password: 'correct horse battery', next: '//evil.example' });
-  assert.equal(good.headers.location, '/feed');
+  assert.equal(good.headers.location, '/dashboard');
 });
 
 test('shared shortlist is public, read-only, and can be turned off', async () => {
