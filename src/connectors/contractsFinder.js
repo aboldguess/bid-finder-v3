@@ -1,7 +1,8 @@
-// Contracts Finder (GOV.UK): public-sector contract opportunities, via its
-// OCDS search API. Cursor-paginated through links.next.
+// Contracts Finder (GOV.UK): public-sector contract opportunities in England
+// and for non-devolved bodies, mostly below the Find a Tender thresholds.
+// Uses the official OCDS search API, cursor-paginated through links.next.
 import { fetchText, sleep } from './util.js';
-import { mapRelease } from './ocds.js';
+import { isOpenRelease, mapRelease, parseOcdsJson } from './ocds.js';
 
 const BASE = 'https://www.contractsfinder.service.gov.uk';
 
@@ -11,10 +12,10 @@ const noticeUrl = (r) => {
 };
 
 export function parsePage(json) {
-  const data = typeof json === 'string' ? JSON.parse(json) : json;
-  const releases = data.releases || [];
+  const data = parseOcdsJson(json);
+  const releases = (data.releases || []).filter(isOpenRelease);
   return {
-    items: releases.map((r) => mapRelease(r, { noticeUrl })).filter((i) => i.title && i.external_id),
+    items: releases.map((r) => ({ ...mapRelease(r, { noticeUrl }), country: 'GB' })).filter((i) => i.title && i.external_id),
     next: data.links?.next || null,
   };
 }
@@ -23,8 +24,12 @@ export default {
   key: 'contracts-finder',
   name: 'Contracts Finder (GOV.UK)',
   type: 'tender',
-  async fetch({ maxPages = 30, get = fetchText, delayMs = 500, days = 14 } = {}) {
-    const from = new Date(Date.now() - days * 864e5).toISOString().slice(0, 19);
+  homepage: BASE,
+  access: 'Official OCDS API',
+  intervalMinutes: 180,
+  minDelayMs: 1000,
+  async fetch({ maxPages = 40, get = fetchText, delayMs = 500, days = 14, since, now = Date.now() } = {}) {
+    const from = new Date(since ? Date.parse(since) - 3600e3 : now - days * 864e5).toISOString().slice(0, 19);
     let url = `${BASE}/Published/Notices/OCDS/Search?stages=tender&publishedFrom=${from}&limit=100`;
     const all = new Map();
     for (let page = 0; url && page < maxPages; page++) {
@@ -33,7 +38,6 @@ export default {
       url = next;
       await sleep(delayMs);
     }
-    const now = Date.now();
     return [...all.values()].filter((i) => !i.closes_at || Date.parse(i.closes_at) > now);
   },
 };

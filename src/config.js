@@ -8,30 +8,51 @@ const root = path.resolve(import.meta.dirname, '..');
 const dataDir = process.env.DATA_DIR || path.join(root, 'data');
 fs.mkdirSync(dataDir, { recursive: true });
 
-// A session secret is generated on first run and kept in the data directory,
-// so cookies survive restarts without anyone having to set one by hand.
-function loadSessionSecret() {
-  if (process.env.SESSION_SECRET) return process.env.SESSION_SECRET;
-  const file = path.join(dataDir, 'session-secret');
+// Secrets are generated on first run and kept in the data directory, so a
+// fresh install works with no setup. Set the environment variables instead to
+// keep them out of the data volume (and therefore out of database backups).
+function loadSecret(envName, fileName) {
+  if (process.env[envName]) return process.env[envName];
+  const file = path.join(dataDir, fileName);
   if (!fs.existsSync(file)) {
     fs.writeFileSync(file, crypto.randomBytes(32).toString('hex'), { mode: 0o600 });
   }
   return fs.readFileSync(file, 'utf8').trim();
 }
 
+const port = Number(process.env.PORT || 3000);
+const baseUrl = (process.env.BASE_URL || `http://localhost:${port}`).replace(/\/$/, '');
+const bool = (v, fallback = false) => (v === undefined || v === '' ? fallback : /^(1|true|yes|on)$/i.test(v));
+const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+
 export const config = {
   root,
   dataDir,
+  version: pkg.version,
   dbFile: process.env.DB_FILE || path.join(dataDir, 'bidfinder.db'),
-  port: Number(process.env.PORT || 3000),
+  port,
   host: process.env.HOST || '0.0.0.0',
-  baseUrl: (process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`).replace(/\/$/, ''),
-  sessionSecret: loadSessionSecret(),
-  secureCookies: process.env.SECURE_COOKIES === 'true',
-  ingestCron: process.env.INGEST_CRON || '30 5 * * *',
+  baseUrl,
+  sessionSecret: loadSecret('SESSION_SECRET', 'session-secret'),
+  // Master key for the credential vault (portal logins, API keys, webhooks).
+  secretKey: loadSecret('BIDFINDER_SECRET_KEY', 'secret-key'),
+  secureCookies: bool(process.env.SECURE_COOKIES, baseUrl.startsWith('https://')),
+  // Which proxies may set X-Forwarded-For. Docker Compose sets this to cover Caddy.
+  trustProxy: process.env.TRUST_PROXY || 'loopback',
+  // Sign-up is open for the first account only, unless this is set. Others join by invite.
+  allowRegistration: bool(process.env.ALLOW_REGISTRATION),
+  scheduler: !bool(process.env.DISABLE_SCHEDULER),
   digestCron: process.env.DIGEST_CRON || '0 7 * * *',
-  maxPagesPerSource: Number(process.env.MAX_PAGES_PER_SOURCE || 30),
-  userAgent: process.env.USER_AGENT || 'BidFinder/3 (opportunity alerts for UK SMEs)',
+  maintenanceCron: process.env.MAINTENANCE_CRON || '15 3 * * *',
+  timezone: process.env.TZ || 'Europe/London',
+  maxPagesPerSource: Number(process.env.MAX_PAGES_PER_SOURCE || 40),
+  retentionDays: Number(process.env.RETENTION_DAYS || 180),
+  backupsToKeep: Number(process.env.BACKUPS_TO_KEEP || 7),
+  // Sent with every request so portal operators can see who is calling and get in touch.
+  userAgent: process.env.USER_AGENT || `BidFinder/${pkg.version} (+${baseUrl}; self-hosted tender monitor)`,
+  logFormat: process.env.LOG_FORMAT || (process.env.NODE_ENV === 'production' ? 'json' : 'text'),
+  logLevel: process.env.LOG_LEVEL || 'info',
+  metricsToken: process.env.METRICS_TOKEN || '',
   smtp: {
     url: process.env.SMTP_URL || '',
     from: process.env.MAIL_FROM || 'Bid Finder <no-reply@localhost>',

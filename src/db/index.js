@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import Database from 'better-sqlite3';
 import { config } from '../config.js';
+import { migrate } from './migrations.js';
 
 const schema = fs.readFileSync(path.join(import.meta.dirname, 'schema.sql'), 'utf8');
 
@@ -11,7 +12,9 @@ export function openDb(file = config.dbFile) {
   const db = new Database(file);
   db.pragma('journal_mode = WAL');
   db.pragma('foreign_keys = ON');
+  db.pragma('busy_timeout = 5000');
   db.exec(schema);
+  migrate(db);
   return db;
 }
 

@@ -1,16 +1,9 @@
 // Shared helpers for connectors: polite HTTP, and parsers for the money,
 // date and "Label: value" formats that UK funding sites use.
-import { config } from '../config.js';
+import { createHttp } from '../http/client.js';
 
-export async function fetchText(url, { timeoutMs = 20000, accept = 'text/html' } = {}) {
-  const res = await fetch(url, {
-    headers: { 'User-Agent': config.userAgent, Accept: accept },
-    signal: AbortSignal.timeout(timeoutMs),
-    redirect: 'follow',
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status} from ${url}`);
-  return res.text();
-}
+const defaultHttp = createHttp();
+export const fetchText = (url, opts) => defaultHttp.get(url, opts);
 
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -130,4 +123,22 @@ export function extractLabelled($, el, labels) {
     take(hit[1], text.slice(hit.index + hit[0].length, end));
   });
   return out;
+}
+
+// CPV codes are 8 digits, sometimes written with a check digit ("71300000-4").
+export function cpvCode(value) {
+  const m = String(value ?? '').match(/\b(\d{8})(?:-\d)?\b/);
+  return m ? m[1] : null;
+}
+
+export const uniq = (list) => [...new Set(list.filter(Boolean))];
+
+// ISO 3166 alpha-3 to alpha-2 for the countries that publish on TED.
+const ALPHA3 = { AUT: 'AT', BEL: 'BE', BGR: 'BG', HRV: 'HR', CYP: 'CY', CZE: 'CZ', DNK: 'DK', EST: 'EE', FIN: 'FI', FRA: 'FR', DEU: 'DE', GRC: 'GR', HUN: 'HU', IRL: 'IE', ITA: 'IT', LVA: 'LV', LTU: 'LT', LUX: 'LU', MLT: 'MT', NLD: 'NL', POL: 'PL', PRT: 'PT', ROU: 'RO', SVK: 'SK', SVN: 'SI', ESP: 'ES', SWE: 'SE', NOR: 'NO', ISL: 'IS', LIE: 'LI', CHE: 'CH', GBR: 'GB', USA: 'US', MKD: 'MK', SRB: 'RS', TUR: 'TR' };
+export function countryCode(value) {
+  const v = clean(String(value ?? '')).toUpperCase();
+  if (/^[A-Z]{2}$/.test(v)) return v === 'UK' ? 'GB' : v;
+  if (ALPHA3[v]) return ALPHA3[v];
+  if (/^UNITED KINGDOM|^ENGLAND|^SCOTLAND|^WALES|^NORTHERN IRELAND/.test(v)) return 'GB';
+  return '';
 }
