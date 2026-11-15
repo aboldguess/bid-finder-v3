@@ -14,6 +14,7 @@ const wanted = process.argv.slice(2);
 // notice when they recover, but they do not fail the run.
 const KNOWN_ISSUES = {
   sell2wales: 'the API answers every request with HTTP 500 "Error converting data type nvarchar to float" (seen November 2026)',
+  'innovate-uk': 'its robots.txt redirects to a sign-in service that returns HTTP 500, which the robots.txt standard says to treat as "disallow everything" (seen November 2026)',
 };
 const isoOk = (v) => v == null || (typeof v === 'string' && !Number.isNaN(Date.parse(v)));
 

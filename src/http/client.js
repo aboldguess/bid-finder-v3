@@ -61,26 +61,32 @@ export function createHttp({
 
   async function robotsFor(origin) {
     const hit = robotsCache.get(origin);
-    if (hit && Date.now() - hit.at < 24 * 3600e3) return hit.groups;
+    if (hit && Date.now() - hit.at < 24 * 3600e3) return hit;
     let groups = [];
+    let note = '';
     try {
       const res = await fetchImpl(`${origin}/robots.txt`, { headers: { 'User-Agent': userAgent }, signal: AbortSignal.timeout(15000) });
       // 4xx means "no restrictions"; 5xx means "assume disallowed" (RFC 9309).
       if (res.ok) groups = parseRobots(await res.text());
-      else if (res.status >= 500) groups = parseRobots('User-agent: *\nDisallow: /');
+      else if (res.status >= 500) {
+        groups = parseRobots('User-agent: *\nDisallow: /');
+        note = ` (its robots.txt could not be read: HTTP ${res.status}${res.redirected ? ` after a redirect to ${new URL(res.url).host}` : ''}, which means "assume everything is disallowed")`;
+      }
     } catch {
       groups = [];
     }
-    robotsCache.set(origin, { groups, at: Date.now() });
-    return groups;
+    const entry = { groups, note, at: Date.now() };
+    robotsCache.set(origin, entry);
+    return entry;
   }
 
   async function once(url, { method, headers, body, timeoutMs, jar }) {
     const target = guard ? await assertPublicUrl(url, lookup ? { lookup } : undefined) : new URL(url);
     let delay = minDelayMs;
     if (respectRobots) {
-      const { allowed, crawlDelay } = robotsDecision(await robotsFor(target.origin), 'BidFinder', target.pathname + target.search);
-      if (!allowed) throw new HttpError(`robots.txt at ${target.host} disallows ${target.pathname}`, 0);
+      const robots = await robotsFor(target.origin);
+      const { allowed, crawlDelay } = robotsDecision(robots.groups, 'BidFinder', target.pathname + target.search);
+      if (!allowed) throw new HttpError(`robots.txt at ${target.host} disallows ${target.pathname}${robots.note}`, 0);
       if (crawlDelay) delay = Math.max(delay, Math.min(crawlDelay, 60) * 1000);
     }
     await throttle(target.host, delay);

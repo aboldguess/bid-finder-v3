@@ -65,6 +65,15 @@ test('http client: honours robots.txt, retries with Retry-After, identifies itse
   assert.equal(calls.filter((c) => c.url.endsWith('/robots.txt')).length, 1, 'robots.txt is cached');
 });
 
+test('http client: a robots.txt that fails with a server error means stay away, and says why', async () => {
+  resetHttpState();
+  const fetchImpl = async (url) => (url.endsWith('/robots.txt')
+    ? { ok: false, status: 500, redirected: true, url: 'https://auth.portal.example/sso', text: async () => 'oops' }
+    : res('page'));
+  const client = createHttp({ fetchImpl, respectRobots: true, minDelayMs: 0 });
+  await assert.rejects(client.get('https://portal.example/search'), /disallows \/search \(its robots\.txt could not be read: HTTP 500 after a redirect to auth\.portal\.example/);
+});
+
 test('http client: spaces out requests to the same host', async () => {
   resetHttpState();
   const waits = [];
@@ -279,7 +288,7 @@ test('every built-in connector declares how it accesses its source', () => {
     assert.ok(['tender', 'grant'].includes(c.type));
     if (/listing pages/.test(c.access)) assert.equal(c.respectRobots, true, `${c.key} scrapes HTML so must respect robots.txt`);
   }
-  assert.deepEqual(connectors.filter((c) => c.enabledByDefault === false).map((c) => c.key), ['sell2wales', 'ted', 'sam-gov']);
+  assert.deepEqual(connectors.filter((c) => c.enabledByDefault === false).map((c) => c.key), ['sell2wales', 'ted', 'sam-gov', 'innovate-uk']);
 });
 
 // --- Ingest, dedupe, scoring ---------------------------------------------------------
