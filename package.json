@@ -21,21 +21,21 @@
   "private": true,
   "dependencies": {
     "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^13.0.3",
+    "better-sqlite3": "^13.1.1",
     "cheerio": "^1.2.0",
     "ejs": "^7.0.2",
-    "express": "^4.22.3",
+    "express": "^5.3.0",
     "express-session": "^1.19.0",
     "helmet": "^8.3.0",
     "node-cron": "^4.6.0",
-    "nodemailer": "^10.1.7",
+    "nodemailer": "^10.5.0",
     "undici": "^7.30.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.15.0",
     "globals": "^17.14.0",
-    "supertest": "^7.3.1"
+    "supertest": "^7.3.2"
   },
   "bin": {
     "bidfinder": "src/cli.js"
