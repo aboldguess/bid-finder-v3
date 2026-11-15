@@ -14,7 +14,8 @@
     "digest": "node src/cli.js digest",
     "demo": "node scripts/demo.js",
     "lint": "eslint .",
-    "test": "node --test \"test/*.test.js\""
+    "test": "node --test \"test/*.test.js\"",
+    "check:sources": "node scripts/check-sources.js"
   },
   "license": "UNLICENSED",
   "private": true,
