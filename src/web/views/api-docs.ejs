@@ -1,0 +1,21 @@
+<%- include('partials/head', { title: 'API' }) %>
+<section class="narrow wide">
+  <h1>API</h1>
+  <p><%= spec.info.description %></p>
+  <p>Base URL: <code><%= baseUrl %>/api/v1</code> · <a href="/api/v1/openapi.json">OpenAPI description</a> · <a href="/account">Create a token</a></p>
+  <pre class="code">curl -H "Authorization: Bearer bf_your_token" \
+  "<%= baseUrl %>/api/v1/opportunities?cpv=713&amp;min_value=50000&amp;sort=deadline"</pre>
+  <% Object.entries(spec.paths).forEach(([route, methods]) => { Object.entries(methods).forEach(([method, op]) => { %>
+    <div class="panel endpoint">
+      <h2><span class="method <%= method %>"><%= method.toUpperCase() %></span> <code><%= route %></code></h2>
+      <p><%= op.summary %></p>
+      <% const params = (op.parameters || []).filter(p => p.in === 'query'); if (params.length) { %>
+        <table class="table compact"><tbody><% params.forEach(p => { %><tr><td><code><%= p.name %></code></td><td class="muted"><%= p.description %></td></tr><% }) %></tbody></table>
+      <% } %>
+      <% const body = op.requestBody?.content['application/json'].schema.properties; if (body) { %><p class="muted">JSON body: <%= Object.keys(body).join(', ') %></p><% } %>
+    </div>
+  <% }) }) %>
+  <h2>Webhooks</h2>
+  <p>A saved search can POST new matches to a URL of yours as JSON, with <code>event</code>, <code>search</code>, <code>count</code> and an <code>opportunities</code> array in the same shape as above.</p>
+</section>
+<%- include('partials/foot') %>

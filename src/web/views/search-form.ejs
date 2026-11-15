@@ -1,0 +1,43 @@
+<%- include('partials/head', { title: search.id ? 'Edit search' : 'New saved search' }) %>
+<p class="back"><a href="/searches">← Searches and alerts</a></p>
+<section class="narrow wide">
+  <h1><%= search.id ? 'Edit search' : 'New saved search' %></h1>
+  <% if (error) { %><p class="error" role="alert"><%= error %></p><% } %>
+  <form method="post" action="<%= search.id ? '/searches/' + search.id : '/searches' %>" class="stack">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label>Name <input name="name" required value="<%= search.name %>" placeholder="e.g. Control systems over £100k"></label>
+    <fieldset>
+      <legend>What to match</legend>
+      <p class="muted">Results are always scored against your profile. These narrow them further.</p>
+      <label>Search text <input name="q" value="<%= search.filters.q || '' %>" placeholder="Words that must appear"></label>
+      <div class="row">
+        <label>Type <select name="type"><option value="">Tenders and grants</option><option value="tender" <%= search.filters.type === 'tender' ? 'selected' : '' %>>Tenders</option><option value="grant" <%= search.filters.type === 'grant' ? 'selected' : '' %>>Grants</option></select></label>
+        <label>Source <select name="source"><option value="">All sources</option><% Object.entries(sourceNames).forEach(([k, name]) => { %><option value="<%= k %>" <%= search.filters.source === k ? 'selected' : '' %>><%= name %></option><% }) %></select></label>
+      </div>
+      <div class="row">
+        <label>CPV categories <input name="cpv" value="<%= search.filters.cpv || '' %>" placeholder="713, 42"></label>
+        <label>Country <input name="country" value="<%= search.filters.country || '' %>" placeholder="GB" maxlength="2"></label>
+      </div>
+      <div class="row">
+        <label>Minimum value <input name="min_value" inputmode="numeric" value="<%= search.filters.min_value ?? '' %>"></label>
+        <label>Minimum fit score <input name="min_score" type="number" min="0" max="100" value="<%= search.filters.min_score ?? '' %>" placeholder="Your profile's setting"></label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Alerts</legend>
+      <label>How often
+        <select name="frequency">
+          <% [['instant', 'As soon as a match is found'], ['daily', 'Daily round-up'], ['weekly', 'Weekly round-up'], ['off', 'No alerts']].forEach(([v, label]) => { %><option value="<%= v %>" <%= search.frequency === v ? 'selected' : '' %>><%= label %></option><% }) %>
+        </select>
+      </label>
+      <label>Email to <textarea name="emails" rows="2" placeholder="One address per line"><%= search.emails %></textarea><% if (!smtp) { %><small>Email is not set up on this server yet, so these will not be sent.</small><% } %></label>
+      <label>Slack incoming webhook URL <input name="slack_webhook" type="password" autocomplete="off" placeholder="<%= search.hasSlack ? 'Stored. Leave empty to keep, or enter - to remove' : 'https://hooks.slack.com/services/…' %>"><small>Create one in Slack under Apps, Incoming Webhooks. Stored encrypted.</small></label>
+      <label>Webhook URL <input name="webhook_url" type="password" autocomplete="off" placeholder="<%= search.hasWebhook ? 'Stored. Leave empty to keep, or enter - to remove' : 'https://example.com/hooks/tenders' %>"><small>Receives a JSON POST for Teams, Zapier, a CRM or your own code. Stored encrypted.</small></label>
+    </fieldset>
+    <div class="row"><button class="button">Save search</button><a class="button ghost" href="/searches">Cancel</a></div>
+  </form>
+  <% if (search.id) { %>
+    <form method="post" action="/searches/<%= search.id %>/delete" class="danger-zone"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link danger" data-confirm="Delete this saved search?">Delete this search</button></form>
+  <% } %>
+</section>
+<%- include('partials/foot') %>

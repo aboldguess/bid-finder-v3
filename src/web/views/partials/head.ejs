@@ -3,27 +3,40 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
   <title><%= typeof title !== 'undefined' ? title + ' · ' : '' %>Bid Finder</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/static/style.css">
   <script src="/static/app.js" defer></script>
 </head>
 <body>
 <header class="topbar">
-  <a class="brand" href="/">Bid Finder</a>
-  <% if (user) { %>
-    <nav>
-      <a href="/feed" class="<%= path === '/feed' ? 'active' : '' %>">Opportunities</a>
-      <a href="/profile" class="<%= path === '/profile' ? 'active' : '' %>">Profile</a>
-      <a href="/digests" class="<%= path.startsWith('/digests') ? 'active' : '' %>">Digests</a>
-      <% if (user.is_platform_admin) { %><a href="/admin" class="<%= path === '/admin' ? 'active' : '' %>">Admin</a><% } %>
-    </nav>
-    <div class="who">
-      <span><%= org.name %> <span class="badge"><%= org.plan %></span></span>
-      <form method="post" action="/logout"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link">Sign out</button></form>
-    </div>
-  <% } else { %>
-    <nav class="right"><a href="/login">Sign in</a><a class="button small" href="/register">Start free</a></nav>
-  <% } %>
+  <div class="topbar-inner">
+    <a class="brand" href="/"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M8 11.5l2.2 2.2L14.5 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Bid Finder</a>
+    <% if (user) { %>
+      <nav class="mainnav" aria-label="Main">
+        <a href="/dashboard" class="<%= path === '/dashboard' ? 'active' : '' %>">Dashboard</a>
+        <a href="/feed" class="<%= path === '/feed' || path.startsWith('/o/') ? 'active' : '' %>">Opportunities</a>
+        <a href="/pipeline" class="<%= path === '/pipeline' ? 'active' : '' %>">Pipeline</a>
+        <a href="/searches" class="<%= path.startsWith('/searches') ? 'active' : '' %>">Searches and alerts</a>
+        <a href="/profile" class="<%= path === '/profile' ? 'active' : '' %>">Profile</a>
+        <% if (user.is_platform_admin) { %><a href="/admin" class="<%= path.startsWith('/admin') ? 'active' : '' %>">Admin</a><% } %>
+      </nav>
+      <details class="usermenu">
+        <summary><span class="avatar"><%= (user.name || '?').slice(0, 1).toUpperCase() %></span><span class="org"><%= org.name %></span></summary>
+        <div class="menu">
+          <div class="menu-who"><strong><%= user.name %></strong><span><%= user.email %></span></div>
+          <a href="/account">Account and API tokens</a>
+          <a href="/team">Team</a>
+          <a href="/digests">Digests</a>
+          <a href="/api">API</a>
+          <form method="post" action="/logout"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button>Sign out</button></form>
+        </div>
+      </details>
+    <% } else { %>
+      <nav class="mainnav right"><a href="/login">Sign in</a></nav>
+    <% } %>
+  </div>
 </header>
-<main>
-<% if (flash) { %><p class="flash"><%= flash %></p><% } %>
+<main class="<%= typeof wide !== 'undefined' && wide ? 'wide' : '' %>">
+<% if (flash) { %><p class="flash" role="status"><%= flash %></p><% } %>

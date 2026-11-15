@@ -1,0 +1,20 @@
+<%- include('partials/head', { title: search.name }) %>
+<p class="back"><a href="/searches">← Searches and alerts</a></p>
+<div class="pagehead"><h1><%= search.name %></h1>
+  <div class="row">
+    <form method="post" action="/searches/<%= search.id %>/test"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="button small ghost">Send a test alert</button></form>
+    <a class="button small ghost" href="/searches/<%= search.id %>/edit">Edit</a>
+  </div>
+</div>
+<p class="muted"><%= search.frequency === 'off' ? 'Alerts are off.' : `Alerts: ${search.frequency}` %><%= [search.emails && ' · email to ' + search.emails.split('\n').join(', '), search.hasSlack && ' · Slack', search.hasWebhook && ' · webhook'].filter(Boolean).join('') %></p>
+<% if (log.length) { %>
+  <details class="panel"><summary>Recent alerts</summary>
+    <ul class="list"><% log.forEach(l => { %><li><span><%= fmt.stamp(l.created_at) %> · <%= l.channel %> · <%= l.item_count %> <%= l.item_count === 1 ? 'opportunity' : 'opportunities' %></span><span class="<%= l.ok ? 'muted' : 'error' %>"><%= l.ok ? 'Sent' : 'Failed: ' + l.error %></span></li><% }) %></ul>
+  </details>
+<% } %>
+<p class="muted count"><%= total %> current <%= total === 1 ? 'match' : 'matches' %></p>
+<div class="cards" data-csrf="<%= csrfToken %>">
+  <% items.forEach(o => { %><%- include('partials/card', { o, interactive: true }) %><% }) %>
+  <% if (!items.length) { %><p class="empty">Nothing matches right now. You will be alerted when something does.</p><% } %>
+</div>
+<%- include('partials/foot') %>

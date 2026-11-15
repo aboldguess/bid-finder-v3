@@ -1,32 +1,43 @@
 <%- include('partials/head', { title: 'Profile' }) %>
-<% const lines = (s) => (s || '').split('\n').filter(Boolean); %>
 <section class="narrow wide">
-  <h1>What are you looking for?</h1>
-  <p class="muted">We score every opportunity against this. One item per line, or separate with commas.</p>
+  <h1>What is your firm looking for?</h1>
+  <p class="muted">Every opportunity is scored against this. One item per line, or separate with commas.</p>
+  <div class="panel presets">
+    <h2>Start from a discipline</h2>
+    <p class="muted">Each adds its keywords and CPV categories to the boxes below. Pick as many as apply, then edit freely.</p>
+    <div class="chips">
+      <% presets.forEach(p => { %><button type="button" class="chip" data-preset data-keywords="<%= p.keywords.join('\n') %>" data-cpv="<%= p.cpv.join('\n') %>"><%= p.label %></button><% }) %>
+    </div>
+  </div>
   <form method="post" action="/profile" class="stack">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-    <% if (org.role === 'owner') { %><label>Organisation name <input name="org_name" value="<%= org.name %>"></label><% } %>
-    <label>Keywords that describe your work <textarea name="keywords" rows="5" placeholder="e.g. aerospace&#10;composite materials&#10;net zero&#10;AI"><%= profile.keywords %></textarea><small>Matches in a title count most.</small></label>
-    <label>Rule out anything mentioning <textarea name="exclude_keywords" rows="2" placeholder="e.g. farming, schools"><%= profile.exclude_keywords %></textarea></label>
-    <label>Where you are based <textarea name="regions" rows="2" placeholder="e.g. South East England"><%= profile.regions %></textarea><small>UK-wide schemes always count.</small></label>
-    <label>What kind of organisation you are <textarea name="applicant_types" rows="2" placeholder="e.g. Private Sector, SME, Business"><%= profile.applicant_types %></textarea></label>
+    <% if (org.role === 'owner') { %><label>Company name <input name="org_name" value="<%= org.name %>"></label><% } %>
+    <label>Keywords that describe your work <textarea name="keywords" id="keywords" rows="6" placeholder="e.g. control systems&#10;mechanical design&#10;test rig"><%= profile.keywords %></textarea><small>A match in the title counts most.</small></label>
+    <label>CPV categories <textarea name="cpv_codes" id="cpv_codes" rows="3" placeholder="e.g. 713&#10;42&#10;71333000"><%= profile.cpv_codes %></textarea><small>Common Procurement Vocabulary codes used on tenders. Leading digits cover a whole branch: 713 is all engineering services.</small></label>
+    <label>Rule out anything mentioning <textarea name="exclude_keywords" rows="2" placeholder="e.g. catering, cleaning, grounds maintenance"><%= profile.exclude_keywords %></textarea></label>
+    <div class="row">
+      <label>Countries you will bid in <input name="countries" value="<%= (profile.countries || '').split('\n').join(', ') %>" placeholder="GB, IE"><small>Two-letter codes. Empty means anywhere.</small></label>
+      <label>Regions you cover <input name="regions" value="<%= (profile.regions || '').split('\n').join(', ') %>" placeholder="South West, Wales"><small>UK-wide notices always count.</small></label>
+    </div>
     <fieldset>
       <legend>Opportunity types</legend>
-      <% const types = lines(profile.types); %>
-      <label class="inline"><input type="checkbox" name="types" value="grant" <%= types.includes('grant') ? 'checked' : '' %>> Grants and competitions</label>
+      <% const types = (profile.types || '').split('\n'); %>
       <label class="inline"><input type="checkbox" name="types" value="tender" <%= types.includes('tender') ? 'checked' : '' %>> Public contracts (tenders)</label>
+      <label class="inline"><input type="checkbox" name="types" value="grant" <%= types.includes('grant') ? 'checked' : '' %>> Grants and innovation competitions</label>
     </fieldset>
     <div class="row">
-      <label>Smallest award worth your time (£) <input name="min_award" inputmode="numeric" value="<%= profile.min_award ?? '' %>"></label>
+      <label>Smallest contract worth your time (£) <input name="min_award" inputmode="numeric" value="<%= profile.min_award ?? '' %>"></label>
       <label>Largest you could deliver (£) <input name="max_award" inputmode="numeric" value="<%= profile.max_award ?? '' %>"></label>
     </div>
+    <label>What kind of organisation you are <input name="applicant_types" value="<%= (profile.applicant_types || '').split('\n').join(', ') %>" placeholder="SME, Private Sector"><small>Used for grants that list who can apply, and tenders marked suitable for SMEs.</small></label>
     <label>Only show matches scoring at least <input type="number" name="min_score" min="0" max="100" value="<%= profile.min_score %>"></label>
     <fieldset>
-      <legend>Email digest</legend>
+      <legend>Email digest of all new matches</legend>
       <% [['daily', 'Daily'], ['weekly', 'Weekly'], ['off', 'Off']].forEach(([v, label]) => { %>
-        <label class="inline"><input type="radio" name="digest_frequency" value="<%= v %>" <%= profile.digest_frequency === v ? 'checked' : '' %>> <%= label %></label>
+        <label class="inline"><input type="radio" name="digest_frequency" value="<%= v %>" <%= (profile.digest_frequency || 'daily') === v ? 'checked' : '' %>> <%= label %></label>
       <% }) %>
       <label>Send to <textarea name="digest_emails" rows="2"><%= profile.digest_emails %></textarea></label>
+      <small>For alerts on something narrower, or to Slack, use <a href="/searches">saved searches</a>.</small>
     </fieldset>
     <button class="button">Save and re-rank</button>
   </form>
