@@ -1,0 +1,20 @@
+# TEMPORARY: runs scripts/probe.js on pushes to this branch. Removed before merge.
+name: probe
+on:
+  push:
+    branches: [claude/project-thread-m0d3sy]
+    paths: [scripts/probe.js, .github/workflows/probe.yml]
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node scripts/probe.js
