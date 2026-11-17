@@ -1,0 +1,699 @@
+
+
+
+
+<!DOCTYPE html>
+
+
+
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>NSPIRES - Solicitations Search</title>
+		
+		<link rel="icon" type="image/x-icon" href="/external/images/favicon.ico" media="all"/>
+
+		<link rel="shortcut icon" type="image/x-icon" href="/external/images/favicon.ico" media="all"/>
+
+		
+		<link rel="stylesheet" type="text/css" href="/external/styles/external_overall.css?v=7.9" media="all"/>
+
+		
+		<link rel="stylesheet" type="text/css" href="/external/styles/jquery.multiselect.css"/>
+
+		
+		
+
+
+
+
+<script type="text/javascript" src="/external/static/js/base/jquery-3.7.1.min.js">
+</script>
+        <!-- script type="text/javascript" src="/external/static/js/base/core.min.js?s2j=5.0.6"></script -->
+<script type="text/javascript" src="/external/static/js/base/version.min.js">
+</script>
+<script type="text/javascript" src="/external/static/js/plugins/jquery.subscribe.min.js?s2j=5.0.6">
+</script>
+
+<script type="text/javascript" src="/external/static/js/struts2/jquery.struts2.min.js?s2j=5.0.6">
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        jQuery.struts2_jquery.version = "5.0.6";
+        jQuery.scriptPath = "/external/static/";
+        jQuery.ajaxSettings.traditional = true;
+
+        jQuery.ajaxSetup({
+            cache: false
+        });
+
+        jQuery.struts2_jquery.require("js/struts2/jquery.ui.struts2.min.js?s2j=5.0.6");
+
+    });
+</script>
+
+            <link
+                    id="jquery_theme_link"
+                    rel="stylesheet"
+                    href="/external//styles/jquery-ui.css?s2j=5.0.6"
+                    type="text/css"
+                    />
+
+		
+		<link rel="stylesheet" type="text/css" href="/external/styles/externalJqueryStr_styles.css?v=7.9"/>
+
+		<script src="/external/javascript/parsley.min.js">
+</script>
+
+		<script src="/external/javascript/jquery.mask-1.14.16.min.js">
+</script>
+
+		<script src="/external/javascript/bootstrap-5.3.3.min.js">
+</script>
+
+		<script src="/external/javascript/pageScroll.js">
+</script>
+
+	</head>
+
+	<body >
+
+		<!-- Wrapper -->		
+		<div class="pageWrapper">
+
+			<!-- Page header -->
+			
+
+
+
+<div class="headerWrapper ">
+	<div class="headerContainer">
+		<div class="headerContent">
+			<div class="container-fluid topbarPadding">
+				<nav class="navbar navbar-expand stroke" data-bs-toggle="affix">
+					<div class="navbar-brand">
+						<a class="logoLink" href="https://www.nasa.gov/" target="_blank" title="NASA"><span
+							class="nasaLogo"></span><span class="linkText">NASA Home</span></a> 
+							
+							
+						
+							
+							<a href="/external/index.do" class="logoLink" title="NSPIRES Home"><span class="nspiresLogo"></span><span class="linkText">NSPIRES Home</span></a>
+						
+						
+					</div>
+					<div class="collapse navbar-collapse" id="navbarCollapse">
+
+							<ul class="navbar-nav mr-auto">
+								
+								
+								
+							</ul>
+
+						
+						<form id="createuser" name="createuser" action="/external/registration/createuser!init.do" method="post" class="form-inline mt-md-0">
+							<input type="hidden" name="struts.token.name" value="token" />
+<input type="hidden" name="token" value="FFF0TPWRFIAYQD1JHHCVDL9DXQIUQHVE" />
+
+						<!--<div class="col-md-auto col-md-auto col-sm-12">
+							<div class="searchWrapper mr-2 ">
+								<input class="mr-sm-2 col-md-auto" type="search" placeholder="Search" aria-label="Search"> <a href="#"><span class="searchSubmit"></span></a>
+							</div>
+							</div>-->							
+							
+								<div class="loginLink my-2 my-sm-0 stroke">
+									<a href="/external/index.do" title="Home" class="homeIcon"><span>Home</span></a>
+								</div>
+							
+							
+							
+							<div class="loginLink my-2 my-sm-0 stroke" >
+								
+									
+									<a href="/external/login/login!display.do" class="userIcon" title="Login"><span>Login</span></a>
+								
+								
+							</div>
+							
+								<div class="my-2 my-sm-0">
+									<button type="submit" class="btn btn-primary btn-block mainBtn" name=""
+										title="Create an Account" value="Create an Account">Create
+										an Account</button>
+								</div>
+							
+						</form>
+
+
+
+					</div>
+				</nav>
+			</div>
+				<div class="subNavWrapper">
+					<div class="subNavContainer">
+						<div class="titleBar">
+							<div class="container-fluid">
+								<div class="row justify-content-between">
+									<div class="col-4">
+									<!--	<ol class="breadcrumb">
+										<li class="breadcrumb-item"><a href="members.html">Member home </a></li>
+										<li class="breadcrumb-item active">Module Mgmt</li>
+								</ol>--></div>
+									<div class="col-8 text-right" >
+										<nav class="subLinks">
+								        <a href="/external/solicitations/solicitations!init.do" title="View Solicitations" class="soliIcon"><span>Solicitations</span></a>
+								        <a href="/external/externalhelp/public/index.htm" target="_blank" title="Help" class="helpLinkIcon"><span>Help</span></a>
+								        <a href="#" class="misconductPolicyIcon" title="Misconduct Policy" data-bs-toggle="modal" data-bs-target="#misconductPolicyModal" data-bs-keyboard="false"><span>Misconduct Policy</span></a>
+								        <a href="#" class="privacyIcon" title="Privacy and Paperwork Reduction Act Statement" id="ppraStatement" data-bs-toggle="modal" data-bs-target="#ppraModal" data-bs-keyboard="false" data-bs-backdrop="static"><span>Privacy and Paperwork Reduction Act</span></a>
+								      </nav>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+			
+		</div>
+	</div>
+	
+  <!--  This file in nspires_split is replicated in external4. Please make sure the two files are kept in sync at all times to ensure consistent look and feel. -->
+  <div id="misconductPolicyModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-infoModal-md infoModal modal-dialog-scrollable">
+      <div class="modal-content contentContainer">
+        <div class="modal-header">
+          <h5 class="modal-title">Misconduct Policy</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" title="Close">×</span>
+		  </button>
+        </div>
+        <div class="modal-body container"> <span class="nasaLogoDisplay"></span>
+        <r class="ns-lu" data-lookup="misconductPolicy">
+        	<p>NASA and U.S. Government policies address research and personal misconduct, and provide avenues for reporting potential violations.</p>
+         	<p>Any individual comfortable doing so is encouraged to contact the panel/solicitation program official directly. When a NASA individual responsible for reviews receives allegations of misconduct, etc. from a reviewer/panel, they must notify the NASA Office of Inspector General (OIG) immediately. All individuals are encouraged to read the NASA websites, which include information on reporting options outside of the NASA programs.</p>
+			<h3>Research Misconduct</h3>
+			<p>The descriptions of research misconduct and NASA’s science policies can be found at: <a href="https://www.nasa.gov/offices/ocs/science_policies" class="externalLink inlineBlock" title="NASA Science Policies and Reports" target="_blank">https://www.nasa.gov/offices/ocs/science_policies</a>.</p>	
+			<p>Anyone engaged in or observing any aspect of NASA-supported research activities (from peer review to the final publication of results), including a non-NASA individual, may make a misconduct allegation directly to the Office of Inspector General (OIG) by phone at 1-800-424-9183 or online at: <a href="https://oigforms.nasa.gov/wp_cyberhotline.html" title="E-mail Report to the NASA OIG Cyberhotline" target="_blank" class="externalLink inlineBlock">https://oigforms.nasa.gov/wp_cyberhotline.html</a>.</p>
+         </r>
+         	<div class="mainBtnContainer">
+	            <div class="innerBox">
+	              <button  data-bs-dismiss="modal" aria-label="Close"  type="button"
+	              			class="mainBtn cancelBtn"  name="" title="Close" value="iAcknowledge">Close</button>
+	            </div>
+          	</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+	
+  <!--  This file in nspires_split is replicated in external4. Please make sure the two files are kept in sync at all times to ensure consistent look and feel. -->
+  <div id="ppraModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ppraStatement" aria-hidden="true">
+    <div class="modal-dialog modal-infoModal-md infoModal modal-dialog-scrollable">
+      <div class="modal-content contentContainer">
+        <div class="modal-header">
+          <h5 class="modal-title">Privacy and Paperwork Reduction Act Statement</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" title="Close">×</span>
+		  </button>
+        </div>
+        <div class="modal-body container">
+         <r class="ns-lu" data-lookup="ppra"></r>
+          <div class="mainBtnContainer">
+            <div class="innerBox">
+              <button  data-bs-dismiss="modal" aria-label="Close"  type="button"
+								class="mainBtn cancelBtn"  name="" title="Close" value="iAcknowledge">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="/external4/javascript/lu.js"></script> 
+	
+</div>
+
+
+			<!-- End header -->
+	
+			<!-- System message -->
+			
+
+
+
+
+
+			<!-- End system message -->
+	
+			<div class="contentWrapper">
+				<div class="contentContainer">
+					<div class="mainContent">
+						<div class="mainContentOneCol">
+							<div class="innerBox">
+								<!-- Content goes here -->
+								<a href="#" title="Back to Top" class="scrollup">Scroll</a>
+								<div class="panelBox">
+									 
+
+
+
+<link rel="stylesheet" type="text/css" href="/external/styles/solicitations.css?v=7.9" media="all"/>
+ 		
+
+<link rel="stylesheet" type="text/css" href="/external/styles/jsScrollbar.css?v=7.9" media="all"/>
+
+
+<link rel="stylesheet" type="text/css" href="/external/styles/jquery.treeview.css?v=7.9" media="all"/>
+
+
+<link rel="stylesheet" type="text/css" href="/external/styles/sol_search.css?v=7.9" media="all"/>
+
+<script type="text/javascript" src="/external/javascript/json2.js">
+</script>
+ 
+<script src="/external/javascript/jquery.dataTables-2.2.0.min.js">
+</script>
+
+<script src="/external/javascript/jquery.scrollbar-0.2.11.min.js">
+</script>
+ 
+<script src="/external/javascript/jquery-ui-1.14.1.min.js">
+</script>
+ 
+<script src="/external/javascript/moment-2.30.1.min.js">
+</script>
+
+<script src="/external/javascript/datetime-moment.js">
+</script>
+
+<script src="/external/javascript/solicitation/solSearchUI.js">
+</script>
+
+<noscript>
+	<div class="warning">
+		<b>Note: No JavaScript</b>
+		<p>Your current browser configuration is not compatible with the site requirements. JavaScript is disabled, please enable it to use this feature.</p>
+	</div>  
+</noscript>
+<h2>Solicitations <span class="helpIcon pop" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" 
+data-bs-content="<p>Search entries are case-insensitive, can be partial, or are treated as exact terms/phrases.</p><br><p>Click Search to execute! Clear will clear the Search criteria!</p>" data-bs-original-title="" title=""> </span></h2>
+ 
+<div class="dataDisplayRow">
+									<div class="row no-gutter">
+										<div class="col-3 col-3Alt">
+											<div class="searchformContainer mb-10">
+											<form onSubmit="return searchData();">
+												<div class="row no-gutters">
+													<div class="col-12">
+														<div class="form-group ">
+															<label class="displayNone" for="solTitle">Solicitation # / Keyword(s)</label>
+															<input id="keyword"
+																data-bs-toggle="popover" title="" type="text"
+																class="form-control" value="" placeholder="Solicitation # / Keyword(s)"
+																data-bs-original-title="Solicitation # / Keyword(s)">
+														</div>
+															<div class="helpIconContainer">
+													<span class="helpIcon pop" data-bs-container="body" 
+													data-bs-toggle="popover" data-bs-placement="top" 
+													data-bs-content="<p>Keyword field will search Solicitation Title, Number, and Dates (ex. yyyy-mm-dd). </p><br><p>Multiple terms are delimited by commas. (ex. 2019, 2020)</p><br><p>Enter partial or full solicitation number.</p>" data-bs-original-title="" title=""> </span>
+													</div>
+													</div>
+													 
+												</div>
+												
+												<div class="row no-gutters">
+													<div class="col-12">
+														<div class="form-group ">
+															<label class="displayNone" for="missionDirectorate">Mission Directorate</label>
+															<input id="missionDirectorate"
+																data-bs-toggle="popover" title="" type="text"
+																class="form-control" value="" placeholder="Mission Directorate"
+																data-bs-original-title="Mission Directorate">
+																
+														</div>
+														<div class="helpIconContainer">
+														<span class="helpIcon pop" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="<p>Searching by directorate will search any matching directorate irrespective of organizational hierarchy.</p>" data-bs-original-title="" title=""> </span>
+													</div>
+													</div>
+													
+												</div>
+												<div class="row no-gutters">
+													<div class="col-12"> 
+														<div class="form-group">
+														<input type="button" value="Clear" class="searchSubmit floatLeft" id="clearSearchBtn" onclick="resetSearchData();"/> 
+														<input type="button" value="Search" class="searchSubmit floatRight" onclick="searchData();"/>		
+														</div>
+													</div>
+												</div>
+												</form>
+											</div>
+											<div class="filterContainer">
+												<h4>Default Filters</h4>
+												<div class="scrollContainer">
+													<div class="scrollbar-inner">
+														<div class="filterBox" id="filterStatus">
+															<div class="filterContent">
+																<div class="openClose filterToggle open" data-bs-toggle="collapse" href="#statusFilter">
+																	<span class="arrow"></span>Status
+																</div>
+																<div class="collapse show" id="statusFilter">
+																	<ul class="filterList" id="filterStatusList">
+																		<li>
+																			<div class="row no-gutters">
+																				<div class="col-auto">
+																					<input type="checkbox" id="filterStatusList_All" name="all"
+																						value="" checked="true" onchange="allChkBxSelected(this, 0);">
+																				</div>
+																				<label for="filterStatusList_All">All</label>
+																			</div>
+																		</li>
+								
+								
+																		<li><div class="row no-gutters">
+																				<div class="col-auto">
+																					<input type="checkbox" id="filterStatusList_Due in 30 Days"
+																						value="Due"
+																						onchange="filterSearch(this, 0);">
+																				</div>
+																				<div class="col-10">
+																					<label for="filterStatusList_Due in 30 Days">Due within 30 Days <span
+																						id="propfilterStatusList_Due in 30 Days">(0)</span></label>
+																				</div>
+																			</div></li>
+																		<li><div class="row no-gutters">
+																				<div class="col-auto">
+																					<input type="checkbox" id="filterStatusList_Future"
+																						value="Future"
+																						onchange="filterSearch(this, 0)">
+																				</div>
+																				<div class="col-10">
+																					<label for="filterStatusList_Future">Future <span
+																						id="propfilterStatusList_Future">(0)</span></label>
+																				</div>
+																			</div></li>
+																		<li><div class="row no-gutters">
+																				<div class="col-auto">
+																					<input type="checkbox" id="filterStatusList_Open"
+																						value="Open"
+																						onchange="toggleCBOn(this,'filterStatusList_Due' ); filterSearch(this, 0);">
+																				</div>
+																				<div class="col-10">
+																					<label for="filterStatusList_Open">Open <span
+																						id="propfilterStatusList_Open">(0)</span></label>
+																				</div>
+																			</div></li>
+																		<li><div class="row no-gutters">
+																				<div class="col-auto">
+																					<input type="checkbox" id="filterStatusList_Closed"
+																						value="Closed"
+																						onchange="filterSearch(this, 0 )">
+																				</div>
+																				<div class="col-10">
+																					<label for="filterStatusList_Closed">Closed <span
+																						id="propfilterStatusList_Closed">(0)</span></label>
+																				</div>
+																			</div></li>
+																			<li><div class="row no-gutters">
+																				<div class="col-auto">
+																					<input type="checkbox" id="filterStatusList_Past"
+																						value="Past"
+																						onchange="filterSearch(this, 0)">
+																				</div>
+																				<div class="col-10">
+																					<label for="filterStatusList_Past">Past <span
+																						id="propfilterStatusList_Past">(0)</span></label>
+																				</div>
+																			</div></li>
+																	</ul>
+																</div>
+															</div>
+														</div>
+														<div class="filterBox" id="filterType">
+															<div class="filterContent" data-bs-collapse>
+																<div class="openClose filterToggle open" data-bs-toggle="collapse" href="#typeFilter">
+																	<span class="arrow"></span>Type
+																</div>
+																<div class="collapse show" id="typeFilter">
+																	<ul class="filterList" id="filterTypeList">
+																 
+
+																	</ul>
+																</div>
+															</div>
+														</div>
+														
+														<div class="filterBox" id="filterCategory">
+															<div class="filterContent">
+																<div class="openClose filterToggle open" data-bs-toggle="collapse" href="#categoryFilter">
+																	<span class="arrow"></span>Category
+																</div>
+																<div class="collapse show" id="categoryFilter">
+																	<ul class="filterList" id="filterCatList">
+																	 
+																		
+																	</ul>
+																</div>
+															</div>
+														</div> 
+														<div class="filterBox" id="filterFY">
+															<div class="filterContent">
+																<div class="openClose filterToggle open" data-bs-toggle="collapse" href="#yearFilter">
+																	<span class="arrow"></span>Fiscal Years
+																</div>
+																<div class="collapse show" id="yearFilter">
+																	<ul class="filterList" id="filterFYList">
+																  
+																	 																	
+																	</ul>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-9 col-9Alt">
+											<div class="solSearchResults">
+												<!-- <h3>Search Results</h3> -->
+												
+												<div class="pageCenter">
+		<noscript>
+			<form id="solicitations" name="solicitations" action="/external/solicitations/solicitations.do" method="get" styleId="frm1">
+				<table border="0" cellspacing="0" cellpadding="0" width="100%"
+					bgcolor="#eeeeee"  role="presentation">
+					<tr>
+						<td width="60" class="tablenav"> <label for="sfkey">Keywords:</label> </td>
+						<td width="60" class="form">
+							<input type="text" name="" size="24" value="keyword" id="sfkey" styleClass="input"/>
+						</td>
+						
+						<td> <input type="submit" value="Find" id="solicitations_method" name="method:init" class="subBtn" title="Find"/>
+</td>
+					</tr>
+				</table>
+				<input type="hidden" name="stack" value="push"/>
+				<input type="hidden" name="method" value="openAs"/>
+			</form>
+
+
+
+		</noscript>
+			<!-- request.setAttribute("parentAction", "/solicitations/solicitations.do");
+		   request.setAttribute("parentMethod", "open"); -->
+		   
+		<div id="listjs" style="display: none">
+		   
+
+
+<script>
+$('link[rel=stylesheet][href*="jquery-ui.min.css"]').remove();</script>
+
+
+
+
+	<div class="ex_highlight_row">		
+		
+		
+			<table  class="table_data" id="openSolicitations"> 
+			</table>
+		
+	</div>
+
+
+
+		</div> 
+		
+		<script>
+document.getElementById("listjs").style.display='block';</script>
+
+		<script>
+		  // If user presses Enter in the text field, call searchData()
+			$(document).ready(function() {
+				
+
+				
+			  $('#keyword, #missionDirectorate').on('keypress', function(e) {
+			    if(e.which === 13) {
+			      e.preventDefault();
+			      searchData();
+			    }
+			  });
+			});
+		</script>
+
+		<noscript>
+		<div id="listnojs">
+		   
+
+
+
+	
+	
+
+<table class="table_data table_striped" role="presentation">
+	<tr>
+		<td colspan="5"><p class="form"> <br/><span class="statusMsg">( There are none ) </span></p></td>
+	</tr>
+</table>
+
+
+		</div>
+		</noscript>
+												</div>
+											</div>
+										</div>
+									</div>
+</div>
+<input type="hidden" name="orgTreeJSON" value="{}" id="orgTreeJSON"/>
+<input type="hidden" name="allOrgsJSON" value="[{&quot;label&quot;:&quot;Advanced Air Transport TechnologyAAVP&quot;,&quot;value&quot;:&quot;Advanced Air Transport Technology&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:AAVP&quot;},{&quot;label&quot;:&quot;Advanced Air Vehicles ProgramAAVP&quot;,&quot;value&quot;:&quot;Advanced Air Vehicles Program&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:AAVP&quot;},{&quot;label&quot;:&quot;Advanced Composites ProjectISRP&quot;,&quot;value&quot;:&quot;Advanced Composites Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ISRP&quot;},{&quot;label&quot;:&quot;Advanced Composites ProjectAAVP&quot;,&quot;value&quot;:&quot;Advanced Composites Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:AAVP&quot;},{&quot;label&quot;:&quot;Advanced Exploration SystemAESD&quot;,&quot;value&quot;:&quot;Advanced Exploration System&quot;,&quot;desc&quot;:&quot;NASA:HQ:HEOMD:AESD&quot;},{&quot;label&quot;:&quot;Aeronautics Evaluation &amp; Test CapabilitiesAAVP&quot;,&quot;value&quot;:&quot;Aeronautics Evaluation &amp; Test Capabilities&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:AAVP&quot;},{&quot;label&quot;:&quot;Aeronautics Research Mission DirectorateARMD&quot;,&quot;value&quot;:&quot;Aeronautics Research Mission Directorate&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD&quot;},{&quot;label&quot;:&quot;Aeronautics Research Mission DirectorateARMD&quot;,&quot;value&quot;:&quot;Aeronautics Research Mission Directorate&quot;,&quot;desc&quot;:&quot;NASA:AFRC:ARMD&quot;},{&quot;label&quot;:&quot;Aeronautics Research Mission Directorate - OldARMD-OLD&quot;,&quot;value&quot;:&quot;Aeronautics Research Mission Directorate - Old&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD&quot;},{&quot;label&quot;:&quot;Aeronautics Sciences ProjectFAP&quot;,&quot;value&quot;:&quot;Aeronautics Sciences Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:FAP&quot;},{&quot;label&quot;:&quot;Aeronautics Strategy and ManagementASM&quot;,&quot;value&quot;:&quot;Aeronautics Strategy and Management&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ASM&quot;},{&quot;label&quot;:&quot;Aeronautics Test ProgramATP&quot;,&quot;value&quot;:&quot;Aeronautics Test Program&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ATP&quot;},{&quot;label&quot;:&quot;Air Traffic Management\u2014ExplorationAOSP&quot;,&quot;value&quot;:&quot;Air Traffic Management\u2014Exploration&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:AOSP&quot;},{&quot;label&quot;:&quot;Aircraft Aging and Durability ProjectAVSP&quot;,&quot;value&quot;:&quot;Aircraft Aging and Durability Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:AVSP&quot;},{&quot;label&quot;:&quot;Airspace Concept Evaluation SystemASP&quot;,&quot;value&quot;:&quot;Airspace Concept Evaluation System&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ASP&quot;},{&quot;label&quot;:&quot;Airspace Operations and SafetyAOSP&quot;,&quot;value&quot;:&quot;Airspace Operations and Safety&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:AOSP&quot;},{&quot;label&quot;:&quot;Airspace Systems ProgramASP&quot;,&quot;value&quot;:&quot;Airspace Systems Program&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ASP&quot;},{&quot;label&quot;:&quot;Airspace Systems Program: Nextgen SAIE ProjectASP&quot;,&quot;value&quot;:&quot;Airspace Systems Program: Nextgen SAIE Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ASP&quot;},{&quot;label&quot;:&quot;Airspace Technology DemosAOSP&quot;,&quot;value&quot;:&quot;Airspace Technology Demos&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:AOSP&quot;},{&quot;label&quot;:&quot;Airspace and Traffic Operations SimulationASP&quot;,&quot;value&quot;:&quot;Airspace and Traffic Operations Simulation&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ASP&quot;},{&quot;label&quot;:&quot;All Other MissionsAESD&quot;,&quot;value&quot;:&quot;All Other Missions&quot;,&quot;desc&quot;:&quot;NASA:HQ:HEOMD:AESD&quot;},{&quot;label&quot;:&quot;Ames Research CenterARC&quot;,&quot;value&quot;:&quot;Ames Research Center&quot;,&quot;desc&quot;:&quot;NASA:ARC&quot;},{&quot;label&quot;:&quot;Ames Research Center ProcurementARC-Proc&quot;,&quot;value&quot;:&quot;Ames Research Center Procurement&quot;,&quot;desc&quot;:&quot;NASA:ARC:ARC-Proc&quot;},{&quot;label&quot;:&quot;Armstrong Flight Research CenterAFRC&quot;,&quot;value&quot;:&quot;Armstrong Flight Research Center&quot;,&quot;desc&quot;:&quot;NASA:AFRC&quot;},{&quot;label&quot;:&quot;Armstrong Flight Research Center ProcurementAFRC-Proc&quot;,&quot;value&quot;:&quot;Armstrong Flight Research Center Procurement&quot;,&quot;desc&quot;:&quot;NASA:AFRC:AFRC-Proc&quot;},{&quot;label&quot;:&quot;Asteroid Redirect MissionAESD&quot;,&quot;value&quot;:&quot;Asteroid Redirect Mission&quot;,&quot;desc&quot;:&quot;NASA:HQ:HEOMD:AESD&quot;},{&quot;label&quot;:&quot;AstrophysicsAP&quot;,&quot;value&quot;:&quot;Astrophysics&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:AP&quot;},{&quot;label&quot;:&quot;Atmospheric Environment Safety TechnologiesAVSP&quot;,&quot;value&quot;:&quot;Atmospheric Environment Safety Technologies&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:AVSP&quot;},{&quot;label&quot;:&quot;Aviation Safety ProgramAVSP&quot;,&quot;value&quot;:&quot;Aviation Safety Program&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:AVSP&quot;},{&quot;label&quot;:&quot;Biological and Physical SciencesBPS&quot;,&quot;value&quot;:&quot;Biological and Physical Sciences&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:BPS&quot;},{&quot;label&quot;:&quot;Centennial ChallengesCC&quot;,&quot;value&quot;:&quot;Centennial Challenges&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCT:CC&quot;},{&quot;label&quot;:&quot;Center Innovation FundCIF&quot;,&quot;value&quot;:&quot;Center Innovation Fund&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCT:CIF&quot;},{&quot;label&quot;:&quot;Commercial SupersonicsAAVP&quot;,&quot;value&quot;:&quot;Commercial Supersonics&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:AAVP&quot;},{&quot;label&quot;:&quot;Convergent Aeronautics SolutionsTACP&quot;,&quot;value&quot;:&quot;Convergent Aeronautics Solutions&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:TACP&quot;},{&quot;label&quot;:&quot;Cross DivisionCD&quot;,&quot;value&quot;:&quot;Cross Division&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:CD&quot;},{&quot;label&quot;:&quot;Cross Program ResearchCPR&quot;,&quot;value&quot;:&quot;Cross Program Research&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:CPR&quot;},{&quot;label&quot;:&quot;Cross-Cutting Multidisciplinary Design, Analysis and OptimizationFAP&quot;,&quot;value&quot;:&quot;Cross-Cutting Multidisciplinary Design, Analysis and Optimization&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:FAP&quot;},{&quot;label&quot;:&quot;Curriculum Development &amp; Provider ResourcesEONS&quot;,&quot;value&quot;:&quot;Curriculum Development &amp; Provider Resources&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:EONS&quot;},{&quot;label&quot;:&quot;DiscoveryOTHER&quot;,&quot;value&quot;:&quot;Discovery&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:OTHER&quot;},{&quot;label&quot;:&quot;ERAIASP&quot;,&quot;value&quot;:&quot;ERA&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:IASP&quot;},{&quot;label&quot;:&quot;ERA ProjectISRP&quot;,&quot;value&quot;:&quot;ERA Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ISRP&quot;},{&quot;label&quot;:&quot;Earth ScienceES&quot;,&quot;value&quot;:&quot;Earth Science&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:ES&quot;},{&quot;label&quot;:&quot;Earth VentureOTHER&quot;,&quot;value&quot;:&quot;Earth Venture&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:OTHER&quot;},{&quot;label&quot;:&quot;Earth-Sun SystemSS&quot;,&quot;value&quot;:&quot;Earth-Sun System&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:SS&quot;},{&quot;label&quot;:&quot;Edison Small Satellite Demonstration MissionsESSDM&quot;,&quot;value&quot;:&quot;Edison Small Satellite Demonstration Missions&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCT:ESSDM&quot;},{&quot;label&quot;:&quot;EducationSIMO&quot;,&quot;value&quot;:&quot;Education&quot;,&quot;desc&quot;:&quot;NASA:HQ:ESMD:SIMO&quot;},{&quot;label&quot;:&quot;Elementary &amp; Secondary EducationES&quot;,&quot;value&quot;:&quot;Elementary &amp; Secondary Education&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCEO:ES&quot;},{&quot;label&quot;:&quot;Elementary\/Secondary EducationINTE&quot;,&quot;value&quot;:&quot;Elementary\/Secondary Education&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:INTE&quot;},{&quot;label&quot;:&quot;Enabling Technology Development and Demonstration (ETDD) ProgramETDD&quot;,&quot;value&quot;:&quot;Enabling Technology Development and Demonstration (ETDD) Program&quot;,&quot;desc&quot;:&quot;NASA:HQ:ESMD:ETDD&quot;},{&quot;label&quot;:&quot;Engagement Opportunities in NASA STEMEONS&quot;,&quot;value&quot;:&quot;Engagement Opportunities in NASA STEM&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:EONS&quot;},{&quot;label&quot;:&quot;Entry Descent and Landing ProjectFAP&quot;,&quot;value&quot;:&quot;Entry Descent and Landing Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:FAP&quot;},{&quot;label&quot;:&quot;Experimental Program to Stimulate Competitive ResearchINTE&quot;,&quot;value&quot;:&quot;Experimental Program to Stimulate Competitive Research&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:INTE&quot;},{&quot;label&quot;:&quot;Experimental Program to Stimulate Competitive ResearchEONS&quot;,&quot;value&quot;:&quot;Experimental Program to Stimulate Competitive Research&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:EONS&quot;},{&quot;label&quot;:&quot;Exploration Systems Mission DirectorateESMD&quot;,&quot;value&quot;:&quot;Exploration Systems Mission Directorate&quot;,&quot;desc&quot;:&quot;NASA:HQ:ESMD&quot;},{&quot;label&quot;:&quot;Exploration Systems Mission DirectorateESMD&quot;,&quot;value&quot;:&quot;Exploration Systems Mission Directorate&quot;,&quot;desc&quot;:&quot;NASA:JSC:ESMD&quot;},{&quot;label&quot;:&quot;ExploreOTHER&quot;,&quot;value&quot;:&quot;Explore&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:OTHER&quot;},{&quot;label&quot;:&quot;Facility ResearchATP&quot;,&quot;value&quot;:&quot;Facility Research&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ATP&quot;},{&quot;label&quot;:&quot;Fixed Wing ProjectFAP&quot;,&quot;value&quot;:&quot;Fixed Wing Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:FAP&quot;},{&quot;label&quot;:&quot;Flight Demonstrations and CapabilitiesIASP&quot;,&quot;value&quot;:&quot;Flight Demonstrations and Capabilities&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:IASP&quot;},{&quot;label&quot;:&quot;Flight OpportunitiesFO&quot;,&quot;value&quot;:&quot;Flight Opportunities&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCT:FO&quot;},{&quot;label&quot;:&quot;Flight OpportunitiesFO&quot;,&quot;value&quot;:&quot;Flight Opportunities&quot;,&quot;desc&quot;:&quot;NASA:HQ:STMD:FO&quot;},{&quot;label&quot;:&quot;Franklin Small Satellite Subsystem TechnologiesFSSST&quot;,&quot;value&quot;:&quot;Franklin Small Satellite Subsystem Technologies&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCT:FSSST&quot;},{&quot;label&quot;:&quot;Fundamental Aeronautics ProgramFAP&quot;,&quot;value&quot;:&quot;Fundamental Aeronautics Program&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:FAP&quot;},{&quot;label&quot;:&quot;Fundamental Space BiologyFSB&quot;,&quot;value&quot;:&quot;Fundamental Space Biology&quot;,&quot;desc&quot;:&quot;NASA:HQ:ESMD:FSB&quot;},{&quot;label&quot;:&quot;Game Changing DevelopmentsGCD&quot;,&quot;value&quot;:&quot;Game Changing Developments&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCT:GCD&quot;},{&quot;label&quot;:&quot;Game Changing DevelopmentsGCD&quot;,&quot;value&quot;:&quot;Game Changing Developments&quot;,&quot;desc&quot;:&quot;NASA:HQ:STMD:GCD&quot;},{&quot;label&quot;:&quot;Glenn Research CenterGRC&quot;,&quot;value&quot;:&quot;Glenn Research Center&quot;,&quot;desc&quot;:&quot;NASA:GRC&quot;},{&quot;label&quot;:&quot;Glenn Research Center ProcurementGRC-Proc&quot;,&quot;value&quot;:&quot;Glenn Research Center Procurement&quot;,&quot;desc&quot;:&quot;NASA:GRC:GRC-Proc&quot;},{&quot;label&quot;:&quot;Goddard Institute of Space Studies ProcurementGISS-Proc&quot;,&quot;value&quot;:&quot;Goddard Institute of Space Studies Procurement&quot;,&quot;desc&quot;:&quot;NASA:GSFC:GISS-Proc&quot;},{&quot;label&quot;:&quot;Goddard Space Flight CenterGSFC&quot;,&quot;value&quot;:&quot;Goddard Space Flight Center&quot;,&quot;desc&quot;:&quot;NASA:GSFC&quot;},{&quot;label&quot;:&quot;Goddard Space Flight Center ProcurementGSFC-Proc&quot;,&quot;value&quot;:&quot;Goddard Space Flight Center Procurement&quot;,&quot;desc&quot;:&quot;NASA:GSFC:GSFC-Proc&quot;},{&quot;label&quot;:&quot;HeadquartersHQ&quot;,&quot;value&quot;:&quot;Headquarters&quot;,&quot;desc&quot;:&quot;NASA:HQ&quot;},{&quot;label&quot;:&quot;Headquarters Grant AO ProcurementHGAO&quot;,&quot;value&quot;:&quot;Headquarters Grant AO Procurement&quot;,&quot;desc&quot;:&quot;NASA:HQ:HGAO&quot;},{&quot;label&quot;:&quot;Headquarters ProcurementHQ-Proc&quot;,&quot;value&quot;:&quot;Headquarters Procurement&quot;,&quot;desc&quot;:&quot;NASA:HQ:HQ-Proc&quot;},{&quot;label&quot;:&quot;HeliophysicsHP&quot;,&quot;value&quot;:&quot;Heliophysics&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:HP&quot;},{&quot;label&quot;:&quot;High SpeedFAP&quot;,&quot;value&quot;:&quot;High Speed&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:FAP&quot;},{&quot;label&quot;:&quot;Higher EducationHE&quot;,&quot;value&quot;:&quot;Higher Education&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCEO:HE&quot;},{&quot;label&quot;:&quot;Higher EducationINTE&quot;,&quot;value&quot;:&quot;Higher Education&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:INTE&quot;},{&quot;label&quot;:&quot;Human Exploration and Operations Mission DirectorateHEOMD&quot;,&quot;value&quot;:&quot;Human Exploration and Operations Mission Directorate&quot;,&quot;desc&quot;:&quot;NASA:HQ:HEOMD&quot;},{&quot;label&quot;:&quot;Human Exploration and Operations Mission DirectorateHEOMD&quot;,&quot;value&quot;:&quot;Human Exploration and Operations Mission Directorate&quot;,&quot;desc&quot;:&quot;NASA:JSC:HEOMD&quot;},{&quot;label&quot;:&quot;Human Exploration and Operations Mission DirectorateHEOMD&quot;,&quot;value&quot;:&quot;Human Exploration and Operations Mission Directorate&quot;,&quot;desc&quot;:&quot;NASA:MSFC:HEOMD&quot;},{&quot;label&quot;:&quot;Human Research OfficeHRO&quot;,&quot;value&quot;:&quot;Human Research Office&quot;,&quot;desc&quot;:&quot;NASA:HQ:ESMD:HRO&quot;},{&quot;label&quot;:&quot;Human Research ProgramHRP&quot;,&quot;value&quot;:&quot;Human Research Program&quot;,&quot;desc&quot;:&quot;NASA:JSC:ESMD:HRP&quot;},{&quot;label&quot;:&quot;Human Research ProgramHRP&quot;,&quot;value&quot;:&quot;Human Research Program&quot;,&quot;desc&quot;:&quot;NASA:JSC:HEOMD:HRP&quot;},{&quot;label&quot;:&quot;Human Research ProgramHRP&quot;,&quot;value&quot;:&quot;Human Research Program&quot;,&quot;desc&quot;:&quot;NASA:HQ:SOMD:HRP&quot;},{&quot;label&quot;:&quot;Human Research ProgramSLPSRAD&quot;,&quot;value&quot;:&quot;Human Research Program&quot;,&quot;desc&quot;:&quot;NASA:HQ:HEOMD:SLPSRAD&quot;},{&quot;label&quot;:&quot;Human Research ProgramHRP&quot;,&quot;value&quot;:&quot;Human Research Program&quot;,&quot;desc&quot;:&quot;NASA:JSC:SOMD:HRP&quot;},{&quot;label&quot;:&quot;Hypersonics ProjectFAP&quot;,&quot;value&quot;:&quot;Hypersonics Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:FAP&quot;},{&quot;label&quot;:&quot;Imagery Experts HierarchyIEH&quot;,&quot;value&quot;:&quot;Imagery Experts Hierarchy&quot;,&quot;desc&quot;:&quot;NASA:MSFC:HEOMD:IEH&quot;},{&quot;label&quot;:&quot;Informal EducationINTE&quot;,&quot;value&quot;:&quot;Informal Education&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:INTE&quot;},{&quot;label&quot;:&quot;Informal EducationIE&quot;,&quot;value&quot;:&quot;Informal Education&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCEO:IE&quot;},{&quot;label&quot;:&quot;Innovation in Aeronautics InstructionCPR&quot;,&quot;value&quot;:&quot;Innovation in Aeronautics Instruction&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:CPR&quot;},{&quot;label&quot;:&quot;Innovative Concepts for AviationASM&quot;,&quot;value&quot;:&quot;Innovative Concepts for Aviation&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ASM&quot;},{&quot;label&quot;:&quot;Integrated Intelligent Flight Deck Technologies ProjectAVSP&quot;,&quot;value&quot;:&quot;Integrated Intelligent Flight Deck Technologies Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:AVSP&quot;},{&quot;label&quot;:&quot;Integrated Resilient Aircraft Control ProjectAVSP&quot;,&quot;value&quot;:&quot;Integrated Resilient Aircraft Control Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:AVSP&quot;},{&quot;label&quot;:&quot;Integrated Systems Research ProgramISRP&quot;,&quot;value&quot;:&quot;Integrated Systems Research Program&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ISRP&quot;},{&quot;label&quot;:&quot;Integrated Systems Research ProgramIASP&quot;,&quot;value&quot;:&quot;Integrated Systems Research Program&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:IASP&quot;},{&quot;label&quot;:&quot;Integrated Systems Research ProgramISR&quot;,&quot;value&quot;:&quot;Integrated Systems Research Program&quot;,&quot;desc&quot;:&quot;NASA:AFRC:ARMD:ISR&quot;},{&quot;label&quot;:&quot;Integrated Vehicle Health Management ProjectAVSP&quot;,&quot;value&quot;:&quot;Integrated Vehicle Health Management Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:AVSP&quot;},{&quot;label&quot;:&quot;IntegrationINTE&quot;,&quot;value&quot;:&quot;Integration&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:INTE&quot;},{&quot;label&quot;:&quot;Integration of Advanced Concepts and Vehicles into the Next Generation Air Transportation SystemCPR&quot;,&quot;value&quot;:&quot;Integration of Advanced Concepts and Vehicles into the Next Generation Air Transportation System&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:CPR&quot;},{&quot;label&quot;:&quot;International Space StationISS&quot;,&quot;value&quot;:&quot;International Space Station&quot;,&quot;desc&quot;:&quot;NASA:HQ:HEOMD:ISS&quot;},{&quot;label&quot;:&quot;International Space StationISS&quot;,&quot;value&quot;:&quot;International Space Station&quot;,&quot;desc&quot;:&quot;NASA:HQ:SOMD:ISS&quot;},{&quot;label&quot;:&quot;Jet Propulsion LaboratoryJPL&quot;,&quot;value&quot;:&quot;Jet Propulsion Laboratory&quot;,&quot;desc&quot;:&quot;NASA:JPL&quot;},{&quot;label&quot;:&quot;Jet Propulsion Laboratory ProcurementJPL-Proc&quot;,&quot;value&quot;:&quot;Jet Propulsion Laboratory Procurement&quot;,&quot;desc&quot;:&quot;NASA:JPL:JPL-Proc&quot;},{&quot;label&quot;:&quot;Johnson Space CenterJSC&quot;,&quot;value&quot;:&quot;Johnson Space Center&quot;,&quot;desc&quot;:&quot;NASA:JSC&quot;},{&quot;label&quot;:&quot;Johnson Space Center ProcurementJSC-Proc&quot;,&quot;value&quot;:&quot;Johnson Space Center Procurement&quot;,&quot;desc&quot;:&quot;NASA:JSC:JSC-Proc&quot;},{&quot;label&quot;:&quot;Kennedy Space CenterKSC&quot;,&quot;value&quot;:&quot;Kennedy Space Center&quot;,&quot;desc&quot;:&quot;NASA:KSC&quot;},{&quot;label&quot;:&quot;Kennedy Space Center ProcurementKSC-Proc&quot;,&quot;value&quot;:&quot;Kennedy Space Center Procurement&quot;,&quot;desc&quot;:&quot;NASA:KSC:KSC-Proc&quot;},{&quot;label&quot;:&quot;Langley Research CenterLRC&quot;,&quot;value&quot;:&quot;Langley Research Center&quot;,&quot;desc&quot;:&quot;NASA:LRC&quot;},{&quot;label&quot;:&quot;Langley Research Center ProcurementLRC-Proc&quot;,&quot;value&quot;:&quot;Langley Research Center Procurement&quot;,&quot;desc&quot;:&quot;NASA:LRC:LRC-Proc&quot;},{&quot;label&quot;:&quot;Leading Edge Aero Research for NASATACP&quot;,&quot;value&quot;:&quot;Leading Edge Aero Research for NASA&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:TACP&quot;},{&quot;label&quot;:&quot;Management &amp; PolicyMP&quot;,&quot;value&quot;:&quot;Management &amp; Policy&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:MP&quot;},{&quot;label&quot;:&quot;Marshall Space Flight CenterMSFC&quot;,&quot;value&quot;:&quot;Marshall Space Flight Center&quot;,&quot;desc&quot;:&quot;NASA:MSFC&quot;},{&quot;label&quot;:&quot;Marshall Space Flight Center ProcurementMSFC-Proc&quot;,&quot;value&quot;:&quot;Marshall Space Flight Center Procurement&quot;,&quot;desc&quot;:&quot;NASA:MSFC:MSFC-Proc&quot;},{&quot;label&quot;:&quot;Minority University Research and Education ProjectINTE&quot;,&quot;value&quot;:&quot;Minority University Research and Education Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:INTE&quot;},{&quot;label&quot;:&quot;MiscellaneousOTHER&quot;,&quot;value&quot;:&quot;Miscellaneous&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:OTHER&quot;},{&quot;label&quot;:&quot;Mission &amp; System ManagementMSM&quot;,&quot;value&quot;:&quot;Mission &amp; System Management&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:MSM&quot;},{&quot;label&quot;:&quot;Mission Support Services OfficeMSSO&quot;,&quot;value&quot;:&quot;Mission Support Services Office&quot;,&quot;desc&quot;:&quot;NASA:HQ:HEOMD:MSSO&quot;},{&quot;label&quot;:&quot;NASA&quot;,&quot;value&quot;:&quot;NASA&quot;,&quot;desc&quot;:&quot;NASA&quot;},{&quot;label&quot;:&quot;NASA Shared Service Center ProcurementNSSC&quot;,&quot;value&quot;:&quot;NASA Shared Service Center Procurement&quot;,&quot;desc&quot;:&quot;NASA:NSSC&quot;},{&quot;label&quot;:&quot;NASA Unsolicited ProposalNUP&quot;,&quot;value&quot;:&quot;NASA Unsolicited Proposal&quot;,&quot;desc&quot;:&quot;NASA:NUP&quot;},{&quot;label&quot;:&quot;NGATS ATM - Airportal ProjectASP&quot;,&quot;value&quot;:&quot;NGATS ATM - Airportal Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ASP&quot;},{&quot;label&quot;:&quot;NGATS ATM - Airspace ProjectASP&quot;,&quot;value&quot;:&quot;NGATS ATM - Airspace Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ASP&quot;},{&quot;label&quot;:&quot;NIACNIAC&quot;,&quot;value&quot;:&quot;NIAC&quot;,&quot;desc&quot;:&quot;NASA:HQ:STMD:NIAC&quot;},{&quot;label&quot;:&quot;NIACNIAC&quot;,&quot;value&quot;:&quot;NIAC&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCT:NIAC&quot;},{&quot;label&quot;:&quot;National Space Biomedical Research InstituteNSBRI&quot;,&quot;value&quot;:&quot;National Space Biomedical Research Institute&quot;,&quot;desc&quot;:&quot;NASA:JSC:NSBRI&quot;},{&quot;label&quot;:&quot;New FrontierOTHER&quot;,&quot;value&quot;:&quot;New Frontier&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:OTHER&quot;},{&quot;label&quot;:&quot;Next Generation STEMEONS&quot;,&quot;value&quot;:&quot;Next Generation STEM&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:EONS&quot;},{&quot;label&quot;:&quot;Nextgen Concepts and Technology DevelopmentASP&quot;,&quot;value&quot;:&quot;Nextgen Concepts and Technology Development&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ASP&quot;},{&quot;label&quot;:&quot;Office of Aerospace TechnologyCode R&quot;,&quot;value&quot;:&quot;Office of Aerospace Technology&quot;,&quot;desc&quot;:&quot;NASA:HQ:Code R&quot;},{&quot;label&quot;:&quot;Office of Biological and Physical ResearchCode U&quot;,&quot;value&quot;:&quot;Office of Biological and Physical Research&quot;,&quot;desc&quot;:&quot;NASA:HQ:Code U&quot;},{&quot;label&quot;:&quot;Office of Chief Education OfficerOCEO&quot;,&quot;value&quot;:&quot;Office of Chief Education Officer&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCEO&quot;},{&quot;label&quot;:&quot;Office of Chief TechnologistOCT&quot;,&quot;value&quot;:&quot;Office of Chief Technologist&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCT&quot;},{&quot;label&quot;:&quot;Office of CommunicationsOC&quot;,&quot;value&quot;:&quot;Office of Communications&quot;,&quot;desc&quot;:&quot;NASA:HQ:OC&quot;},{&quot;label&quot;:&quot;Office of Earth ScienceCode Y&quot;,&quot;value&quot;:&quot;Office of Earth Science&quot;,&quot;desc&quot;:&quot;NASA:HQ:Code Y&quot;},{&quot;label&quot;:&quot;Office of Program Analysis and EvaluationOPAE&quot;,&quot;value&quot;:&quot;Office of Program Analysis and Evaluation&quot;,&quot;desc&quot;:&quot;NASA:HQ:OPAE&quot;},{&quot;label&quot;:&quot;Office of STEM EngagementOSE&quot;,&quot;value&quot;:&quot;Office of STEM Engagement&quot;,&quot;desc&quot;:&quot;NASA:JSC:OSE&quot;},{&quot;label&quot;:&quot;Office of STEM EngagementOSE&quot;,&quot;value&quot;:&quot;Office of STEM Engagement&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE&quot;},{&quot;label&quot;:&quot;Office of STEM Engagement - OldAOSP&quot;,&quot;value&quot;:&quot;Office of STEM Engagement - Old&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:AOSP&quot;},{&quot;label&quot;:&quot;Office of Space FlightCode M&quot;,&quot;value&quot;:&quot;Office of Space Flight&quot;,&quot;desc&quot;:&quot;NASA:HQ:Code M&quot;},{&quot;label&quot;:&quot;Office of Space ScienceCode S&quot;,&quot;value&quot;:&quot;Office of Space Science&quot;,&quot;desc&quot;:&quot;NASA:HQ:Code S&quot;},{&quot;label&quot;:&quot;Other OpportunityOTHER&quot;,&quot;value&quot;:&quot;Other Opportunity&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:OTHER&quot;},{&quot;label&quot;:&quot;Partnership Development Strategic IntegrationPDSI&quot;,&quot;value&quot;:&quot;Partnership Development Strategic Integration&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCT:PDSI&quot;},{&quot;label&quot;:&quot;Partnerships &amp; SustainabilityEONS&quot;,&quot;value&quot;:&quot;Partnerships &amp; Sustainability&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:EONS&quot;},{&quot;label&quot;:&quot;Physical SciencesBPS&quot;,&quot;value&quot;:&quot;Physical Sciences&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:BPS&quot;},{&quot;label&quot;:&quot;Physical SciencesSLPSRAD&quot;,&quot;value&quot;:&quot;Physical Sciences&quot;,&quot;desc&quot;:&quot;NASA:HQ:HEOMD:SLPSRAD&quot;},{&quot;label&quot;:&quot;Physical SciencesPS&quot;,&quot;value&quot;:&quot;Physical Sciences&quot;,&quot;desc&quot;:&quot;NASA:HQ:ESMD:PS&quot;},{&quot;label&quot;:&quot;Planetary SciencePS&quot;,&quot;value&quot;:&quot;Planetary Science&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:PS&quot;},{&quot;label&quot;:&quot;Prizes, Challenges, and CrowdsourcingPCC&quot;,&quot;value&quot;:&quot;Prizes, Challenges, and Crowdsourcing&quot;,&quot;desc&quot;:&quot;NASA:HQ:STMD:PCC&quot;},{&quot;label&quot;:&quot;RadiationHRP&quot;,&quot;value&quot;:&quot;Radiation&quot;,&quot;desc&quot;:&quot;NASA:JSC:ESMD:HRP&quot;},{&quot;label&quot;:&quot;Radiation ProgramHRP&quot;,&quot;value&quot;:&quot;Radiation Program&quot;,&quot;desc&quot;:&quot;NASA:JSC:HEOMD:HRP&quot;},{&quot;label&quot;:&quot;Research Infrastructure &amp; Capacity BuildingEONS&quot;,&quot;value&quot;:&quot;Research Infrastructure &amp; Capacity Building&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:EONS&quot;},{&quot;label&quot;:&quot;Revolutionary Vertical Lift TechnologyAAVP&quot;,&quot;value&quot;:&quot;Revolutionary Vertical Lift Technology&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:AAVP&quot;},{&quot;label&quot;:&quot;Rotary Wing ProjectFAP&quot;,&quot;value&quot;:&quot;Rotary Wing Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:FAP&quot;},{&quot;label&quot;:&quot;SBIR\/STTRSBIR\/STTR&quot;,&quot;value&quot;:&quot;SBIR\/STTR&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCT:SBIR\/STTR&quot;},{&quot;label&quot;:&quot;SMART NAS - OldAOSP&quot;,&quot;value&quot;:&quot;SMART NAS - Old&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:AOSP&quot;},{&quot;label&quot;:&quot;Science Mission DirectorateSMD&quot;,&quot;value&quot;:&quot;Science Mission Directorate&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD&quot;},{&quot;label&quot;:&quot;Small Spacecraft TechnologiesSST&quot;,&quot;value&quot;:&quot;Small Spacecraft Technologies&quot;,&quot;desc&quot;:&quot;NASA:HQ:STMD:SST&quot;},{&quot;label&quot;:&quot;Small Spacecraft TechnologiesSST&quot;,&quot;value&quot;:&quot;Small Spacecraft Technologies&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCT:SST&quot;},{&quot;label&quot;:&quot;Solar SystemSE&quot;,&quot;value&quot;:&quot;Solar System&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:SE&quot;},{&quot;label&quot;:&quot;Space BiologySLPSRAD&quot;,&quot;value&quot;:&quot;Space Biology&quot;,&quot;desc&quot;:&quot;NASA:HQ:HEOMD:SLPSRAD&quot;},{&quot;label&quot;:&quot;Space BiologyBPS&quot;,&quot;value&quot;:&quot;Space Biology&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:BPS&quot;},{&quot;label&quot;:&quot;Space Communications &amp; NavigationSCaN&quot;,&quot;value&quot;:&quot;Space Communications &amp; Navigation&quot;,&quot;desc&quot;:&quot;NASA:HQ:HEOMD:SCaN&quot;},{&quot;label&quot;:&quot;Space GrantEONS&quot;,&quot;value&quot;:&quot;Space Grant&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:EONS&quot;},{&quot;label&quot;:&quot;Space GrantINTE&quot;,&quot;value&quot;:&quot;Space Grant&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:INTE&quot;},{&quot;label&quot;:&quot;Space Launch SystemSLS&quot;,&quot;value&quot;:&quot;Space Launch System&quot;,&quot;desc&quot;:&quot;NASA:MSFC:HEOMD:SLS&quot;},{&quot;label&quot;:&quot;Space Life &amp; Physical Sciences Research &amp; ApplicationsSLPSRAD&quot;,&quot;value&quot;:&quot;Space Life &amp; Physical Sciences Research &amp; Applications&quot;,&quot;desc&quot;:&quot;NASA:HQ:HEOMD:SLPSRAD&quot;},{&quot;label&quot;:&quot;Space Operations Mission DirectorateSOMD&quot;,&quot;value&quot;:&quot;Space Operations Mission Directorate&quot;,&quot;desc&quot;:&quot;NASA:HQ:SOMD&quot;},{&quot;label&quot;:&quot;Space Operations Mission DirectorateSOMD&quot;,&quot;value&quot;:&quot;Space Operations Mission Directorate&quot;,&quot;desc&quot;:&quot;NASA:JSC:SOMD&quot;},{&quot;label&quot;:&quot;Space Technology Mission DirectorateSTMD&quot;,&quot;value&quot;:&quot;Space Technology Mission Directorate&quot;,&quot;desc&quot;:&quot;NASA:HQ:STMD&quot;},{&quot;label&quot;:&quot;Space Technology Research GrantsSTRG&quot;,&quot;value&quot;:&quot;Space Technology Research Grants&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCT:STRG&quot;},{&quot;label&quot;:&quot;Space Technology Research GrantsSTRG&quot;,&quot;value&quot;:&quot;Space Technology Research Grants&quot;,&quot;desc&quot;:&quot;NASA:HQ:STMD:STRG&quot;},{&quot;label&quot;:&quot;Stennis Space CenterSSC&quot;,&quot;value&quot;:&quot;Stennis Space Center&quot;,&quot;desc&quot;:&quot;NASA:SSC&quot;},{&quot;label&quot;:&quot;Strategic Integration and Management OfficeSIMO&quot;,&quot;value&quot;:&quot;Strategic Integration and Management Office&quot;,&quot;desc&quot;:&quot;NASA:HQ:ESMD:SIMO&quot;},{&quot;label&quot;:&quot;Strategic InvestmentsSI&quot;,&quot;value&quot;:&quot;Strategic Investments&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCEO:SI&quot;},{&quot;label&quot;:&quot;Strategic PlanningSP&quot;,&quot;value&quot;:&quot;Strategic Planning&quot;,&quot;desc&quot;:&quot;NASA:HQ:OPAE:SP&quot;},{&quot;label&quot;:&quot;Student EngagementEONS&quot;,&quot;value&quot;:&quot;Student Engagement&quot;,&quot;desc&quot;:&quot;NASA:HQ:OSE:EONS&quot;},{&quot;label&quot;:&quot;Supersonics ProjectFAP&quot;,&quot;value&quot;:&quot;Supersonics Project&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:FAP&quot;},{&quot;label&quot;:&quot;System-Wide SafetyAOSP&quot;,&quot;value&quot;:&quot;System-Wide Safety&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:AOSP&quot;},{&quot;label&quot;:&quot;Systems-Wide Safety and Assurance TechnologiesAVSP&quot;,&quot;value&quot;:&quot;Systems-Wide Safety and Assurance Technologies&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:AVSP&quot;},{&quot;label&quot;:&quot;Technology &amp; ProductsTP&quot;,&quot;value&quot;:&quot;Technology &amp; Products&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCEO:TP&quot;},{&quot;label&quot;:&quot;Technology Demonstration MissionsTDM&quot;,&quot;value&quot;:&quot;Technology Demonstration Missions&quot;,&quot;desc&quot;:&quot;NASA:HQ:STMD:TDM&quot;},{&quot;label&quot;:&quot;Technology Demonstration MissionsTDM&quot;,&quot;value&quot;:&quot;Technology Demonstration Missions&quot;,&quot;desc&quot;:&quot;NASA:HQ:OCT:TDM&quot;},{&quot;label&quot;:&quot;Technology Development OfficeTDO&quot;,&quot;value&quot;:&quot;Technology Development Office&quot;,&quot;desc&quot;:&quot;NASA:HQ:ESMD:TDO&quot;},{&quot;label&quot;:&quot;Transformational Tools and TechnologiesTACP&quot;,&quot;value&quot;:&quot;Transformational Tools and Technologies&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:TACP&quot;},{&quot;label&quot;:&quot;Transformative Aeronautical ConceptsTACP&quot;,&quot;value&quot;:&quot;Transformative Aeronautical Concepts&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:TACP&quot;},{&quot;label&quot;:&quot;Translational Research InstituteHRP&quot;,&quot;value&quot;:&quot;Translational Research Institute&quot;,&quot;desc&quot;:&quot;NASA:JSC:HEOMD:HRP&quot;},{&quot;label&quot;:&quot;Translational Research InstituteHRP&quot;,&quot;value&quot;:&quot;Translational Research Institute&quot;,&quot;desc&quot;:&quot;NASA:HQ:SOMD:HRP&quot;},{&quot;label&quot;:&quot;Translational Research InstituteHRP&quot;,&quot;value&quot;:&quot;Translational Research Institute&quot;,&quot;desc&quot;:&quot;NASA:JSC:SOMD:HRP&quot;},{&quot;label&quot;:&quot;UAS Traffic ManagementAOSP&quot;,&quot;value&quot;:&quot;UAS Traffic Management&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:AOSP&quot;},{&quot;label&quot;:&quot;UAS-NASIASP&quot;,&quot;value&quot;:&quot;UAS-NAS&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:IASP&quot;},{&quot;label&quot;:&quot;UAS-NASISR&quot;,&quot;value&quot;:&quot;UAS-NAS&quot;,&quot;desc&quot;:&quot;NASA:AFRC:ARMD:ISR&quot;},{&quot;label&quot;:&quot;UniverseU&quot;,&quot;value&quot;:&quot;Universe&quot;,&quot;desc&quot;:&quot;NASA:HQ:SMD:U&quot;},{&quot;label&quot;:&quot;University InnovationsTACP&quot;,&quot;value&quot;:&quot;University Innovations&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD:TACP&quot;},{&quot;label&quot;:&quot;University of Maryland Baltimore Campus ProcurementHQ-UMBC&quot;,&quot;value&quot;:&quot;University of Maryland Baltimore Campus Procurement&quot;,&quot;desc&quot;:&quot;NASA:HQ:HQ-UMBC&quot;},{&quot;label&quot;:&quot;Unmanned Aircraft Systems Integration in the National Airspace SystemISRP&quot;,&quot;value&quot;:&quot;Unmanned Aircraft Systems Integration in the National Airspace System&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:ISRP&quot;},{&quot;label&quot;:&quot;Vehicle Systems Safety TechnologiesAVSP&quot;,&quot;value&quot;:&quot;Vehicle Systems Safety Technologies&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:AVSP&quot;},{&quot;label&quot;:&quot;Verification and Validation of Flight Critical SystemsAVSP&quot;,&quot;value&quot;:&quot;Verification and Validation of Flight Critical Systems&quot;,&quot;desc&quot;:&quot;NASA:HQ:ARMD-OLD:AVSP&quot;},{&quot;label&quot;:&quot;Wallops Flight FacilityWFF&quot;,&quot;value&quot;:&quot;Wallops Flight Facility&quot;,&quot;desc&quot;:&quot;NASA:WFF&quot;},{&quot;label&quot;:&quot;Wallops Flight Facility ProcurementWFF-Proc&quot;,&quot;value&quot;:&quot;Wallops Flight Facility Procurement&quot;,&quot;desc&quot;:&quot;NASA:WFF:WFF-Proc&quot;}]" id="allOrgsJSON"/>
+<script type="text/javascript" src="/external/javascript/solicitation/openSols.js?v=8.7">
+</script>
+
+
+<div id="solSummaryDialog"
+ class="container contentContainer">
+
+			<div class='spinner' id='indicator'><span class='spinnerText'>Loading...</span></div>
+</div>
+<script type="text/javascript">
+jQuery(document).ready(function () {
+	var options_solSummaryDialog = {};
+	options_solSummaryDialog.height = "auto";
+	options_solSummaryDialog.width = 950;
+	options_solSummaryDialog.maxWidth = 950;
+	options_solSummaryDialog.title = "Solicitation Summary";
+	options_solSummaryDialog.position = { my: 'center', at: 'top', of: window };
+	options_solSummaryDialog.buttons = {'Close':function() { $(this).dialog('close'); }};
+	options_solSummaryDialog.draggable = false;
+	options_solSummaryDialog.resizable = false;
+	options_solSummaryDialog.autoOpen = false;
+	options_solSummaryDialog.modal = true;
+	options_solSummaryDialog.opentopics = "openSolSummaryTopic";
+	options_solSummaryDialog.jqueryaction = "dialog";
+	options_solSummaryDialog.id = "solSummaryDialog";
+	options_solSummaryDialog.onbef = "beforeSolSummaryTopic";
+	options_solSummaryDialog.href = "/external/solicitations/solInfo!init.do";
+	options_solSummaryDialog.hrefparameter = "path=open";
+	options_solSummaryDialog.indicatorid = "indicator";
+
+jQuery.struts2_jquery_ui.bind(jQuery('#solSummaryDialog'),options_solSummaryDialog);
+ });
+</script>
+	
+								</div>
+
+								<!-- End main content -->
+							</div>
+						</div>
+					</div>
+	
+					<div class="clearBoth"></div>
+				</div>
+			</div>
+
+		</div>
+		
+		<!-- Page footer -->
+		
+
+<script type="text/javascript">
+$(document).ready(function() {
+	loadGoogleAnalytics();
+});</script>
+
+<!--  This file in nspires_split External is replicated in external4-->
+
+ 
+    <div id="contactUsModal"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="contactUsModal" aria-hidden="true">
+    <div class="modal-dialog modal-infoModal-md infoModal modal-dialog-scrollable">
+      <div class="modal-content contentContainer">
+        <div class="modal-header">
+          <h5 class="modal-title">Contact Info</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"> <span aria-hidden="true" title="Close">×</span></button>
+        </div>
+        <div class="modal-body container">
+			<h3>Requests for technical assistance in using NSPIRES should be
+            directed to the NASA Research and Education Support Services Help
+            Desk at <a href="mailto:nspires-help@nasaprs.com" title="NASA Research and Education Support Services Help Desk Email">nspires-help@nasaprs.com</a>, or at (202) 479-9376, Monday - Friday, 8 AM to 6 PM EST/EDT. </h3>
+          <p>Do not send correspondence concerning general matters,
+            employment, or unsolicited research concepts. General inquiries
+            will not be answered. See the links below for other helpful
+            resources.</p>
+          <h3>Other Links:</h3>
+          <ul>
+            <li>Employment or internships with NASA: <a class="externalLink" title="Careers at NASA" href="https://www.nasa.gov/careers" target="_blank">https://www.nasa.gov/careers</a> </li>
+            <li>Information about NASA: <a class="externalLink" title="NASA" href="https://www.nasa.gov/" target="_blank">https://www.nasa.gov/</a> </li>
+          </ul>
+          <div class="mainBtnContainer">
+            <div class="innerBox">
+              <button  data-bs-dismiss="modal" aria-label="Close"  type="button"
+								class="mainBtn cancelBtn"  name="" title="Close" value="iAcknowledge">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script src="/external4/javascript/lu.js">
+</script>
+
+<div class="footerWrapper footer">
+	<div class="footerContainer">
+		<div class="footerContent">
+			<div class="container-fluid">
+				<div class="row footerInfoSec">
+					<div class="col-12">
+						<div class="nasaFtLogo">
+							<span></span>
+						</div>
+						<ul class="footerInfo">
+							<li>NASA Solicitation and Proposal Integrated Review and Evaluation System</li>
+							<li>NASA Official: <r class="ns-lu" data-lookup="nasacor">Justin Mathurin</r></li>
+						</ul>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<ul class="footerLinks">
+							<li><span class="staticLink staticLink600 externalLink"><a
+								href="https://www.nasa.gov/about/highlights/HP_Privacy.html" class="externalLinkHome"
+								target="_blank" title="NASA Web Privacy Policy and Important Notices">NASA Web Privacy Policy and Important Notices</a></span></li>
+							<li><span class="staticLink staticLink600 externalLink"><a href="https://www.nasa.gov/general/accessibility/" class="externalLinkHome" target="_blank" title="Section 508 Compliance and Digital Accessibility">Section 508 Compliance and Digital Accessibility</a></span></li>
+							<li><span class="staticLink staticLink600">
+								<a href="/external/externalhelp/public/index.htm" target="_blank" title="Help">Help</a></span></li>
+							<li><span class="staticLink staticLink600 externalLink"><a href="https://get.adobe.com/reader/" class="pdfHome" title="Download Adobe Acrobat Reader" target="_blank">Download Adobe Acrobat Reader</a></span></li>
+							<li><span class="staticLink staticLink600"><a id="contactUs" data-bs-toggle="modal" data-bs-target="#contactUsModal" data-bs-keyboard="false" title="Contact Info" href="#">Contact Info</a></span></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="/external/javascript/uiUtils.js">
+</script>
+
+		<!-- End footer -->
+
+	</body>
+</html>
