@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>esa-star Publication</title>
+  <base href="/">
+  <link rel="icon" href="favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+<script type="text/javascript" src="/ruxitagentjs_ICA7NVfqrux_10345260810170330.js" data-dtconfig="rid=RID_1870710671|rpid=347390053|domain=esa.int|reportUrl=/rb_71e7b460-a0d1-479a-8927-2e3ed79e833f|app=43c1994bb133510d|srtbv=4|owasp=1|featureHash=ICA7NVfqrux|rdnt=1|uxrgce=1|cuc=525h53tv|mel=100000|expw=1|dpvc=1|lastModification=1794620510493|tp=500,50,0|srbbv=3|agentUri=/ruxitagentjs_ICA7NVfqrux_10345260810170330.js"></script><link rel="stylesheet" href="styles.34e3b3f6a4d6d7f8d470.css"></head>
+<body class="blue-scroll">
+  <ep-root></ep-root>
+<script src="runtime-es2015.edb2fcf2778e7bf1d426.js" type="module"></script><script src="runtime-es5.edb2fcf2778e7bf1d426.js" nomodule defer></script><script src="polyfills-es5.908bb133d521cb22b7aa.js" nomodule defer></script><script src="polyfills-es2015.d729133bbd57035d477b.js" type="module"></script><script src="main-es2015.77d9349f2f8a727790df.js" type="module"></script><script src="main-es5.77d9349f2f8a727790df.js" nomodule defer></script></body>
+</html>
