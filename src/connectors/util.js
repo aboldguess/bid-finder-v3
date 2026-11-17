@@ -1,5 +1,6 @@
 // Shared helpers for connectors: polite HTTP, and parsers for the money,
 // date and "Label: value" formats that UK funding sites use.
+import * as cheerio from 'cheerio';
 import { createHttp } from '../http/client.js';
 
 const defaultHttp = createHttp();
@@ -37,7 +38,7 @@ const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 
 
 // Is a UTC instant inside British Summer Time (last Sunday of March 01:00 UTC
 // to last Sunday of October 01:00 UTC)?
-function isBst(utcMs) {
+export function isBst(utcMs) {
   const y = new Date(utcMs).getUTCFullYear();
   const lastSunday = (month) => {
     const d = new Date(Date.UTC(y, month + 1, 0, 1));
@@ -141,4 +142,87 @@ export function countryCode(value) {
   if (ALPHA3[v]) return ALPHA3[v];
   if (/^UNITED KINGDOM|^ENGLAND|^SCOTLAND|^WALES|^NORTHERN IRELAND/.test(v)) return 'GB';
   return '';
+}
+
+// Every opportunity field, empty, so a connector only states what it knows.
+export const blankOpportunity = () => ({
+  external_id: '', title: '', summary: '', url: '', funder: '', location: '', eligibility: '', status: '',
+  award_min: null, award_max: null, total_fund: null, award_text: '', opens_at: null, closes_at: null, published_at: null,
+  cpv_codes: '', country: '', currency: '', notice_type: '',
+});
+export const opportunity = (fields) => ({ ...blankOpportunity(), ...fields });
+
+// Plain text from an HTML fragment, with entities decoded ("&ndash;" -> "–").
+export function htmlText(html) {
+  const s = String(html ?? '');
+  if (!/[<&]/.test(s)) return clean(s);
+  return clean(cheerio.load(`<div>${s.replace(/<\/(p|li|div|h\d)>|<br\s*\/?>/gi, '$& ')}</div>`).text());
+}
+
+// "MM/DD/YYYY" (US) -> ISO. A date with no time is the end of that day in
+// US Eastern time, the safe reading for a deadline.
+export function parseUsDate(text, { endOfDay = true } = {}) {
+  const m = clean(text).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (!m) return isoOrNull(text);
+  return isoOrNull(`${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}T${endOfDay ? '23:59:00' : '00:00:00'}-05:00`);
+}
+
+// "2026-12-10" -> end of that day in the given UTC offset; full timestamps pass through.
+export function dayOrInstant(value, offset = 'Z', { endOfDay = true } = {}) {
+  const v = clean(String(value ?? ''));
+  if (!v) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return isoOrNull(`${v}T${endOfDay ? '23:59:00' : '00:00:00'}${offset}`);
+  return isoOrNull(v);
+}
+
+// Minimal RFC 4180 CSV parser: quoted fields, doubled quotes, newlines in quotes.
+export function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let field = '';
+  let quoted = false;
+  const s = String(text).replace(/^﻿/, '');
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (quoted) {
+      if (ch === '"') {
+        if (s[i + 1] === '"') { field += '"'; i++; } else quoted = false;
+      } else field += ch;
+    } else if (ch === '"') quoted = true;
+    else if (ch === ',') { row.push(field); field = ''; }
+    else if (ch === '\n' || ch === '\r') {
+      if (ch === '\r' && s[i + 1] === '\n') i++;
+      row.push(field); rows.push(row); row = []; field = '';
+    } else field += ch;
+  }
+  if (field || row.length) { row.push(field); rows.push(row); }
+  const [header = [], ...body] = rows;
+  return body.filter((r) => r.length > 1 || r[0]).map((r) => Object.fromEntries(header.map((h, i) => [h, r[i] ?? ''])));
+}
+
+// UTC offset of Central European Time on a local wall-clock date: "+02:00" in
+// summer time (which starts and ends at the same instants as in the UK).
+export const cetOffset = (localIso) => (isBst(Date.parse(`${String(localIso).slice(0, 10)}T12:00:00Z`)) ? '+02:00' : '+01:00');
+
+// A local timestamp with no zone ("2026-12-09T16:00:00") read in the given
+// zone function; a bare date is the end of that day.
+export function localToIso(value, offsetFor = cetOffset) {
+  const v = clean(String(value ?? ''));
+  if (!v) return null;
+  if (/[zZ]$|[+-]\d{2}:?\d{2}$/.test(v)) return isoOrNull(v);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return isoOrNull(`${v}T23:59:00${offsetFor(v)}`);
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?/.test(v)) return isoOrNull(`${v.slice(0, 19)}${offsetFor(v)}`);
+  return isoOrNull(v);
+}
+
+// Only items whose deadline has not passed.
+export const stillOpen = (items, now = Date.now()) => items.filter((i) => !i.closes_at || Date.parse(i.closes_at) > now);
+
+// UTC offset of North American Eastern time on a local date: daylight time
+// runs from the second Sunday of March to the first Sunday of November.
+export function easternOffset(localIso) {
+  const d = new Date(`${String(localIso).slice(0, 10)}T12:00:00Z`);
+  const y = d.getUTCFullYear();
+  const nthSunday = (month, n) => { const x = new Date(Date.UTC(y, month, 1)); x.setUTCDate(1 + ((7 - x.getUTCDay()) % 7) + 7 * (n - 1)); return x.getTime(); };
+  return d.getTime() >= nthSunday(2, 2) && d.getTime() < nthSunday(10, 1) ? '-04:00' : '-05:00';
 }

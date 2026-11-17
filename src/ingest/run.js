@@ -71,7 +71,7 @@ function sourceRow(db, key) {
 }
 
 function context(db, connector, source, opts) {
-  const http = createHttp({ minDelayMs: connector.minDelayMs ?? 1000, respectRobots: Boolean(connector.respectRobots), guard: Boolean(connector.guard) });
+  const http = createHttp({ minDelayMs: connector.minDelayMs ?? 1000, respectRobots: Boolean(connector.respectRobots), robotsOffsiteError: connector.robotsOffsiteError, guard: Boolean(connector.guard) });
   let sourceConfig = {};
   try { sourceConfig = JSON.parse(source?.config || '{}'); } catch { /* treat as empty */ }
   return {

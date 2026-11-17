@@ -47,6 +47,12 @@ export function createHttp({
   userAgent = config.userAgent,
   minDelayMs = 1000,
   respectRobots = false,
+  // RFC 9309 says a robots.txt that fails with a server error means "disallow
+  // everything". Some sites send /robots.txt to a sign-in service on another
+  // host that fails; that is not the site stating a policy. 'allow' treats
+  // only that case (server error after a redirect to a different host) as
+  // having no robots.txt. Off unless a connector asks for it.
+  robotsOffsiteError = 'disallow',
   guard = false,
   retries = 3,
   sleep = realSleep,
@@ -60,7 +66,8 @@ export function createHttp({
   }
 
   async function robotsFor(origin) {
-    const hit = robotsCache.get(origin);
+    const cacheKey = `${origin} ${robotsOffsiteError}`;
+    const hit = robotsCache.get(cacheKey);
     if (hit && Date.now() - hit.at < 24 * 3600e3) return hit;
     let groups = [];
     let note = '';
@@ -68,7 +75,9 @@ export function createHttp({
       const res = await fetchImpl(`${origin}/robots.txt`, { headers: { 'User-Agent': userAgent }, signal: AbortSignal.timeout(15000) });
       // 4xx means "no restrictions"; 5xx means "assume disallowed" (RFC 9309).
       if (res.ok) groups = parseRobots(await res.text());
-      else if (res.status >= 500) {
+      else if (res.status >= 500 && robotsOffsiteError === 'allow' && res.redirected && new URL(res.url).host !== new URL(origin).host) {
+        log.info(`robots.txt at ${new URL(origin).host} redirects to ${new URL(res.url).host}, which fails with HTTP ${res.status}; treating it as absent`);
+      } else if (res.status >= 500) {
         groups = parseRobots('User-agent: *\nDisallow: /');
         note = ` (its robots.txt could not be read: HTTP ${res.status}${res.redirected ? ` after a redirect to ${new URL(res.url).host}` : ''}, which means "assume everything is disallowed")`;
       }
@@ -76,7 +85,7 @@ export function createHttp({
       groups = [];
     }
     const entry = { groups, note, at: Date.now() };
-    robotsCache.set(origin, entry);
+    robotsCache.set(cacheKey, entry);
     return entry;
   }
 

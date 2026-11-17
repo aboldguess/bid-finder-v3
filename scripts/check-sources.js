@@ -38,7 +38,7 @@ for (const c of connectors) {
   if (wanted.length && !wanted.includes(c.key)) continue;
   const credential = c.key === 'sam-gov' ? (process.env.SAM_API_KEY ? { key: process.env.SAM_API_KEY } : null) : null;
   if (c.key === 'sam-gov' && !credential) { rows.push({ source: c.key, result: 'skipped (no SAM_API_KEY)' }); continue; }
-  const http = createHttp({ minDelayMs: c.minDelayMs ?? 1000, respectRobots: Boolean(c.respectRobots), retries: 2 });
+  const http = createHttp({ minDelayMs: c.minDelayMs ?? 1000, respectRobots: Boolean(c.respectRobots), robotsOffsiteError: c.robotsOffsiteError, retries: 2 });
   const started = Date.now();
   try {
     const items = await c.fetch({ maxPages: 1, get: http.get, request: http.request, since: null, config: {}, credential, days: 7 });
