@@ -1,11 +1,12 @@
-# TEMPORARY: runs scripts/probe.js on pushes to this branch. Removed before merge.
+# TEMPORARY: runs scripts/probe.js on pushes to this branch and commits what
+# the portals returned to probe-out/. Removed before merge.
 name: probe
 on:
   push:
     branches: [claude/project-thread-m0d3sy]
     paths: [scripts/probe.js, .github/workflows/probe.yml]
 permissions:
-  contents: read
+  contents: write
 jobs:
   probe:
     runs-on: ubuntu-latest
@@ -18,3 +19,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: node scripts/probe.js
+      - name: Commit the responses
+        run: |
+          git config user.name probe-bot
+          git config user.email probe-bot@users.noreply.github.com
+          git add -f probe-out
+          git commit -m "Probe responses [skip ci]" && git push
