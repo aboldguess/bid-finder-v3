@@ -1,0 +1,1 @@
+{"userName":null,"email":null,"roles":[],"policies":[],"name":null,"surname":null,"displayName":null,"isSuperAdmin":false,"isEsaUser":false,"isIndustryUser":false,"entityId":null,"entityStatus":null,"isNationalDelegate":false,"isIndustrialOmbudsman":false,"isInteractRepliesEditor":false,"lastLogin":"2026-11-17T22:19:35.6568964+01:00","countryCode":"","country":"","isPublic":true}
