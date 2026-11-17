@@ -4,7 +4,7 @@
 // on any change to a connector, so a portal changing its API is noticed.
 //
 // Usage: node scripts/check-sources.js [source-key ...]
-// SAM.gov is checked only when SAM_API_KEY is set.
+// SAM.gov uses the official API when SAM_API_KEY is set, else public search.
 import { connectors } from '../src/connectors/index.js';
 import { createHttp } from '../src/http/client.js';
 
@@ -14,7 +14,6 @@ const wanted = process.argv.slice(2);
 // notice when they recover, but they do not fail the run.
 const KNOWN_ISSUES = {
   sell2wales: 'the API answers every request with HTTP 500 "Error converting data type nvarchar to float" (seen November 2026)',
-  'innovate-uk': 'its robots.txt redirects to a sign-in service that returns HTTP 500, which the robots.txt standard says to treat as "disallow everything" (seen November 2026)',
 };
 const isoOk = (v) => v == null || (typeof v === 'string' && !Number.isNaN(Date.parse(v)));
 
@@ -37,7 +36,6 @@ let failed = 0;
 for (const c of connectors) {
   if (wanted.length && !wanted.includes(c.key)) continue;
   const credential = c.key === 'sam-gov' ? (process.env.SAM_API_KEY ? { key: process.env.SAM_API_KEY } : null) : null;
-  if (c.key === 'sam-gov' && !credential) { rows.push({ source: c.key, result: 'skipped (no SAM_API_KEY)' }); continue; }
   const http = createHttp({ minDelayMs: c.minDelayMs ?? 1000, respectRobots: Boolean(c.respectRobots), robotsOffsiteError: c.robotsOffsiteError, retries: 2 });
   const started = Date.now();
   try {

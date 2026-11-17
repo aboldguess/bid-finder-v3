@@ -9,13 +9,18 @@ const iso = (d) => d.toISOString().slice(0, 10);
 const ago = (n) => new Date(Date.now() - n * 864e5);
 const P = (name, url, opts = {}) => ({ name, url, ...opts });
 const sedia = (types, status = ['31094501', '31094502']) => ({ query: JSON.stringify({ bool: { must: [{ terms: { type: types } }, { terms: { status } }] } }), languages: JSON.stringify(['en']), sort: JSON.stringify({ field: 'sortStatus', order: 'ASC' }) });
-const md = (d) => `${String(d.getUTCMonth() + 1).padStart(2, '0')}/${String(d.getUTCDate()).padStart(2, '0')}/${d.getUTCFullYear()}`;
+const ESA = 'https://esastar-publication-ext.sso.esa.int/api';
 const probes = [
-  P('r4-esa-endpoints', 'https://esastar-publication-ext.sso.esa.int/assets/conf/endpoints.json'),
-  P('r4-esa-labels', 'https://esastar-publication-ext.sso.esa.int/assets/conf/labels.json', { keep: 20000 }),
-  P('r4-jetro-national', `https://www.jetro.go.jp/en/database/procurement/national/list.html?type=&from=${encodeURIComponent(md(ago(7)))}&to=${encodeURIComponent(md(today))}`),
-  P('r4-jetro-local', `https://www.jetro.go.jp/en/database/procurement/local/list.html?local_from=${encodeURIComponent(md(ago(7)))}&local_to=${encodeURIComponent(md(today))}`),
-  P('r4-jetro-national-plain', 'https://www.jetro.go.jp/en/database/procurement/national/list.html'),
+  P('r5-jetro-central', 'https://www.jetro.go.jp/XiProcurementSearch/xi_proc_central_en.json', { keep: 300000 }),
+  P('r5-jetro-local', 'https://www.jetro.go.jp/XiProcurementSearch/xi_proc_local_en.json', { keep: 300000 }),
+  P('r5-esa-filter', `${ESA}/tenderAction/filter`),
+  P('r5-esa-filter-20-0', `${ESA}/tenderAction/filter/20/0`),
+  P('r5-esa-filter-0-1', `${ESA}/tenderAction/filter/0/1`),
+  P('r5-esa-last', `${ESA}/tenderAction/last/10`),
+  P('r5-esa-status', `${ESA}/app/status`),
+  P('r5-esa-type', `${ESA}/app/tendertype`),
+  P('r5-esa-user', `${ESA}/user`),
+  P('r5-esa-nonesa', `${ESA}/nonESATA/filter`),
 ];
 
 fs.mkdirSync('probe-out', { recursive: true });

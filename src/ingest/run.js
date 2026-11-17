@@ -53,7 +53,7 @@ export function saveOpportunities(db, connector, items) {
   let added = 0;
   db.transaction(() => {
     for (const item of items) {
-      const row = { source_key: connector.key, type: connector.type, external_id: String(item.external_id).slice(0, 500) };
+      const row = { source_key: connector.key, type: item.type === 'grant' || item.type === 'tender' ? item.type : connector.type, external_id: String(item.external_id).slice(0, 500) };
       for (const f of TEXT) row[f] = String(item[f] ?? '').slice(0, f === 'summary' ? 20000 : 2000);
       for (const f of NULLABLE) row[f] = item[f] ?? null;
       row.currency = item.currency || 'GBP';
