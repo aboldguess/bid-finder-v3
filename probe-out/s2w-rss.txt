@@ -1,0 +1,637 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head><title>
+	Page not found - Sell2Wales
+</title><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" /><link rel="stylesheet" href="/S2WWeb/Content/s2w/s2w-bootstrap.css" /><link rel="stylesheet" href="/S2WWeb/Content/fontawesome/font-awesome.min.css" />
+    <script src="/S2WWeb/Scripts/jQuery/jquery-3.7.1.min.js"></script>
+    <script src="/S2WWeb/Scripts/modal/accessible-modal.js"></script>
+
+    <meta name="Keywords" content="Sell2Wales: tenders, ojeu, ojec, public sector contract opportunities, private sector contracts, Wales" />
+        <meta name="Description" content="Welcome to Sell2Wales, an initiative from the Welsh Government helping SMEs work successfully with the public sector."></meta>
+    
+</head>
+<body id="body">
+
+    
+
+<div class="loading-panel" style="display: none;">
+    <div class="spinner-s2w"><div></div><div></div><div></div></div>
+</div>
+
+<script>
+    function showLoadingSpinner() {
+        document.getElementsByClassName('loading-panel')[0].style.display = "block";
+    }
+
+    function hideLoadingSpinner() {
+        document.getElementsByClassName('loading-panel')[0].style.display = "none";
+    }
+</script>
+    
+
+<div class="toast-container bottom-0 start-50 translate-middle-x" role="alert" aria-live="assertive" aria-atomic="true">
+    <div id="globalToast" class="toast" data-bs-delay="10000">
+        <div class="toast-body">
+        </div>
+    </div>
+</div>
+
+    <a class="visually-hidden-focusable" href="#content">Skip to main content</a>
+
+    <form method="post" action="./404.aspx" id="aspnetForm">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="Kn3dgY1dTmK0WJa3Ei7NXb9oyiH7tXRvWpT13ZGmNAM2EZrdBMIk1U2gkz7NbKE8aSvEe3HEHyNeNBWtUeOzL5RBJZoxG3OdEAKBGo4kioxetkjgl6uReoeC9RbROL0uvlJUrpgYac0sVn4bSQNqGO62PUwmWPgVOp7CLwehAOykBo+dd2WdsLgs1E/nqjDBhtyeuVXGmPX5Hanf5O63i92xPAj/NK4K7n7wMoObbcHcMWxaNs5jK0a2cB1F2lZwHyenFie3DAjt+umt0HY5UccXFUdkFaqYvdtYtfSxB3QIWzupzBp5eNcABZnngQaKhd0kXxadPxz+ictqjdSWaK5aZMAtXY+DkZHciL2+yGT4mNN5uxIWvPo/G39S3Ny5ghNd8w30qVe3yrHoRFebKzfzRXeX6veeT+YCxsAkOy5JjX/k7rjNo1LtiIyVUEqV5WNaOqfLWzzv/ovYZpLJqObhiftiJoAzNz1XlzDifA7CRs+d7mTnF87wVJXeLYr17gVAk9PoCMf1WCSYDsw9fw==" />
+
+
+<script src="/ScriptResource.axd?d=NJmAwtEo3Ipnlaxl6CMhvg34YUS4LDW17rN2zEUafJKVFKfXnZAjUAz4owVsu9E-pMzky-YeshUKDWayeA6Of3yde_9yldrjxNmAaPk7JR-7cxB6vYKVnudJoscqSdaxP2aGyjhpkvFlrUdKrRcf7tU8HNXLQ5fjIIVrS2I_-hQ1&amp;t=2a9d95e3" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="193A34DB" />
+<input type="hidden" name="__PREVIOUSPAGE" id="__PREVIOUSPAGE" value="JWrtrvRpNsO--q4ss0cRPdVVQ56dRZFko5PgXinLzHkOH_JuOKK1XvXdqKrfztGIc5fgspwei1LSVQMbopZFCA2" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="ACzoK5Co+jaS8Ara+jg+ijQHSMlHwxsbsHHQGSoe50RblOkOQVmc4WrR4iRPVYQi8KMf86HZd5BmEJxVm2hs7T6Qt/JI5tczwwu1tKcStd5wKrgXAaq1RiRW+ddNvJK+eWmyamk2Wpam5Vc33Q1Nj7l0DLOVVcCjRceDd/4siwM=" />
+        
+        
+
+        <div id="ctl00_ctrlCookieBar_pnlCookiesBar">
+	
+        <div id="ctl00_ctrlCookieBar_pnlCookiesMessage">
+		
+            <div class="container-fluid cookiebar">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <p>We've saved some files called cookies on your device. These cookies are:</p>
+                                    <ul>
+                                        <li>essential for the site to work</li>
+                                        <li>to help improve our website by collecting and reporting information on how you use it</li>
+                                    </ul>
+                                    <p>We would also like to save some cookies to help tailor communications.</p>
+
+                                    <input type="submit" name="ctl00$ctrlCookieBar$btnAcceptCookies" value="Accept all cookies" id="ctl00_ctrlCookieBar_btnAcceptCookies" class="btn-xs-blue-inverted" />
+                                    <input type="submit" name="ctl00$ctrlCookieBar$ctl02" value="Set cookie preferences" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$ctrlCookieBar$ctl02&quot;, &quot;&quot;, false, &quot;&quot;, &quot;/Cookies/CookiesPolicy.aspx&quot;, false, false))" class="btn-xs-blue-inverted" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+	</div>
+
+        
+    
+</div>
+
+
+
+        <div class="container-fluid mb-3">
+            
+
+<div class="row beta-bar">
+    <div class="col-12">
+        <div class="container h-100">
+            <div class="row h-100">
+                <div class="d-flex">
+                <div class="justify-content-center align-self-center">
+                    <span class="badge beta-badge">BETA</span>
+                </div>
+
+                <div class="flex-grow-1 justify-content-center align-self-center">
+                    You're viewing an updated version of this service - your feedback will help us to improve it.
+                </div>
+
+                <div class="justify-content-center align-self-center">
+
+                    
+                    <div class="d-none d-md-block text-right text-nowrap" style="display: inline-block; float: right;">
+                        <a class="btn-beta-feedback" href="mailto:help@sell2wales.gov.wales?subject=Sell2Wales Site Feedback">
+                            Give Feedback
+                        </a>
+                    </div>
+
+                    
+                    <div class="d-sm-block d-md-none text-right" style="display: inline-block; float: right;">
+                        <a class="btn-beta-expand text-black" aria-label="Expand" data-bs-toggle="collapse" href="#mobileExtraFeedbackOptions" role="button" aria-expanded="false" aria-controls="mobileExtraFeedbackOptions">
+                            <i class="fa fa-2x fa-chevron-down" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="col-12 collapse d-md-none" style="margin-top: 10px;" id="mobileExtraFeedbackOptions">
+                    <div style="display: inline-block;">
+                        <a class="btn-beta-feedback" href="mailto:help@sell2wales.gov.wales?subject=Sell2Wales Site Feedback">
+                            Give Feedback
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+            
+
+             
+
+<div class="row masthead">
+    <div class="col-12">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-4 col-sm-6 justify-content-center align-self-center">
+
+                    <a id="ctl00_ctl08_lnkGovWales" href="https://gov.wales" target="_blank"><img class="wg-logo" src="/S2WWeb/Images/wg-white.svg" alt="Welsh Government logo" /></a>
+                </div>
+
+                <div class="col text-end justify-content-center align-self-center">
+                    <a id="ctl00_ctl08_btnGoToAlt" class="btn-language-switch" href="/Redirect/GoAlt.aspx?redirectUrl=%2f404.aspx">Cymraeg</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row sw2-logo-row">
+    <div class="col-12">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-6 justify-content-center align-self-center">
+                    <a class="s2w-logo-link" href="/">
+                        <img id="ctl00_ctl08_imgLogo" class="img-fluid" src="/S2WWeb/Images/s2w-en.png" alt="Sell2Wales Logo" />
+                    </a>
+                </div>
+
+                <div class="col-6 text-end justify-content-center align-self-center">
+
+                    
+
+                    <a id="ctl00_ctl08_lbLogin" class="btn-md-blue-inverted header-sign-in-btn" href="javascript:__doPostBack(&#39;ctl00$ctl08$lbLogin&#39;,&#39;&#39;)">Sign in</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12" style="padding: 0;">
+
+        <nav class="navbar navbar-expand-lg navbar-lightgrey-light">
+            <div class="container" style="flex-direction: row-reverse;">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-bars" aria-hidden="true"></i> Menu
+                </button>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li id="ctl00_ctl08_lnkHome" class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/">
+                                Home
+                            </a>
+                        </li>
+                        <li id="ctl00_ctl08_lnkSearchNotice" class="nav-item">
+                            <a class="nav-link" href="/Search/Search_MainPage.aspx">
+                                Search Contracts
+                            </a>
+                        </li>
+                        <li id="ctl00_ctl08_lnkSearchBuyers" class="nav-item">
+                            <a class="nav-link" href="/Search/Search_Auth.aspx">
+                                Search Buyers
+                            </a>
+                        </li>
+                        <li id="ctl00_ctl08_lnkHelpAndResources" class="nav-item">
+                            <a class="nav-link" href="/helpandresources">
+                                Help and Resources
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    </div>
+</div>
+
+<div class="row d-lg-none">
+    <div class="col-12 no-padding">
+        <div class="collapse navbar-collapse navbar-lightgrey-light-collapse" id="mobileNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li id="ctl00_ctl08_lnkHomeMobile" class="nav-item">
+                    <a class="nav-link mobile-home" aria-current="page" href="/">
+                        Home
+                    </a>
+                </li>
+                <li id="ctl00_ctl08_lnkSearchNoticeMobile" class="nav-item">
+                    <a class="nav-link" href="/Search/Search_MainPage.aspx">
+                        Search Contracts
+                    </a>
+                </li>
+                <li id="ctl00_ctl08_lnkSearchBuyersMobile" class="nav-item">
+                    <a class="nav-link" href="/Search/Search_Auth.aspx">
+                        Search Buyers
+                    </a>
+                </li>
+                <li id="ctl00_ctl08_lnkHelpAndResourcesMobile" class="nav-item">
+                    <a class="nav-link" href="/helpandresources">
+                        Help and Resources
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="ctl00_ctl08_lnkMobileControlPanel" class="nav-link" href="/Membership/Member_ControlPanel.aspx">My account</a>
+                    
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        </div>
+
+        <div id="content"></div>
+        
+
+
+    <div class="container">
+
+        
+        <div class="row">
+            <div class="col-12">
+                <span><nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="/">Home</a></li><li class="breadcrumb-item active" aria-current="page">Page not found</li></ol></nav></span>
+            </div>
+        </div>
+    
+
+
+    
+    <div class="row">
+        <div class="col-12">
+            <h1>
+                Page not found
+            </h1>
+        </div>
+    </div>
+
+
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <h2>Sorry, but the page you were trying to view could not be found.</h2>
+<p><br/>
+This could be the result of a mistyped address or an out of date link.
+<br/><br/>
+You can also search Sell2Wales, visit the <a href="/"/>homepage.</a>
+<p>
+        </div>
+    </div>
+
+  </div>
+
+
+
+        
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <hr class="hr-6" />
+        </div>
+    </div>
+
+
+    <div class="row mb-5">
+        <div class="col-xs-12 order-xs-2 order-md-1 col-md-6">
+            <div class="text-footer-heading">
+                Follow Sell2Wales
+            </div>
+            <ul class="list-inline mt-3">
+                <li class="list-inline-item social">
+                    <a target="_blank" rel="noopener noreferrer" class="no-external-icon" href="https://twitter.com/_Sell2Wales" aria-label="Follow on Twitter">
+                        <svg width="20" height="17" viewBox="0 0 20 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.9442 4.04822C17.9569 4.22588 17.9569 4.40357 17.9569 4.58123C17.9569 10 13.8326 16.2437 6.29444 16.2437C3.97209 16.2437 1.81473 15.5711 0 14.4036C0.329962 14.4417 0.64719 14.4544 0.989848 14.4544C2.90607 14.4544 4.67006 13.8072 6.0787 12.7031C4.27666 12.665 2.7665 11.4848 2.24618 9.86043C2.50001 9.89848 2.7538 9.92387 3.02032 9.92387C3.38833 9.92387 3.75638 9.87309 4.099 9.7843C2.22083 9.40355 0.812152 7.75382 0.812152 5.76143V5.71069C1.35782 6.01526 1.99239 6.20561 2.66493 6.23096C1.56087 5.4949 0.837542 4.23857 0.837542 2.81724C0.837542 2.05583 1.04055 1.35786 1.3959 0.748714C3.41369 3.23603 6.44671 4.86037 9.84769 5.03807C9.78426 4.7335 9.74617 4.41627 9.74617 4.099C9.74617 1.84009 11.5736 0 13.8452 0C15.0254 0 16.0914 0.494924 16.8401 1.29442C17.7665 1.11676 18.6548 0.774105 19.4416 0.304572C19.137 1.25637 18.4898 2.05587 17.6396 2.56345C18.4645 2.47466 19.264 2.24618 20 1.92895C19.4417 2.7411 18.7437 3.46443 17.9442 4.04822Z" />
+                        </svg>
+                    </a>
+                </li>
+                <li class="list-inline-item social">
+                    <a target="_blank" rel="noopener noreferrer" class="no-external-icon" href="https://www.facebook.com/Sell2Wales/" aria-label="Follow on Facebook">
+                        <svg width="13" height="23" viewBox="0 0 13 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.5112 12.9375L12.15 8.77504H8.15602V6.07389C8.15602 4.93512 8.71395 3.8251 10.5027 3.8251H12.3185V0.281211C12.3185 0.281211 10.6707 0 9.09533 0C5.80615 0 3.65619 1.99363 3.65619 5.60266V8.77504H0V12.9375H3.65619V23H8.15602V12.9375H11.5112Z" />
+                        </svg>
+                    </a>
+                </li>
+                <li class="list-inline-item social">
+                    <a target="_blank" rel="noopener noreferrer" class="no-external-icon" href="https://www.linkedin.com/groups/7498668/" aria-label="Follow on LinkedIn">
+                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.89648 21.8745H0.361328V7.27002H4.89648V21.8745ZM2.62646 5.27783C1.17627 5.27783 0 4.07666 0 2.62646C1.03799e-08 1.92988 0.276716 1.26183 0.769274 0.769274C1.26183 0.276716 1.92988 0 2.62646 0C3.32305 0 3.9911 0.276716 4.48366 0.769274C4.97621 1.26183 5.25293 1.92988 5.25293 2.62646C5.25293 4.07666 4.07617 5.27783 2.62646 5.27783ZM21.8701 21.8745H17.3447V14.7651C17.3447 13.0708 17.3105 10.8979 14.9868 10.8979C12.6289 10.8979 12.2676 12.7388 12.2676 14.6431V21.8745H7.73731V7.27002H12.0869V9.26221H12.1504C12.7559 8.11475 14.2349 6.90381 16.4414 6.90381C21.0313 6.90381 21.875 9.92627 21.875 13.8521V21.8745H21.8701Z" />
+                        </svg>
+                    </a>
+                </li>
+                <li class="list-inline-item social">
+                    <a target="_blank" rel="noopener noreferrer" class="no-external-icon" href="https://www.youtube.com/playlist?list=PLG7WQwaaMENg_7vijdMJsLtpmZ4LPap3z" aria-label="Follow on YouTube">
+                        <svg width="24" height="17" viewBox="0 0 24 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M23.2084 2.60777C22.9358 1.58129 22.1326 0.772873 21.1128 0.498524C19.2642 0 11.8519 0 11.8519 0C11.8519 0 4.43954 0 2.59097 0.498524C1.57114 0.772917 0.767925 1.58129 0.495312 2.60777C0 4.46832 0 8.35017 0 8.35017C0 8.35017 0 12.232 0.495312 14.0926C0.767925 15.1191 1.57114 15.8938 2.59097 16.1681C4.43954 16.6667 11.8519 16.6667 11.8519 16.6667C11.8519 16.6667 19.2642 16.6667 21.1128 16.1681C22.1326 15.8938 22.9358 15.1191 23.2084 14.0926C23.7037 12.232 23.7037 8.35017 23.7037 8.35017C23.7037 8.35017 23.7037 4.46832 23.2084 2.60777ZM9.4276 11.8746V4.82574L15.6229 8.35026L9.4276 11.8746Z" />
+                        </svg>
+                    </a>
+                </li>
+                <li class="list-inline-item social">
+                    <a target="_blank" rel="noopener noreferrer" class="no-external-icon" href="https://www.instagram.com/_business.wales/?hl=en" aria-label="Follow on Instagram">
+                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10.946 5.33081C7.84058 5.33081 5.33569 7.83569 5.33569 10.9412C5.33569 14.0466 7.84058 16.5515 10.946 16.5515C14.0515 16.5515 16.5564 14.0466 16.5564 10.9412C16.5564 7.83569 14.0515 5.33081 10.946 5.33081ZM10.946 14.5886C8.93921 14.5886 7.29858 12.9529 7.29858 10.9412C7.29858 8.92944 8.93433 7.2937 10.946 7.2937C12.9578 7.2937 14.5935 8.92944 14.5935 10.9412C14.5935 12.9529 12.9529 14.5886 10.946 14.5886ZM18.0945 5.10132C18.0945 5.82886 17.5085 6.40991 16.7859 6.40991C16.0584 6.40991 15.4773 5.82397 15.4773 5.10132C15.4773 4.37866 16.0632 3.79272 16.7859 3.79272C17.5085 3.79272 18.0945 4.37866 18.0945 5.10132ZM21.8103 6.42944C21.7273 4.67651 21.3269 3.12378 20.0427 1.84448C18.7634 0.565185 17.2107 0.164795 15.4578 0.0769043C13.6511 -0.0256348 8.23608 -0.0256348 6.42944 0.0769043C4.6814 0.159912 3.12866 0.560303 1.84448 1.8396C0.560303 3.1189 0.164795 4.67163 0.0769043 6.42456C-0.0256348 8.2312 -0.0256348 13.6462 0.0769043 15.4529C0.159912 17.2058 0.560303 18.7585 1.84448 20.0378C3.12866 21.3171 4.67651 21.7175 6.42944 21.8054C8.23608 21.908 13.6511 21.908 15.4578 21.8054C17.2107 21.7224 18.7634 21.322 20.0427 20.0378C21.322 18.7585 21.7224 17.2058 21.8103 15.4529C21.9128 13.6462 21.9128 8.23608 21.8103 6.42944ZM19.4763 17.3914C19.0955 18.3484 18.3582 19.0857 17.3962 19.4714C15.9558 20.0427 12.5378 19.9109 10.946 19.9109C9.35425 19.9109 5.9314 20.0378 4.49585 19.4714C3.53882 19.0906 2.80151 18.3533 2.41577 17.3914C1.84448 15.9509 1.97632 12.533 1.97632 10.9412C1.97632 9.34937 1.84937 5.92651 2.41577 4.49097C2.79663 3.53394 3.53394 2.79663 4.49585 2.41089C5.93628 1.8396 9.35425 1.97144 10.946 1.97144C12.5378 1.97144 15.9607 1.84448 17.3962 2.41089C18.3533 2.79175 19.0906 3.52905 19.4763 4.49097C20.0476 5.9314 19.9158 9.34937 19.9158 10.9412C19.9158 12.533 20.0476 15.9558 19.4763 17.3914Z" />
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+
+            <hr class="hr-1" />
+
+            <div>
+                <span style="vertical-align: top; margin-right: 10px;">
+                    <img src="/S2WWeb/Images/Icons/email.svg" alt="Email icon" />
+                </span>
+
+                <a href="/Membership/Member_Settings.aspx?page=comms" class="newsletter-link">
+                    
+                    <span style="vertical-align: text-bottom;">
+                        Sign up to receive email newsletter
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-xs-12 order-xs-1 order-md-2 col-md-6">
+            <div class="text-footer-heading">
+                Sell2Wales Helpline
+            </div>
+
+            <div class="support-tel">
+                0800 222 9004
+            </div>
+            <p>
+                Lines are open 8:30am to 5pm Monday to Friday.
+            </p>
+            <p class="mb-0">Rydym yn croesawu galwadau'n Gymraeg.</p>
+            <p>We welcome calls in Welsh.</p>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <a class="pagefeedback no-style" href="mailto:help@sell2wales.gov.wales?subject=Report%20on%20https%3A%2F%2Fwww.sell2wales.gov.wales%2F404.aspx&body=Page%20URL%3A%20https%3A%2F%2Fwww.sell2wales.gov.wales%2F404.aspx%0D%0APage%20title%3A%20Page%20not%20found%20-%20Sell2Wales%0D%0AYour%20report%3A%20">
+                Give feedback about this page
+            </a>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="container-fluid footer-dark mt-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-12" style="line-height: 73px;">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item container-share-this-page">
+                        <button class="no-style btn-share-this-page" type="button" data-bs-toggle="collapse" data-bs-target="#expandShareThisPage" aria-expanded="false" aria-controls="expandShareThisPage">
+                            <span class="icon">
+                                <img src="/S2WWeb/Images/Icons/share.svg" alt="Share this page" />&nbsp; 
+                            </span>
+                            Share this page
+                        </button>
+
+                        <ul id="expandShareThisPage" class="list-inline mb-0 collapse">
+                            <li class="list-inline-item">
+                                <a target="_blank" rel="noopener noreferrer" class="no-external-icon share-link" href="http://twitter.com/share?url=https%3a%2f%2fwww.sell2wales.gov.wales%2f404.aspx">
+                                    <span class="share-twitter icon"></span>
+                                    Twitter
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a target="_blank" rel="noopener noreferrer" class="no-external-icon share-link" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fwww.sell2wales.gov.wales%2f404.aspx">
+                                    <span class="share-facebook icon"></span>
+                                    Facebook
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="mailto:?body=https%3a%2f%2fwww.sell2wales.gov.wales%2f404.aspx" class="share-link">
+                                    <span class="share-email icon"></span>
+                                    E-mail
+                                </a>
+                            </li>
+                        </ul>
+
+                    </li>
+                    <li class="list-inline-item container-back-to-top">
+                        <button type="button" href="javascript:void(0);" onclick="window.scroll(0,0);" class="no-style btn-back-to-top" aria-label="Back to top">
+                            <span class="icon">
+                                <svg width="19" height="12" viewBox="0 0 19 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9.88995 0.391729L17.9007 8.45848C18.287 8.84753 18.287 9.47829 17.9007 9.8673L16.9663 10.8082C16.5807 11.1965 15.9556 11.1973 15.569 10.8098L9.19041 4.41678L2.8119 10.8099C2.4253 11.1973 1.80021 11.1966 1.41452 10.8082L0.480192 9.86734C0.0938421 9.47828 0.0938421 8.84753 0.480192 8.45852L8.49091 0.39177C8.87722 0.00271744 9.50359 0.0027178 9.88995 0.391729Z" fill="#1F1F1F"/>
+                                </svg>
+                            </span>
+                            Back to top
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid footer">
+    <div class="container primary-links">
+        <div class="row">
+            <div class="col-12">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item">
+                        <a class="no-style primary-link" href="/AboutUs/AboutUs_Main.aspx">About Sell2Wales</a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a class="no-style primary-link" href="/helpandresources/additionalinfo/howtousesell2wales">How to use Sell2Wales</a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a class="no-style primary-link" href="/helpandresources">Help and resources</a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a class="no-style primary-link" href="/AboutUs/AboutUs_ContactUs.aspx">Contact us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <hr class="hr-2" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <ul class="list-inline d-md-flex text-md-center justify-content-between">
+                    <li class="list-inline-item">
+                        <a class="no-style secondary-link" href="/Cookies/CookiesPolicy.aspx">Cookies</a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a class="no-style secondary-link" href="/helpandresources/websitepolicies/privacypolicy">Privacy policy</a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a class="no-style secondary-link" href="/helpandresources/websitepolicies/termsandconditions">Terms &amp; conditions</a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a class="no-style secondary-link" href="/SiteHelp/Help_Access.aspx">Accessibility</a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a class="no-style secondary-link" href="/Notice/Download/Download.aspx">Open Contracting Transparency Data</a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a class="no-style secondary-link" href="/helpandresources/websitepolicies/welsh-language-policy">Welsh language policy</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container logos">
+        <div class="row">
+            <div class="col-12">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item">
+                        <a id="ctl00_ctl09_lnkGovWales" rel="noopener noreferrer" href="https://gov.wales" target="_blank">
+                            <img class="wg-logo" src="/S2WWeb/Images/wg-black.svg" alt="Welsh Government Logo" />
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a id="ctl00_ctl09_lnkGovWalesLogo" rel="noopener noreferrer" href="https://gov.wales" target="_blank">
+                            <img class="bw-logo" src="/S2WWeb/Images/bw-red.svg" alt="Business Wales Logo" />
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container copyright">
+        <div class="row">
+            <div class="col-12">
+                All content is available under the Open Government License, except where otherwise stated.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </form>
+
+    <script src="/S2WWeb/Content/bootstrap/v5/js/bootstrap.bundle.min.js"></script>
+    <script src="/S2WWeb/Scripts/s2w-global.js"></script>
+
+        <script type="text/javascript">
+            // Block Authority Control Panel access for users with no active subscription
+            (function() {
+                var noActiveSubscription = 'false';
+
+                if (noActiveSubscription === 'true') {
+
+                    // Function to block links
+                    function blockControlPanelLinks() {
+                        // Find all links that point to Authority Control Panel - use multiple selectors
+                        var authorityLinks = document.querySelectorAll('a[href*="Authority_ControlPanel"], a[href*="authority_controlpanel"], a[href*="Authority/Authority_ControlPanel"]');
+
+                        // Find all links that point to Member/Supplier Control Panel
+                        var memberLinks = document.querySelectorAll('a[href*="Member_ControlPanel"], a[href*="member_controlpanel"], a[href*="Membership/Member_ControlPanel"]');
+
+                        // Block authority links
+                        if (authorityLinks.length === 0) {
+                            // Try again with all links
+                            var allLinks = document.querySelectorAll('a');
+
+                            allLinks.forEach(function (link) {
+                                var href = link.getAttribute('href') || '';
+                                if (href.toLowerCase().indexOf('authority_controlpanel') > -1) {
+                                    blockLink(link, 'Authority');
+                                }
+                            });
+                        } else {
+                            authorityLinks.forEach(function (link) {
+                                blockLink(link, 'Authority');
+                            });
+                        }
+
+                        // Block member/supplier links
+                        if (memberLinks.length === 0) {
+                            // Try again with all links
+                            var allLinks = document.querySelectorAll('a');
+
+                            allLinks.forEach(function (link) {
+                                var href = link.getAttribute('href') || '';
+                                if (href.toLowerCase().indexOf('member_controlpanel') > -1) {
+                                    blockLink(link, 'Member');
+                                }
+                            });
+                        } else {
+                            memberLinks.forEach(function (link) {
+                                blockLink(link, 'Member');
+                            });
+                        }
+                    }
+
+                    // Function to block a single link
+                    function blockLink(link, panelType) {
+
+                        // Remove any existing click handlers
+                        var newLink = link.cloneNode(true);
+
+                        // Add new click handler
+                        newLink.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+
+                            var message = panelType === 'Authority'
+                                ? 'You do not have an active subscription. Please renew your subscription to access the Authority Control Panel.'
+                                : 'You do not have an active subscription. Please renew your subscription to access the Member Control Panel.';
+
+                            alert(message);
+
+                            // Mark that we've shown the alert, so it doesn't show again on subscription page
+                            sessionStorage.setItem('subscriptionAlertShown', 'true');
+
+                            // Redirect to subscription page
+                            window.location.href = '/Membership/Member_Settings.aspx?page=subs';
+
+                            return false;
+                        }, true); // Use capture phase
+
+                        // Add visual indicator
+                        newLink.style.opacity = '0.6';
+                        newLink.style.cursor = 'not-allowed';
+                        newLink.title = 'Active subscription required';
+
+                        // Replace the old link with new one
+                        if (link.parentNode) {
+                            link.parentNode.replaceChild(newLink, link);
+                        }
+                    }
+
+                    // Run when DOM is ready
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', blockControlPanelLinks);
+                    } else {
+                        // DOM already loaded
+                        blockControlPanelLinks();
+                    }
+
+                    // Also run after a short delay to catch dynamically loaded content
+                    setTimeout(blockControlPanelLinks, 1000);
+                    setTimeout(blockControlPanelLinks, 2000);
+                }
+            })();
+    </script>
+
+    
+
+</body>
+</html>

@@ -1,0 +1,1258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>service.bund.de - öffentliche Ausschreibungen der Vergabestellen der Bundes-, Landes- und Kommunalverwaltung.</title>
+    <link>http://www.service.bund.de/ausschreibungen</link>
+    <description>RSS-Feed mit aktuellen Ausschreibungen der Vergabestellen der Bundes-, Landes- und Kommunalverwaltung.</description>
+    <language>de-de</language>
+    <pubDate>Tue, 17 Nov 2026 22:09:37 +0100</pubDate>
+    <lastBuildDate>Tue, 17 Nov 2026 22:09:37 +0100</lastBuildDate>
+    <managingEditor>redaktion-support@bva.bund.de</managingEditor>
+    <webMaster>redaktion-support@bva.bund.de</webMaster>
+    <generator>Government Site Builder (GSB7.0)</generator>
+    <image>
+      <url>http://www.service.bund.de/cae/servlet/contentblob/546/normal/66/logo_a.jpg</url>
+      <title>service.bund.de - öffentliche Ausschreibungen</title>
+      <link>http://www.service.bund.de/ausschreibungen</link>
+    </image>
+    <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+    <ttl>60</ttl>
+    <item>
+<title>Reinigung Sportbad 2027</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/331953.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>85057 Ingolstadt</strong>
+<br />Vergabestelle: <strong>Stadtwerke Ingolstadt Beteiligungen GmbH, Ringlerstr. 28, 85057 Ingolstadt, Tel.: +49 841800, Fax: +49 841804139, E-Mail: einkauf@sw-i.de, Internet: www.sw-i.de</strong>
+<br />Veröffentlichungsende: <strong>13.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 17:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/331953.html</guid>
+    </item>
+    <item>
+<title>09.12 Baumeisterarbeiten</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/332107.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>91161 Hilpoltstein</strong>
+<br />Vergabestelle: <strong>Rummelsberger Diakonie e.V., Rummelsberg 51, 90592 Schwarzenbruck, Tel.: 09128/50-2147, Fax: 09128/50-2042, E-Mail: wagner.dieter@rummelsberger.net, Internet: www.rummelsberg.de</strong>
+<br />Veröffentlichungsende: <strong>21.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 17:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/332107.html</guid>
+    </item>
+    <item>
+<title>09.69 Aufzugsanlage</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/332109.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>91161 Hilpoltstein</strong>
+<br />Vergabestelle: <strong>Rummelsberger Diakonie e.V., Rummelsberg 51, 90592 Schwarzenbruck, Tel.: 09128/50-2147, Fax: 09128/50-2042, E-Mail: wagner.dieter@rummelsberger.net, Internet: www.rummelsberg.de</strong>
+<br />Veröffentlichungsende: <strong>21.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 17:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/332109.html</guid>
+    </item>
+    <item>
+<title>Vergabe Dispositionszentrale BAXI SAD</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/332102.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>92421 Schwandorf</strong>
+<br />Vergabestelle: <strong>Landratsamt Schwandorf, Wackersdorfer Str. 80, 92421 Schwandorf, Tel.: +49 9431471414, Fax: +49 9431471117, E-Mail: hochbau@landkreis-schwandorf.de, Internet: www.landkreis-schwandorf.de</strong>
+<br />Veröffentlichungsende: <strong>01.03.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 17:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/332102.html</guid>
+    </item>
+    <item>
+<title>Trockenbauarbeiten</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/332098.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>94486 Osterhofen</strong>
+<br />Vergabestelle: <strong>Stadt Osterhofen, Stadtplatz 13, 94486 Osterhofen, Tel.: +49 9932403136, Fax: +49 9932403175, E-Mail: christian.moosbauer@osterhofen.de, Internet: http://www.osterhofen.de</strong>
+<br />Veröffentlichungsende: <strong>01.06.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 17:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/332098.html</guid>
+    </item>
+    <item>
+<title>Au&#223;enanlagen LV_20</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/332114.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>84503 Alt&#246;tting</strong>
+<br />Vergabestelle: <strong>Stadt Alt&#246;tting, Kapellplatz 2a, 84503 Alt&#246;tting, Tel.: +49 867150620, Fax: +49 8671506247, E-Mail: vergabe-hochbau@altoetting.de, Internet: www.altoetting.de</strong>
+<br />Veröffentlichungsende: <strong>25.11.2026 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 17:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/332114.html</guid>
+    </item>
+    <item>
+<title>Modifiziertes Unterwasser-Gammaspektrometriesystem</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Deutsches-Zentrum-fuer-Luft-und-Raumfahrt-e-V/2026/11/6714863.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> DLR Bremerhaven</strong>
+<br />Vergabestelle: <strong>DLR Oldenburg</strong>
+<br />Veröffentlichungsende: <strong>18.02.2027 12:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 16:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Deutsches-Zentrum-fuer-Luft-und-Raumfahrt-e-V/2026/11/6714863.html</guid>
+    </item>
+    <item>
+<title>Interface Engine</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/vizson/2026/11/132524FEE78AB1CB9A251516AA34F295.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> Berlin</strong>
+<br />Vergabestelle: <strong>Charit&#233; - Universit&#228;tsmedizin Berlin</strong>
+<br />Veröffentlichungsende: <strong>14.12.2026 11:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 15:42:11 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/vizson/2026/11/132524FEE78AB1CB9A251516AA34F295.html</guid>
+    </item>
+    <item>
+<title>5 St&#252;ck 3D-LiDAR-Sensoren</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Deutsches-Zentrum-fuer-Luft-und-Raumfahrt-e-V/2026/11/6715168.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>82234 We&#223;ling</strong>
+<br />Vergabestelle: <strong>Deutsches Zentrum f&#252;r Luft- und Raumfahrt e.V. (DLR), M&#252;nchener Stra&#223;e 20, 82234 We&#223;ling</strong>
+<br />Veröffentlichungsende: <strong>18.02.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 15:30:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Deutsches-Zentrum-fuer-Luft-und-Raumfahrt-e-V/2026/11/6715168.html</guid>
+    </item>
+    <item>
+<title>1 St&#252;ck Spektrumanalysator</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Deutsches-Zentrum-fuer-Luft-und-Raumfahrt-e-V/2026/11/6715092.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>82234 We&#223;ling</strong>
+<br />Vergabestelle: <strong>Deutsches Zentrum f&#252;r Luft- und Raumfahrt e.V. (DLR), M&#252;nchener Stra&#223;e 20, 82234 We&#223;ling</strong>
+<br />Veröffentlichungsende: <strong>18.02.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 14:45:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Deutsches-Zentrum-fuer-Luft-und-Raumfahrt-e-V/2026/11/6715092.html</guid>
+    </item>
+    <item>
+<title>DFG-GZ: YA 1013/2-1 (A 198)</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/vizson/2026/11/7233F19253568ED6115BBFE6939AAEC5.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> Bayreuth</strong>
+<br />Vergabestelle: <strong>Deutsche Forschungsgemeinschaft e.V.</strong>
+<br />Veröffentlichungsende: <strong>09.12.2026 13:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 14:34:22 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/vizson/2026/11/7233F19253568ED6115BBFE6939AAEC5.html</guid>
+    </item>
+    <item>
+<title>Pr&#252;fung der Kosten- und Einnahmeentwicklung einer GmbH unter Ber&#252;cksichtigung von Kostenprognosen sowie Erstellung eines Konzepts f&#252;r zuk&#252;nftige Pr&#252;fungen</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907877.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> siehe Vergabeunterlagen</strong>
+<br />Vergabestelle: <strong>Beschaffungsamt des BMI</strong>
+<br />Veröffentlichungsende: <strong>18.12.2026 11:30</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 14:18:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907877.html</guid>
+    </item>
+    <item>
+<title>KKE 500 Baumf&#228;llarbeiten - GNUE des LSA, Neubau Biobank und klinische Forschung, OvG-Universit&#228;t Magdeburg, Medizinische Fakult&#228;t (MLB-2026-0449)</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907799.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> Otto-von-Guericke-Universit&#228;t Magdeburg Medizinische Fakult&#228;t Leipziger Str. 44, 39120 Magdeburg</strong>
+<br />Vergabestelle: <strong>Amt f&#252;r Immobilien- und Baumanagement Magdeburg (AIB Magdeburg)</strong>
+<br />Veröffentlichungsende: <strong>10.12.2026 10:30</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 12:04:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907799.html</guid>
+    </item>
+    <item>
+<title>Fortsetzung von 3 Wartungsvertr&#228;gen &#252;ber 3 Jahre f&#252;r das HNF.</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Forschungszentrum-Juelich-GmbH/2026/11/6714979.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>52425 Forschungszentrum J&#252;lich GmbH</strong>
+<br />Vergabestelle: <strong>Forschungszentrum J&#252;lich GmbH</strong>
+<br />Veröffentlichungsende: <strong>17.02.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 12:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Forschungszentrum-Juelich-GmbH/2026/11/6714979.html</guid>
+    </item>
+    <item>
+<title>Herstellung LED W&#228;nde</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Bundesanstalt-fuer-Arbeitsschutz-und-Arbeitsmedizin/2026/11/6714993.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>44149 Dortmund</strong>
+<br />Vergabestelle: <strong>Bundesanstalt f&#252;r Arbeitsschutz und Arbeitsmedizin</strong>
+<br />Veröffentlichungsende: <strong>17.12.2026 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 12:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Bundesanstalt-fuer-Arbeitsschutz-und-Arbeitsmedizin/2026/11/6714993.html</guid>
+    </item>
+    <item>
+<title>Los 2_Aluminium-Au&#223;enelemente_Sekundarschule A.Holst M&#252;cheln</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907785.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> Sekundarschule &quot;A. Holst&quot; Arthur-Scheibner-Ring 1, 06249 M&#252;cheln Ert&#252;chtigung Brandschutz 1. BA Los 02 Aluminium-Au&#223;enelemente</strong>
+<br />Vergabestelle: <strong>Landkreis Saalekreis - Vergabestelle</strong>
+<br />Veröffentlichungsende: <strong>01.12.2026 10:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 11:21:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907785.html</guid>
+    </item>
+    <item>
+<title>Erweiterung Schlie&#223;anlage Schulzentrum</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Kreis-Viersen/2026/11/6714916.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>41366 Schwalmtal</strong>
+<br />Vergabestelle: <strong>Kreis Viersen</strong>
+<br />Veröffentlichungsende: <strong>08.12.2026 10:30</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 11:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Kreis-Viersen/2026/11/6714916.html</guid>
+    </item>
+    <item>
+<title>AA SAP Copy Tool</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907750.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> Ausw&#228;rtiges Amt Referat Z34 Am Werdischen Markt 1 10117 Berlin</strong>
+<br />Vergabestelle: <strong>Bundesamt f&#252;r Ausw&#228;rtige Angelegenheiten</strong>
+<br />Veröffentlichungsende: <strong>09.12.2026 09:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 10:23:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907750.html</guid>
+    </item>
+    <item>
+<title>&#214;ffentliche Ausschreibung &#8222;Event-Dienstleistungen zur Planung und Durchf&#252;hrung der  Hamburg Sustainability Conference 2027&#8220;</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Hamburg-Sustainability-Conference-gGmbH/2026/11/6714856.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>20457 Hamburg</strong>
+<br />Vergabestelle: <strong>Hamburg Sustainability Conference gGmbH</strong>
+<br />Veröffentlichungsende: <strong>22.12.2026 16:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 10:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Hamburg-Sustainability-Conference-gGmbH/2026/11/6714856.html</guid>
+    </item>
+    <item>
+<title>Neubau Vereinsheim MLV Einheit e. V., Neuer S&#252;lzeweg 72 in 39128 Magdeburg - F&#246;rderungsprogramm: F&#246;rderung des sozialen Zusammenhalts, Los 11 - Estricharbeiten</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907674.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>39128 Ersatzneubau Vereinsheim MLV Einheit e. V., Neuer S&#252;lzeweg 72 in 39128 Magdeburg</strong>
+<br />Vergabestelle: <strong>Landeshauptstadt Magdeburg - Zentrale Vergabestelle</strong>
+<br />Veröffentlichungsende: <strong>14.12.2026 08:59</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 08:31:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907674.html</guid>
+    </item>
+    <item>
+<title>Mobiles R&#246;ntgensystem f&#252;r die Klinik f&#252;r Radiologie am Universit&#228;tsklinikum Halle (Saale)</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907669.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> Universit&#228;tsklinik Halle (Saale) Ernst-Grube-Stra&#223;e 40 06120 Halle (Saale)</strong>
+<br />Vergabestelle: <strong>Universit&#228;tsklinikum Halle (Saale) A&#246;R</strong>
+<br />Veröffentlichungsende: <strong>02.12.2026 10:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 08:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907669.html</guid>
+    </item>
+    <item>
+<title>68-1127-26 Kanalbau; Schneckenburgerstra&#223;e</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Landeshauptstadt-Hannover/2026/11/6714543.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> Hannover</strong>
+<br />Vergabestelle: <strong>Landeshauptstadt Hannover Stadtentw&#228;sserung Hannover</strong>
+<br />Veröffentlichungsende: <strong>21.12.2026 10:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 07:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Landeshauptstadt-Hannover/2026/11/6714543.html</guid>
+    </item>
+    <item>
+<title>Los 34 Baustelleneinrichtung, Baustrom und Demontagen - Amtsgericht Merseburg, Herrichtung Geb&#228;udeteil 104a sowie Saalumbau Geb&#228;udeteil 105 (SLB-2026-0448)</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907543.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> Amtsgericht Merseburg Geusaer Stra&#223;e 88, 06217 Merseburg</strong>
+<br />Vergabestelle: <strong>Amt f&#252;r Immobilien- und Baumanagement Magdeburg (AIB Magdeburg)</strong>
+<br />Veröffentlichungsende: <strong>17.12.2026 10:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 06:54:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907543.html</guid>
+    </item>
+    <item>
+<title>REZ NORD 16h JC Emden</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907644.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> Stadt Emden</strong>
+<br />Vergabestelle: <strong>Bundesagentur f&#252;r Arbeit</strong>
+<br />Veröffentlichungsende: <strong>05.01.2027 12:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 06:18:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907644.html</guid>
+    </item>
+    <item>
+<title>2W/26 Neuordnung Quartier Trier-S&#252;d ? Neubau Kita mit Jugendtreff und Neubau Sporthalle mit Schulr&#228;umen ? Objektplanung Geb&#228;ude und Innenr&#228;ume</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/b7cbfac8-10aa-447f-8137-7e72b936f063.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>54290 Trier-S&#252;d.</strong>
+<br />Vergabestelle: <strong>Stadt Trier</strong>
+<br />Veröffentlichungsende: <strong>17.12.2026 10:45</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:35:57 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/b7cbfac8-10aa-447f-8137-7e72b936f063.html</guid>
+    </item>
+    <item>
+<title>1 Mitarbeiter (m/w/d) in AN&#220; ? Fachrichtung Elektrotechnik im R&#252;ckbauprojekt Entsorgungseinrichtungen Geb&#228;ude 545/ TRE-A07</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/6b2db357-6da1-4f47-aeb7-b24158f9b10d.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>76344 Eggenstein-Leopoldshafen</strong>
+<br />Vergabestelle: <strong>KTE Kerntechnische Entsorgung Karlsruhe GmbH</strong>
+<br />Veröffentlichungsende: <strong>18.12.2026 10:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:35:03 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/6b2db357-6da1-4f47-aeb7-b24158f9b10d.html</guid>
+    </item>
+    <item>
+<title>Postdienstleistungen ab 15.05.2027 bis maximal 14.05.2031</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/6720f8d0-8873-4dd0-b122-c125aafa87a6.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>90403 N&#252;rnberg</strong>
+<br />Vergabestelle: <strong>Stadt N&#252;rnberg - Zentrale Dienste</strong>
+<br />Veröffentlichungsende: <strong>22.12.2026 23:59</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:34:38 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/6720f8d0-8873-4dd0-b122-c125aafa87a6.html</guid>
+    </item>
+    <item>
+<title>ESTW Ding.-BMW-W&#246;rth, Str. 5634: Lph 5 - 7</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/6be89038-e9b3-48f4-8d12-b913ed8ebbce.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>84130 Dingolfing</strong>
+<br />Vergabestelle: <strong>DB InfraGO AG ? Gesch&#228;ftsbereich Fahrweg (Bukr 16)</strong>
+<br />Veröffentlichungsende: <strong>17.12.2026 10:30</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:31:48 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/6be89038-e9b3-48f4-8d12-b913ed8ebbce.html</guid>
+    </item>
+    <item>
+<title>1 Mitarbeiter (m/w/d) in AN&#220; ? IT-Projekt-Consultant/ KIP-A02</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/6e688a32-6644-4bde-b124-bec03fda3074.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>76344 Eggenstein-Leopoldshafen</strong>
+<br />Vergabestelle: <strong>KTE Kerntechnische Entsorgung Karlsruhe GmbH</strong>
+<br />Veröffentlichungsende: <strong>17.12.2026 10:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:31:36 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/6e688a32-6644-4bde-b124-bec03fda3074.html</guid>
+    </item>
+    <item>
+<title>Inkubatoren und W&#228;rmebetten Klinikum Oldenburg</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/4e3252d5-ead0-4855-8d2c-aae5fe083e4c.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>26133 Oldenburg</strong>
+<br />Vergabestelle: <strong>Klinikum Oldenburg A&#246;R</strong>
+<br />Veröffentlichungsende: <strong>18.12.2026 12:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:31:03 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/4e3252d5-ead0-4855-8d2c-aae5fe083e4c.html</guid>
+    </item>
+    <item>
+<title>Rahmenvereinbarung &#252;ber die Lieferung von mobilen Drohnendetektoren auf Radarbasis, Radar Panel Echo Guard</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/474cdd9e-214e-466e-abd8-d1ea1550ce0c.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>95030 Hof</strong>
+<br />Vergabestelle: <strong>Freistaat Bayern, vertreten durch das Logistikzentrum der Bayerischen Polizei (LZBP)</strong>
+<br />Veröffentlichungsende: <strong>02.12.2026 10:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:31:01 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/474cdd9e-214e-466e-abd8-d1ea1550ce0c.html</guid>
+    </item>
+    <item>
+<title>Tieloh 28 - Dachdecker</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/ad8ebfc7-dd9f-438d-be07-aa75d9410218.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>22307 Hamburg</strong>
+<br />Vergabestelle: <strong>SBH | Schulbau Hamburg</strong>
+<br />Veröffentlichungsende: <strong>17.12.2026 10:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:31:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/ad8ebfc7-dd9f-438d-be07-aa75d9410218.html</guid>
+    </item>
+    <item>
+<title>Weidenstieg 29 - Trockenbau</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/6262ceb4-727d-4fe9-b7cf-3007f2dfa0f2.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>20259 Hamburg</strong>
+<br />Vergabestelle: <strong>SBH | Schulbau Hamburg</strong>
+<br />Veröffentlichungsende: <strong>17.12.2026 10:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:30:55 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/6262ceb4-727d-4fe9-b7cf-3007f2dfa0f2.html</guid>
+    </item>
+    <item>
+<title>Sanierung Messpfahl Westerland</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907375.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> 25980 Sylt (Nordfriesland)</strong>
+<br />Vergabestelle: <strong>Landesbetrieb f&#252;r K&#252;stenschutz, Nationalpark und Meeresschutz Schleswig-Holstein</strong>
+<br />Veröffentlichungsende: <strong>07.01.2027 11:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907375.html</guid>
+    </item>
+    <item>
+<title>Erstellung einer Studie zum Thema Absicherungs- und Finanzierungsinstrumente f&#252;r den Aufbau eines CO2-Transportsystems</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/899516.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> Ort im betreffenden Land</strong>
+<br />Vergabestelle: <strong>Bundesministerium f&#252;r Wirtschaft und Energie - Vergabestelle ZC4</strong>
+<br />Veröffentlichungsende: <strong>16.12.2026 23:59</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/899516.html</guid>
+    </item>
+    <item>
+<title>REZ NRW 45TC JC Rhein-Erft</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907495.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> - Stadt Bergheim und Stadt Br&#252;hl (Rhein-Erft-Kreis)</strong>
+<br />Vergabestelle: <strong>Bundesagentur f&#252;r Arbeit</strong>
+<br />Veröffentlichungsende: <strong>16.12.2026 10:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907495.html</guid>
+    </item>
+    <item>
+<title>6003145085- Abschluss eines Rahmenvertrages f&#252;r die Wartung/Inspektion der Tore der Munitionslagerh&#228;user in Wulfen nach VGV</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907497.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> Ort im betreffenden Land</strong>
+<br />Vergabestelle: <strong>Bundeswehrverwaltung</strong>
+<br />Veröffentlichungsende: <strong>17.12.2026 13:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907497.html</guid>
+    </item>
+    <item>
+<title>KKE 407 Labortechnische Anlagen - GNUE Neubau eines Labor- und Verwaltungsgeb&#228;udes f&#252;r das Landesamt f&#252;r Verbraucherschutz Halle, An der Fliederwegkaserne 20, 06130 Halle (Saale) (SLB-2026-0451)</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907383.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> 06130 Halle (Saale) (Halle (Saale), Kreisfreie Stadt)</strong>
+<br />Vergabestelle: <strong>Amt f&#252;r Immobilien- und Baumanagement Magdeburg (AIB Magdeburg)</strong>
+<br />Veröffentlichungsende: <strong>17.12.2026 09:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907383.html</guid>
+    </item>
+    <item>
+<title>REZ NORD 45ind JC Bremen</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907253.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>28201 - 28277 Bremen und 28259 Bremen und 28199 oder 28201 Bremen (Bremen, Kreisfreie Stadt)</strong>
+<br />Vergabestelle: <strong>Bundesagentur f&#252;r Arbeit</strong>
+<br />Veröffentlichungsende: <strong>15.12.2026 12:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907253.html</guid>
+    </item>
+    <item>
+<title>PEKI - Generalplaner f&#252;r Dachsanierung</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907442.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> 14776 Peking (Brandenburg an der Havel, Kreisfreie Stadt)</strong>
+<br />Vergabestelle: <strong>Bundesamt f&#252;r Ausw&#228;rtige Angelegenheiten</strong>
+<br />Veröffentlichungsende: <strong>01.02.2027 10:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907442.html</guid>
+    </item>
+    <item>
+<title>Forschungsvorhaben zur Datenerhebung und -analyse im Rahmen der Evaluation der Reform des &#167; 261 StGB durch das Gesetz zur Verbesserung der strafrechtlichen Bek&#228;mpfung der Geldw&#228;sche vom 9. M&#228;rz 2021 (BGBl. I 2021 S. 327)</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907425.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>  Berlin (Berlin)</strong>
+<br />Vergabestelle: <strong>Bundesamt f&#252;r Justiz</strong>
+<br />Veröffentlichungsende: <strong>$cms.formatDate($item.moveToArchive,"dd.MM.yyyy HH:mm")</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907425.html</guid>
+    </item>
+    <item>
+<title>Gutachten zur Umsetzung und zu den Folgen der Kassenzulassung des nicht invasiven Pr&#228;nataltests (NIPT) auf Trisomien</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/906617.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>   (Bonn, Kreisfreie Stadt)</strong>
+<br />Vergabestelle: <strong>Bundesministerium f&#252;r Gesundheit</strong>
+<br />Veröffentlichungsende: <strong>17.12.2026 12:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/906617.html</guid>
+    </item>
+    <item>
+<title>REZ NORD 45ind AA Neubrandenburg</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907264.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> - Waren (Mecklenburgische Seenplatte)</strong>
+<br />Vergabestelle: <strong>Bundesagentur f&#252;r Arbeit</strong>
+<br />Veröffentlichungsende: <strong>15.12.2026 12:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907264.html</guid>
+    </item>
+    <item>
+<title>Zerst&#246;rende und zerst&#246;rungsfreie Bauteiluntersuchungen an tragenden und nichttragenden Bauteilen als Teil der Erkundung des Bestandstragwerks f&#252;r das Bauprojekt ITA Tannenbusch f&#252;r die Bauabschnitte 4-7 (VOEK 472-26)</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/906830.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> 53119 Bonn Ehemalige HICOG-Siedlung in Im Tannenbusch 5, 9, 24, 26 und Hohe Stra&#223;e 2 (Bonn, Kreisfreie Stadt)</strong>
+<br />Vergabestelle: <strong>Bundesanstalt f&#252;r Immobilienaufgaben Verdingungsstelle</strong>
+<br />Veröffentlichungsende: <strong>22.12.2026 09:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/906830.html</guid>
+    </item>
+    <item>
+<title>Trockenwaren BPOLAFZ Eschwege</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907261.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> 37269 Eschwege (Werra-Mei&#223;ner-Kreis)</strong>
+<br />Vergabestelle: <strong>Beschaffungsamt des BMI</strong>
+<br />Veröffentlichungsende: <strong>16.12.2026 11:30</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907261.html</guid>
+    </item>
+    <item>
+<title>Bildungscampus Naumburg, Sch&#246;nburger Stra&#223;e, 06618 Naumburg, Los 3-21: Sportboden</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/906714.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> 06618 Naumburg (Burgenlandkreis)</strong>
+<br />Vergabestelle: <strong>Burgenlandkreis</strong>
+<br />Veröffentlichungsende: <strong>22.12.2026 10:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/906714.html</guid>
+    </item>
+    <item>
+<title>Rahmenvertrag f&#252;r den Bezug von Softwareprodukten im Bereich Flexera</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907412.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> Beliebiger Ort</strong>
+<br />Vergabestelle: <strong>Informationstechnikzentrum Bund (ITZBund)</strong>
+<br />Veröffentlichungsende: <strong>16.12.2026 12:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907412.html</guid>
+    </item>
+    <item>
+<title>2026/0381 Entsorgung von Haus- und Sperrm&#252;ll (gemischte Siedlungsabf&#228;lle) am Standort Munster (au&#223;erhalb der bestehenden Satzung) inklusive Beh&#228;ltergestellung</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907498.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> 29633 Munster (Heidekreis)</strong>
+<br />Vergabestelle: <strong>Bundeswehrverwaltung</strong>
+<br />Veröffentlichungsende: <strong>17.12.2026 13:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907498.html</guid>
+    </item>
+    <item>
+<title>REZ NORD 45Unt3mV AA L&#252;beck</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907270.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> - Ma&#223;nahmeorte im Bezirk der Agentur f&#252;r Arbeit L&#252;beck (L&#252;beck, Kreisfreie Stadt)</strong>
+<br />Vergabestelle: <strong>Bundesagentur f&#252;r Arbeit</strong>
+<br />Veröffentlichungsende: <strong>15.12.2026 12:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 04:15:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/eVergabe/907270.html</guid>
+    </item>
+    <item>
+<title>Glas- und Geb&#228;udereinigung im Bezirksamt Wandsbek, Rahlstedter Stra&#223;e 151- 157, 22143 Hamburg ab dem 01.11.2027</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/816bcbc3-d58d-4351-8ad0-39a85785df2d.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>22143 Hamburg</strong>
+<br />Vergabestelle: <strong>BVC Beh&#246;rde f&#252;r Finanzen und Bezirke</strong>
+<br />Veröffentlichungsende: <strong>17.12.2026 10:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:06 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/healyhudson/2026/11/816bcbc3-d58d-4351-8ad0-39a85785df2d.html</guid>
+    </item>
+    <item>
+<title>Deutsche Bundesbank, Wilhelm-Epstein-Stra&#223;e 14 in Frankfurt am Main, Ert&#252;chtigung der EMC Technik an der EMA 1</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Deutsche-Bundesbank/2026/11/6700356.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong> Frankfurt am Main</strong>
+<br />Vergabestelle: <strong>Deutsche Bundesbank, Zentralbereich Beschaffungen, Taunusanlage 5, 60329 Frankfurt am Main</strong>
+<br />Veröffentlichungsende: <strong>17.02.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/editor/Deutsche-Bundesbank/2026/11/6700356.html</guid>
+    </item>
+    <item>
+<title>080_Bahnhofsunterf&#252;hrung</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E64764298.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>38640 Goslar</strong>
+<br />Vergabestelle: <strong>Zentrale Vergabestelle - Stadt Goslar</strong>
+<br />Veröffentlichungsende: <strong>30.06.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E64764298.html</guid>
+    </item>
+    <item>
+<title>Rahmenvertrag zur Sicherheitsinspektion, Wartung, Instandsetzung und Ersatzbeschaffung von fest eingebauten und transportablen Turn- und Sportger&#228;ten in den Sporthallen der Stadt Ronnenberg</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E46226448.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>30952 Ronnenberg</strong>
+<br />Vergabestelle: <strong>Stadt Ronnenberg</strong>
+<br />Veröffentlichungsende: <strong>01.03.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E46226448.html</guid>
+    </item>
+    <item>
+<title>Austausch Bettenaufz&#252;ge AKA 2. BA</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E14243539.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>22307 Hamburg</strong>
+<br />Vergabestelle: <strong>Asklepios Kliniken Hamburg GmbH</strong>
+<br />Veröffentlichungsende: <strong>30.04.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E14243539.html</guid>
+    </item>
+    <item>
+<title>Dachsanierung Friedhof Kirchfeld Hagenbach</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E79348314.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>76767 Hagenbach</strong>
+<br />Vergabestelle: <strong>Stadt Hagenbach  c/o Verbandsgemeinde Hagenbach</strong>
+<br />Veröffentlichungsende: <strong>15.02.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E79348314.html</guid>
+    </item>
+    <item>
+<title>Schadnagerbek&#228;mpfung im Kanalnetz und Sch&#228;dlingsbek&#228;mpfung im Verbandsgebiet des ZWAR</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E57368967.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>18528 Bergen</strong>
+<br />Vergabestelle: <strong>Zweckverband Wasserversorgung und Abwasserbehandlung R&#252;gen</strong>
+<br />Veröffentlichungsende: <strong>28.02.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E57368967.html</guid>
+    </item>
+    <item>
+<title>Erd- &amp; Abbrucharbeiten (Teil II -  Bestandsgeb&#228;ude) - Neubau Grundschule Gersten</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E36755326.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>49838 Lengerich</strong>
+<br />Vergabestelle: <strong>Samtgemeinde Lengerich(LK Emsland)</strong>
+<br />Veröffentlichungsende: <strong>31.03.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E36755326.html</guid>
+    </item>
+    <item>
+<title>Grundschulcampus mit Hort (Objekt Hortgeb&#228;ude, Los 15)</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E72497766.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>19370 Parchim</strong>
+<br />Vergabestelle: <strong>Stadt Parchim</strong>
+<br />Veröffentlichungsende: <strong>30.12.2026 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E72497766.html</guid>
+    </item>
+    <item>
+<title>Teilamortisationsleasing &#252;ber eine knickgelenkte und allradangetriebene Kompaktkehrmaschine</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E24987223.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>38700 Braunlage</strong>
+<br />Vergabestelle: <strong>St&#228;dtische Betriebe Braunlage</strong>
+<br />Veröffentlichungsende: <strong>30.12.2026 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E24987223.html</guid>
+    </item>
+    <item>
+<title>Albert-Schweitzer-Schule in VS-Villingen - Sanierung der Sporthalle - Bodenbelagsarbeiten - Sportboden</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E65529287.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>78048 Villingen-Schwenningen</strong>
+<br />Vergabestelle: <strong>Landratsamt Schwarzwald-Baar-Kreis</strong>
+<br />Veröffentlichungsende: <strong>13.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E65529287.html</guid>
+    </item>
+    <item>
+<title>Ausschreibung Errichtung Energie W&#228;rmepumpen</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E28658955.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>26532 Gro&#223;heide</strong>
+<br />Vergabestelle: <strong>Gemeinde Gro&#223;heide</strong>
+<br />Veröffentlichungsende: <strong>31.03.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E28658955.html</guid>
+    </item>
+    <item>
+<title>Pumpwerk Silberberg - Erneuerung der hydraulischen Ausr&#252;stung</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E59721953.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>56281 D&#246;rth</strong>
+<br />Vergabestelle: <strong>RheinHunsr&#252;ck WasserZweckverband</strong>
+<br />Veröffentlichungsende: <strong>26.02.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E59721953.html</guid>
+    </item>
+    <item>
+<title>Jahresleistungsvertag &#252;ber Sicherheitsdienstleistungen</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E64992126.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>18528 Bergen</strong>
+<br />Vergabestelle: <strong>Zweckverband Wasserversorgung und Abwasserbehandlung R&#252;gen</strong>
+<br />Veröffentlichungsende: <strong>31.12.2026 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E64992126.html</guid>
+    </item>
+    <item>
+<title>Neubau Versorgungstechnikgeb&#228;ude VTII</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E78913757.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>14109 Berlin</strong>
+<br />Vergabestelle: <strong>Helmholtz-Zentrum Berlin f&#252;r Materialien und Energie GmbH (HZB)</strong>
+<br />Veröffentlichungsende: <strong>17.05.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E78913757.html</guid>
+    </item>
+    <item>
+<title>Erneuerung der Stra&#223;enbeleuchtung im Ortsteil R&#246;hrse (Stadt Peine)</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E14127393.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>31224 Peine</strong>
+<br />Vergabestelle: <strong>Stadt Peine</strong>
+<br />Veröffentlichungsende: <strong>14.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E14127393.html</guid>
+    </item>
+    <item>
+<title>2026 Lieferung Pritschenwagen</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E42994813.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>67346 Speyer</strong>
+<br />Vergabestelle: <strong>Entsorgungsbetriebe Speyer (EBS)</strong>
+<br />Veröffentlichungsende: <strong>01.02.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E42994813.html</guid>
+    </item>
+    <item>
+<title>An- und Umbau Feuerwehr Tappenbeck</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E16114516.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>38518 Gifhorn</strong>
+<br />Vergabestelle: <strong>Landkreis Gifhorn im Auftrag der Samtgemeinde Boldecker Land</strong>
+<br />Veröffentlichungsende: <strong>22.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E16114516.html</guid>
+    </item>
+    <item>
+<title>Um- und Anbau der Feuerwehr Tappenbeck</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E89462463.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>38518 Gifhorn</strong>
+<br />Vergabestelle: <strong>Landkreis Gifhorn im Auftrag der Samtgemeinde Boldecker Land</strong>
+<br />Veröffentlichungsende: <strong>22.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E89462463.html</guid>
+    </item>
+    <item>
+<title>An- und Umbau Feuerwehr Tappenbeck</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E69591571.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>38518 Gifhorn</strong>
+<br />Vergabestelle: <strong>Landkreis Gifhorn im Auftrag der Samtgemeinde Boldecker Land</strong>
+<br />Veröffentlichungsende: <strong>22.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E69591571.html</guid>
+    </item>
+    <item>
+<title>Dachsanierungsarbeiten Geb&#228;ude 16.1</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E28325657.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>52425 J&#252;lich</strong>
+<br />Vergabestelle: <strong>Forschungszentrum J&#252;lich GmbH -Team Bau-</strong>
+<br />Veröffentlichungsende: <strong>30.07.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E28325657.html</guid>
+    </item>
+    <item>
+<title>Sanierung Kunststoffrasen und Kunststoffbelagsfl&#228;chen am Sportplatz der integrierten Gesamtschule Stromberg</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E22799162.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>55543 Bad Kreuznach</strong>
+<br />Vergabestelle: <strong>Landkreis Bad Kreuznach</strong>
+<br />Veröffentlichungsende: <strong>15.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E22799162.html</guid>
+    </item>
+    <item>
+<title>Kanalsanierung 2026 bogeng&#228;ngig gem. Auswertung EKVO</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E96132228.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>64625 Bensheim</strong>
+<br />Vergabestelle: <strong>Kommunalwirtschaft Mittlere Bergstra&#223;e (KMB)</strong>
+<br />Veröffentlichungsende: <strong>31.03.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E96132228.html</guid>
+    </item>
+    <item>
+<title>Sanierung Rathaus Bersenbr&#252;ck IV. Bauabschnitt</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E26779625.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>49593 Bersenbr&#252;ck</strong>
+<br />Vergabestelle: <strong>Samtgemeinde Bersenbr&#252;ck</strong>
+<br />Veröffentlichungsende: <strong>01.07.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E26779625.html</guid>
+    </item>
+    <item>
+<title>Projekt Umbau Werkstatt Btf Merheim: VE411 Brandwand TGA</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E64356898.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>50933 K&#246;ln</strong>
+<br />Vergabestelle: <strong>K&#246;lner Verkehrs-Betriebe AG</strong>
+<br />Veröffentlichungsende: <strong>31.12.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E64356898.html</guid>
+    </item>
+    <item>
+<title>Grundschulcampus mit Hort (Objekt Hortgeb&#228;ude, Los 16)</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E33415771.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>19370 Parchim</strong>
+<br />Vergabestelle: <strong>Stadt Parchim</strong>
+<br />Veröffentlichungsende: <strong>30.12.2026 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E33415771.html</guid>
+    </item>
+    <item>
+<title>T&#252;rmchenschule, John-Schehr-Str. 10,18069 Rostock - Sanierung Spielplatz</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E98444968.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>18057 Rostock</strong>
+<br />Vergabestelle: <strong>&quot;Eigenbetrieb Kommunale Objektbewirtschaftung und -entwicklung der HRO&quot;</strong>
+<br />Veröffentlichungsende: <strong>14.05.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E98444968.html</guid>
+    </item>
+    <item>
+<title>Albert-Schweitzer-Schule in VS-Villingen - Sanierung der Sporthalle - Fliesenarbeiten</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E74156279.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>78048 Villingen-Schwenningen</strong>
+<br />Vergabestelle: <strong>Landratsamt Schwarzwald-Baar-Kreis</strong>
+<br />Veröffentlichungsende: <strong>13.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E74156279.html</guid>
+    </item>
+    <item>
+<title>UMBAU UND SANIERUNG KITA &quot;Kunterbunt&quot;, Max-Adrion-Stra&#223;e 41-43, 17034 Neubrandenburg</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E39748875.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>18439 Stralsund</strong>
+<br />Vergabestelle: <strong>BIG St&#228;dtebau GmbH</strong>
+<br />Veröffentlichungsende: <strong>31.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E39748875.html</guid>
+    </item>
+    <item>
+<title>UMBAU UND SANIERUNG KITA &quot;Kunterbunt&quot;, Max-Adrion-Stra&#223;e 41-43, 17034 Neubrandenburg</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E44297951.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>18439 Stralsund</strong>
+<br />Vergabestelle: <strong>BIG St&#228;dtebau GmbH</strong>
+<br />Veröffentlichungsende: <strong>31.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E44297951.html</guid>
+    </item>
+    <item>
+<title>UMBAU UND SANIERUNG KITA &quot;Kunterbunt&quot;, Max-Adrion-Stra&#223;e 41-43, 17034 Neubrandenburg</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E47234957.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>18439 Stralsund</strong>
+<br />Vergabestelle: <strong>BIG St&#228;dtebau GmbH</strong>
+<br />Veröffentlichungsende: <strong>31.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E47234957.html</guid>
+    </item>
+    <item>
+<title>Kliniken Schmieder (Stiftung &amp; Co.) KG</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E82984671.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>78476 Allensbach</strong>
+<br />Vergabestelle: <strong>Kliniken Schmieder (Stiftung &amp; Co.) KG</strong>
+<br />Veröffentlichungsende: <strong>01.02.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E82984671.html</guid>
+    </item>
+    <item>
+<title>Sanierung Glasdach Gymnasium Leiferde - Metallbauarbeiten</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E67591185.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>38518 Gifhorn</strong>
+<br />Vergabestelle: <strong>Landkreis Gifhorn</strong>
+<br />Veröffentlichungsende: <strong>03.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport15/2026/11/E67591185.html</guid>
+    </item>
+    <item>
+<title>080_Bahnhofsunterf&#252;hrung</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport/2026/11/E64764298.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>38640 Goslar</strong>
+<br />Vergabestelle: <strong>Zentrale Vergabestelle - Stadt Goslar</strong>
+<br />Veröffentlichungsende: <strong>30.06.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport/2026/11/E64764298.html</guid>
+    </item>
+    <item>
+<title>Sanierung Glasdach Gymnasium Leiferde - Metallbauarbeiten</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport/2026/11/E67591185.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>38542 Leiferde</strong>
+<br />Vergabestelle: <strong>Landkreis Gifhorn</strong>
+<br />Veröffentlichungsende: <strong>03.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport/2026/11/E67591185.html</guid>
+    </item>
+    <item>
+<title>Rahmenvereinbarung Multifunktionspapier</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/asp/2026/11/199693.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>37083 Goettingen</strong>
+<br />Vergabestelle: <strong>Stadt Goettingen -</strong>
+<br />Veröffentlichungsende: <strong>30.11.2026 23:59</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/asp/2026/11/199693.html</guid>
+    </item>
+    <item>
+<title>Um- und Anbau der Feuerwehr Tappenbeck</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport/2026/11/E89462463.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>38479 Tappenbeck</strong>
+<br />Vergabestelle: <strong>Landkreis Gifhorn im Auftrag der Samtgemeinde Boldecker Land</strong>
+<br />Veröffentlichungsende: <strong>22.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport/2026/11/E89462463.html</guid>
+    </item>
+    <item>
+<title>An- und Umbau Feuerwehr Tappenbeck</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport/2026/11/E69591571.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>38479 Tappenbeck</strong>
+<br />Vergabestelle: <strong>Landkreis Gifhorn im Auftrag der Samtgemeinde Boldecker Land</strong>
+<br />Veröffentlichungsende: <strong>22.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport/2026/11/E69591571.html</guid>
+    </item>
+    <item>
+<title>Dachsanierungsarbeiten Geb&#228;ude 16.1</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport/2026/11/E28325657.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>52428 J&#252;lich</strong>
+<br />Vergabestelle: <strong>Forschungszentrum J&#252;lich GmbH -Team Bau-</strong>
+<br />Veröffentlichungsende: <strong>30.07.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 00:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport/2026/11/E28325657.html</guid>
+    </item>
+    <item>
+<title>Projekt Umbau Werkstatt Btf Merheim: VE411 Brandwand TGA</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/subreport/2026/11/E64356898.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>51109 K&#246;ln</strong>
+<br />Vergabestelle: <

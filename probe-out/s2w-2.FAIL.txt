@@ -1,0 +1,1 @@
+500 HTTP 500 from https://api.sell2wales.gov.wales/v1/Notices?dateFrom=11-2026&noticeType=2&outputType=0&locale=2057
