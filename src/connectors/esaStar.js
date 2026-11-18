@@ -4,7 +4,8 @@
 import { clean, fetchText, htmlText, localToIso, opportunity, stillOpen } from './util.js';
 
 const BASE = 'https://esastar-publication-ext.sso.esa.int';
-const TAKE = 100;
+// Larger pages than the portal's own (20) are refused.
+const TAKE = 20;
 // Status 1 is "Intended" (planned), 2 is "Issued" (open for tenders).
 const STATUS = { 1: 'Intended', 2: 'Issued' };
 const TYPES = { 5: 'Open competition', 7: 'Call for proposals' };
@@ -41,10 +42,10 @@ export default {
   intervalMinutes: 720,
   minDelayMs: 2000,
   enabledByDefault: false,
-  async fetch({ maxPages = 20, get = fetchText, now = Date.now() } = {}) {
+  async fetch({ maxPages = 75, get = fetchText, now = Date.now() } = {}) {
     const all = new Map();
     for (let page = 0; page < maxPages; page++) {
-      const { items, count, total } = parsePage(await get(`${BASE}/api/tenderAction/filter/${TAKE}/${page * TAKE}`, { accept: 'application/json, text/plain, */*' }));
+      const { items, count, total } = parsePage(await get(`${BASE}/api/tenderAction/filter/${TAKE}/${page * TAKE}`, { accept: '*/*' }));
       items.forEach((i) => all.set(i.external_id, i));
       if (count < TAKE || (page + 1) * TAKE >= total) break;
     }

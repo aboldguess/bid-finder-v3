@@ -181,7 +181,7 @@ test('ESA: intended and issued tender actions only', async () => {
   assert.equal(items[0].published_at, '2026-11-17T15:08:59.000Z');
   const urls = [];
   await esaStar.fetch({ now, get: async (u) => { urls.push(u); return fixture('esa-star.json'); } });
-  assert.equal(urls[0], 'https://esastar-publication-ext.sso.esa.int/api/tenderAction/filter/100/0');
+  assert.equal(urls[0], 'https://esastar-publication-ext.sso.esa.int/api/tenderAction/filter/20/0');
 });
 
 test('South Africa eTenders: OCDS, reference-only titles replaced by the description', async () => {
