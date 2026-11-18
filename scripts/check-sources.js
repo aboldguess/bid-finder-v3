@@ -17,9 +17,9 @@ const KNOWN_ISSUES = {
 };
 const isoOk = (v) => v == null || (typeof v === 'string' && !Number.isNaN(Date.parse(v)));
 
-function problems(items) {
+function problems(items, { mayBeEmpty = false } = {}) {
   const out = [];
-  if (!items.length) out.push('no opportunities returned');
+  if (!items.length && !mayBeEmpty) out.push('no opportunities returned');
   items.forEach((o, i) => {
     const where = `item ${i + 1}`;
     if (!o.external_id) out.push(`${where}: no external_id`);
@@ -40,7 +40,8 @@ for (const c of connectors) {
   const started = Date.now();
   try {
     const items = await c.fetch({ maxPages: 1, get: http.get, request: http.request, since: null, config: {}, credential, days: 7 });
-    const issues = problems(items);
+    // A watch follows one body, which may have nothing open right now.
+    const issues = problems(items, { mayBeEmpty: Boolean(c.parts) });
     const withDeadline = items.filter((o) => o.closes_at).length;
     const withValue = items.filter((o) => o.award_max != null).length;
     const withCpv = items.filter((o) => o.cpv_codes).length;

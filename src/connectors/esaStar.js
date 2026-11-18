@@ -50,7 +50,7 @@ export default {
   async fetch({ maxPages = 20, get = fetchText, now = Date.now() } = {}) {
     const all = new Map();
     for (let page = 0; page < maxPages; page++) {
-      const { items, count, total } = parsePage(await get(`${BASE}/api/tenderAction/filter/${TAKE}/${page * TAKE}`, { accept: 'application/json' }));
+      const { items, count, total } = parsePage(await get(`${BASE}/api/tenderAction/filter/${TAKE}/${page * TAKE}`, { accept: 'application/json, text/plain, */*' }));
       items.forEach((i) => all.set(i.external_id, i));
       if (count < TAKE || (page + 1) * TAKE >= total) break;
     }

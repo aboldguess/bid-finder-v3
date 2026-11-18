@@ -77,7 +77,7 @@ async function fetchPublic({ maxPages, get, from, now, config }) {
     const q = clean(config.keyword).slice(0, 200);
     if (q) params.set('q', q);
     if (TYPE_CODES.test(config.ptype || '')) params.set('notice_type', config.ptype);
-    const { items, raw, totalPages } = parseSearchPage(await get(`${SEARCH}?${params}`, { accept: 'application/json' }));
+    const { items, raw, totalPages } = parseSearchPage(await get(`${SEARCH}?${params}`, { accept: 'application/hal+json, application/json;q=0.9, */*;q=0.8' }));
     items.forEach((i) => all.set(i.external_id, i));
     const oldest = raw.map((o) => Date.parse(o.modifiedDate)).filter(Number.isFinite).sort((a, b) => a - b)[0];
     if (!raw.length || page + 1 >= totalPages || oldest < from) break;

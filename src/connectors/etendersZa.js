@@ -5,7 +5,8 @@ import { isOpenRelease, latestByOcid, mapRelease, parseOcdsJson } from './ocds.j
 
 const API = 'https://ocds-api.etenders.gov.za/api/OCDSReleases';
 const SITE = 'https://www.etenders.gov.za/Home/opportunities?id=1';
-const SIZE = 500;
+// Large pages and future end dates make the API fail with HTTP 500.
+const SIZE = 100;
 
 // Titles are often only a reference number ("RFQJW094KM26"); the description says what it is.
 const looksLikeReference = (s) => /^[A-Z0-9/\-_.\s]{4,40}$/.test(s) && /\d/.test(s) && !/\s\w{4,}\s/.test(s);
@@ -47,7 +48,7 @@ export default {
     const from = since ? Date.parse(since) - 864e5 : now - days * 864e5;
     const all = new Map();
     for (let page = 1; page <= maxPages; page++) {
-      const { items, count } = parsePage(await get(`${API}?PageNumber=${page}&PageSize=${SIZE}&dateFrom=${day(from)}&dateTo=${day(now + 864e5)}`, { accept: 'application/json' }));
+      const { items, count } = parsePage(await get(`${API}?PageNumber=${page}&PageSize=${SIZE}&dateFrom=${day(from)}&dateTo=${day(now)}`, { accept: 'application/json' }));
       items.forEach((i) => all.set(i.external_id, i));
       if (count < SIZE) break;
     }
