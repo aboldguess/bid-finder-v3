@@ -1,0 +1,68 @@
+{
+ "total_count": 1174797,
+ "results": [
+  {
+   "idweb": "26-110857",
+   "id": "26_110857",
+   "objet": "TRAVAUX DE REFECTION DE CHAUSSEE OU TRITTOIR SUITE AUX INTERVENTIONS DU SIRA",
+   "code_departement": [
+    "62"
+   ],
+   "dateparution": "2026-11-17",
+   "datelimitereponse": "2026-12-14T11:00:00+00:00",
+   "nomacheteur": "SYNDICAT A LA CARTE D&#039;ADDUCTION D&#039;EAU POTABLE ET D&#039;ASSAINISSEMENT DE LA REGION D&#039;ANDRES",
+   "procedure_libelle": "Proc\u00e9dure Ouverte",
+   "nature": "APPEL_OFFRE",
+   "nature_libelle": "Avis de march\u00e9",
+   "etat": "INITIAL",
+   "descripteur_libelle": [
+    "Voirie"
+   ],
+   "type_marche": [
+    "TRAVAUX"
+   ]
+  },
+  {
+   "idweb": "26-110952",
+   "id": "26_110952",
+   "objet": "Acquisition d\u2019un microscope \u00e9lectronique \u00e0 balayage (MEB) analytique et d\u2019analyseurs EDS et WDS, ainsi qu\u2019une cam\u00e9ra EBSD pour le centre SMS de Mines Saint-Etienne",
+   "code_departement": [
+    "42"
+   ],
+   "dateparution": "2026-11-17",
+   "datelimitereponse": "2026-12-16T16:00:00+00:00",
+   "nomacheteur": "ECOLE NAL SUP DES MINES DE ST ETIENNE",
+   "procedure_libelle": "Proc\u00e9dure Ouverte",
+   "nature": "APPEL_OFFRE",
+   "nature_libelle": "Avis de march\u00e9",
+   "etat": "INITIAL",
+   "descripteur_libelle": [
+    "Laboratoire (fourniture)"
+   ],
+   "type_marche": [
+    "FOURNITURES"
+   ]
+  },
+  {
+   "idweb": "26-111014",
+   "id": "26_111014",
+   "objet": "Fiabilisation de la cartographie des ouvrages enterr\u00e9s existants - Groupement de commandes",
+   "code_departement": [
+    "53"
+   ],
+   "dateparution": "2026-11-17",
+   "datelimitereponse": "2026-12-28T11:00:00+00:00",
+   "nomacheteur": "Territoire d'\u00e9nergie Mayenne",
+   "procedure_libelle": "Proc\u00e9dure Ouverte",
+   "nature": "APPEL_OFFRE",
+   "nature_libelle": "Avis de march\u00e9",
+   "etat": "INITIAL",
+   "descripteur_libelle": [
+    "Topographie"
+   ],
+   "type_marche": [
+    "SERVICES"
+   ]
+  }
+ ]
+}

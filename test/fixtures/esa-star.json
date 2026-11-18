@@ -1,0 +1,179 @@
+{
+ "start": 0,
+ "take": 20,
+ "total": 1434,
+ "items": [
+  {
+   "activityNumber": "1000044014",
+   "closingDate": null,
+   "clarificationRequestDeadline": null,
+   "description": "The objective of the activity is to design, manufacture and test a power module that will be integrated in an autonomous spacecraftarchitecture.Targeted  Improvements:Increase the level of onboard autonomy by 50% at overall platform level.Description: Current satellite operations require human inter",
+   "eraVersion": 2,
+   "extensionRequestDeadline": null,
+   "firstPublicationDate": "2026-11-17T16:08:59",
+   "id": 199020,
+   "idEra": 26005,
+   "isArchived": false,
+   "isCancelled": false,
+   "isReissued": false,
+   "isToBeReissued": false,
+   "openDate": null,
+   "stageNumber": null,
+   "tanumber": "1-12975",
+   "title": "POWER MODULE FOR AUTONOMOUS SATELLITES (ARTES AT 4F.095) EXPRO + - RE-ISSUE (1-12220)",
+   "countries": [
+    {
+     "id": 1
+    },
+    {
+     "id": 168
+    },
+    {
+     "id": 67
+    },
+    {
+     "id": 62
+    },
+    {
+     "id": 26
+    },
+    {
+     "id": 24
+    },
+    {
+     "id": 23
+    },
+    {
+     "id": 22
+    },
+    {
+     "id": 19
+    },
+    {
+     "id": 17
+    },
+    {
+     "id": 15
+    },
+    {
+     "id": 16
+    },
+    {
+     "id": 12
+    },
+    {
+     "id": 11
+    },
+    {
+     "id": 10
+    },
+    {
+     "id": 9
+    },
+    {
+     "id": 7
+    },
+    {
+     "id": 6
+    },
+    {
+     "id": 5
+    },
+    {
+     "id": 4
+    },
+    {
+     "id": 2
+    },
+    {
+     "id": 13
+    }
+   ],
+   "products": [
+    {
+     "id": 337
+    },
+    {
+     "id": 333
+    },
+    {
+     "id": 335
+    }
+   ],
+   "technologies": [
+    {
+     "id": 482
+    }
+   ],
+   "status": {
+    "id": 1
+   },
+   "tenderType": {
+    "id": 5
+   },
+   "isFavourite": false,
+   "isNew": false,
+   "isUpdated": false
+  },
+  {
+   "activityNumber": "1000044321",
+   "closingDate": null,
+   "clarificationRequestDeadline": null,
+   "description": "Objectives: The objective of this activity is to design and develop a digital processing unit for RF payloads and microwave instruments using novel European technologies and components and to evaluate their performance.Description: Novel high-speed data acquisition and conversion devices together wi",
+   "eraVersion": 2,
+   "extensionRequestDeadline": null,
+   "firstPublicationDate": "2026-11-17T16:08:48",
+   "id": 199019,
+   "idEra": 26004,
+   "isArchived": false,
+   "isCancelled": false,
+   "isReissued": false,
+   "isToBeReissued": false,
+   "openDate": null,
+   "stageNumber": null,
+   "tanumber": "1-13044",
+   "title": "DIGITAL PROCESSING UNIT FOR RF PAYLOADS AND MICROWAVE INSTRUMENTS- EXPRO+",
+   "countries": [
+    {
+     "id": 7
+    }
+   ],
+   "products": [
+    {
+     "id": 151
+    },
+    {
+     "id": 377
+    }
+   ],
+   "technologies": [
+    {
+     "id": 127
+    },
+    {
+     "id": 187
+    },
+    {
+     "id": 191
+    },
+    {
+     "id": 192
+    },
+    {
+     "id": 193
+    }
+   ],
+   "status": {
+    "id": 7
+   },
+   "tenderType": {
+    "id": 5
+   },
+   "isFavourite": false,
+   "isNew": false,
+   "isUpdated": false
+  }
+ ],
+ "totalNew": 0,
+ "totalUpdated": 0
+}

@@ -200,8 +200,7 @@ test('TED: reads multilingual values, pages by token, falls back if a field is r
   assert.equal(bodies[2].iterationNextToken, 'tok-2');
 });
 
-test('SAM.gov: needs a key from the vault, skips awards, never leaks the key', async () => {
-  await assert.rejects(samGov.fetch({ now, get: async () => '{}' }), /needs an API key/);
+test('SAM.gov: uses the official API when a key is in the vault, skips awards, never leaks the key', async () => {
   const urls = [];
   const items = await samGov.fetch({ now, credential: { key: 'SAMKEY' }, config: { ncode: '541330' }, get: async (url) => { urls.push(url); return fixture('sam-gov.json'); } });
   assert.match(urls[0], /api_key=SAMKEY&postedFrom=10%2F25%2F2026&postedTo=11%2F01%2F2026&limit=1000&offset=0&ncode=541330/);
@@ -288,7 +287,9 @@ test('every built-in connector declares how it accesses its source', () => {
     assert.ok(['tender', 'grant'].includes(c.type));
     if (/listing pages/.test(c.access)) assert.equal(c.respectRobots, true, `${c.key} scrapes HTML so must respect robots.txt`);
   }
-  assert.deepEqual(connectors.filter((c) => c.enabledByDefault === false).map((c) => c.key), ['sell2wales', 'ted', 'sam-gov', 'innovate-uk']);
+  // New and very large sources start off; an administrator switches on the ones that matter.
+  assert.deepEqual(connectors.filter((c) => c.enabledByDefault !== false).map((c) => c.key), ['find-a-tender', 'contracts-finder', 'public-contracts-scotland', 'find-a-grant', 'innovate-uk', 'ukri']);
+  assert.equal(new Set(connectors.map((c) => c.key)).size, connectors.length, 'keys are unique');
 });
 
 // --- Ingest, dedupe, scoring ---------------------------------------------------------

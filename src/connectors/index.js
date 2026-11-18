@@ -22,6 +22,8 @@ import getsNz from './getsNz.js';
 import gebiz from './gebiz.js';
 import etendersZa from './etendersZa.js';
 import worldBank from './worldBank.js';
+import jetro from './jetro.js';
+import esaStar from './esaStar.js';
 import { watchConnector } from './watch.js';
 import { rssConnector } from './rss.js';
 import { portalConnector } from './portal.js';
@@ -73,9 +75,9 @@ export const connectors = [
   // North America
   samGov, grantsGov, canadaBuys,
   // Asia-Pacific and the Commonwealth
-  getsNz, gebiz, etendersZa,
-  // Multilateral
-  worldBank,
+  jetro, getsNz, gebiz, etendersZa,
+  // Space and multilateral bodies
+  esaStar, worldBank,
   // Named bodies
   ...watches,
 ];

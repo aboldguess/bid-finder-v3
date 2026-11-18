@@ -8,7 +8,7 @@ It was built for a small engineering company, and the defaults reflect that: pro
 
 ## What you get
 
-- **Sources.** Find a Tender, Contracts Finder, Public Contracts Scotland, TED (EU), SAM.gov (US), Find a Grant and UKRI, with Sell2Wales and Innovate UK ready for when their sites allow it. Official APIs are used wherever one exists, and every source is checked against the live service weekly. See [docs/CONNECTORS.md](docs/CONNECTORS.md).
+- **Sources.** 26 built in. UK: Find a Tender, Contracts Finder, Public Contracts Scotland, Find a Grant, UKRI and Innovate UK (Sell2Wales ready for when its API recovers). EU: TED, the EU Funding & Tenders portal (grants and tenders), France, Germany, the Netherlands and Spain. North America: SAM.gov (no key needed), Grants.gov and CanadaBuys. Asia-Pacific and beyond: Japan (JETRO), New Zealand, Singapore, South Africa, ESA and the World Bank. Plus watches that follow Network Rail, NASA and the US Department of Transportation across the portals they publish on. Official APIs are used wherever one exists, and every source is checked against the live service weekly. See [docs/CONNECTORS.md](docs/CONNECTORS.md).
 - **Your own portals.** Add any RSS or Atom feed, or any listing page, from the Admin screen with no code. Portals behind a login work too; their passwords and API keys are encrypted at rest.
 - **One notice, shown once.** The same tender on three portals appears as one entry that links to the others.
 - **Fit scoring.** Keywords, CPV codes, countries, regions, contract value and deadline. Every score lists its reasons.
