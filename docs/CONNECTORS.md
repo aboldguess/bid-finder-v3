@@ -71,6 +71,10 @@ The administrator can switch each source on or off, change how often it runs, ru
 
 **GeBIZ** pages its listing with form postbacks rather than links, so Bid Finder reads the first listing page each run (every 3 hours) and builds up the full picture as opportunities are published, rather than reading the whole back catalogue at once.
 
+**South Africa eTenders** is built against the National Treasury's documented OCDS API, but in November 2026 that API answered every request from GitHub's test machines with an HTTP 500 server error or a timeout, whatever the page size or dates, so it has never been seen working from here. It is off by default and the weekly live check says when it starts answering. Try switching it on from your own server: the failure may be specific to the networks GitHub uses.
+
+**ESA (esa-star)** lists intended and issued tenders with their titles, descriptions and tender action numbers, but its public listing does not include closing dates, so ESA tenders show no deadline in Bid Finder. Open the tender on esa-star for its dates.
+
 **Spain (PLACSP)** publishes changes as a chain of feed files, newest first. Each run reads back to the previous run, so tenders published before you switched the source on appear only when they are next updated.
 
 ### Portals looked at and not added (November 2026)

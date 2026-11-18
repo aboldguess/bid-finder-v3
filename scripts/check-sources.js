@@ -14,6 +14,7 @@ const wanted = process.argv.slice(2);
 // notice when they recover, but they do not fail the run.
 const KNOWN_ISSUES = {
   sell2wales: 'the API answers every request with HTTP 500 "Error converting data type nvarchar to float" (seen November 2026)',
+  'etenders-za': 'the OCDS API answers HTTP 500 (or times out) for every page size and date range tried from GitHub runners (seen November 2026)',
 };
 const isoOk = (v) => v == null || (typeof v === 'string' && !Number.isNaN(Date.parse(v)));
 
