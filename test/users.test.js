@@ -70,3 +70,23 @@ test('the bidfinder command creates, lists, promotes and demotes accounts', asyn
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('an organisation owner cannot remove the only platform administrator from the team', async () => {
+  const db = openDb(':memory:');
+  const app = createApp(db);
+  const { orgId } = await createUser(db, { email: 'ann@example.com', name: 'Ann', password: 'a long password', orgName: 'Acme' });
+  const bob = await createUser(db, { email: 'bob@example.com', name: 'Bob', password: 'a long password', orgId });
+  setPlatformAdmin(db, 'bob@example.com', true);
+  setPlatformAdmin(db, 'ann@example.com', false);
+  const agent = request.agent(app);
+  const login = await agent.get('/login');
+  const csrf = (html) => html.match(/name="_csrf" value="([^"]+)"/)[1];
+  await agent.post('/login').type('form').send({ _csrf: csrf(login.text), email: 'ann@example.com', password: 'a long password' });
+  const team = await agent.get('/team');
+  await agent.post(`/team/members/${bob.id}/remove`).type('form').send({ _csrf: csrf(team.text) });
+  assert.ok(db.prepare('SELECT 1 FROM users WHERE id = ?').get(bob.id), 'the last administrator is kept');
+  assert.match((await agent.get('/team')).text, /only platform administrator/);
+  setPlatformAdmin(db, 'ann@example.com', true);
+  await agent.post(`/team/members/${bob.id}/remove`).type('form').send({ _csrf: csrf(team.text) });
+  assert.equal(db.prepare('SELECT 1 FROM users WHERE id = ?').get(bob.id), undefined, 'with another administrator, removal works');
+});

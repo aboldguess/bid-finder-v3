@@ -137,7 +137,11 @@ export function accountRoutes(app, ctx) {
 
   app.post('/team/members/:id/remove', requireUser, requireOwner, (req, res) => {
     const id = Number(req.params.id);
-    if (id !== req.user.id) {
+    const target = db.prepare('SELECT is_platform_admin FROM users WHERE id = ?').get(id);
+    const lastAdmin = target?.is_platform_admin && db.prepare('SELECT COUNT(*) AS n FROM users WHERE is_platform_admin = 1').get().n <= 1;
+    if (lastAdmin) {
+      flash(req, 'That person is the only platform administrator, so they cannot be removed. Promote someone else first with "bidfinder promote".');
+    } else if (id !== req.user.id) {
       db.transaction(() => {
         db.prepare(`DELETE FROM memberships WHERE user_id = ? AND org_id = ? AND role != 'owner'`).run(id, req.org.id);
         // An account with no organisation left cannot do anything, so remove it.
