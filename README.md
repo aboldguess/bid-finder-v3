@@ -39,7 +39,32 @@ npm link            # optional: makes the `bidfinder` command available everywhe
 bidfinder serve     # or: npm start
 ```
 
-Open the address it prints and register. The first account is the administrator, and the first fetch from every enabled source starts within a minute. Then fill in your profile, which is what the scoring works from.
+Open the address it prints and choose **Set up this server** (or **Create account** at the top right). That first account is the administrator, and the first fetch from every enabled source starts within a minute. Then fill in your profile, which is what the scoring works from.
+
+Sign-up closes once an account exists, so if you only see **Sign in**, an account has already been made in this data folder. Create one from the command line instead:
+
+```bash
+bidfinder create-user you@example.co.uk --name "Sam Jones" --org "Acme Ltd"
+```
+
+It prints a password to sign in with. The demo keeps its own `data-demo` folder, so running it never closes sign-up on your real server.
+
+### Accounts and administrators
+
+Colleagues normally join through invite links from the Team page. Whoever runs the server can also manage accounts directly:
+
+```bash
+bidfinder users                                   # every account, its organisations, and who is an admin
+bidfinder users --orgs                            # organisations and their ids
+bidfinder create-user sam@example.co.uk           # join the only organisation as a member
+bidfinder create-user sam@example.co.uk --org-id 2 --owner   # join organisation 2 as an owner
+bidfinder create-user sam@example.co.uk --org "Other Ltd"    # start a new organisation
+bidfinder create-user sam@example.co.uk --admin   # also make them a platform administrator
+bidfinder promote sam@example.co.uk               # make an existing account an administrator
+bidfinder demote sam@example.co.uk                # take that away again
+```
+
+`create-user` generates a password and prints it; pipe one in with `--password-stdin` to choose it yourself. The last administrator cannot be demoted, so the Admin page always has someone who can reach it. In Docker, put `docker compose exec app` in front of each command.
 
 ### Choosing the port and who can connect
 
@@ -72,6 +97,10 @@ Other devices on your network use the second address. If they cannot connect, al
 | `bidfinder digest` | Build and send the digests that are due |
 | `bidfinder sources` | List sources with the result of their last run |
 | `bidfinder backup` | Back up the database into the data folder |
+| `bidfinder users [--orgs]` | List accounts, their organisations and who is an administrator, or list organisations |
+| `bidfinder create-user <email>` | Create an account and print its password. Options: `--name`, `--org <new name>` or `--org-id <id>`, `--owner`, `--admin`, `--password-stdin` |
+| `bidfinder promote <email>` | Make an account a platform administrator |
+| `bidfinder demote <email>` | Stop an account being a platform administrator (never the last one) |
 | `bidfinder reset-password <email>` | Set a new random password for a user and print it |
 | `bidfinder version` | Print the version |
 | `bidfinder help` | Show all commands and options |

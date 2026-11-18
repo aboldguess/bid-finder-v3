@@ -34,7 +34,7 @@
         </div>
       </details>
     <% } else { %>
-      <nav class="mainnav right"><a href="/login">Sign in</a></nav>
+      <nav class="mainnav right"><% if (locals.canRegister) { %><a href="/register">Create account</a><% } %><a href="/login">Sign in</a></nav>
     <% } %>
   </div>
 </header>

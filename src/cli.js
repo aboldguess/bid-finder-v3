@@ -14,6 +14,10 @@ Commands
   digest                   Build and send the digests that are due
   sources                  List sources with the result of their last run
   backup                   Back up the database into the data folder
+  users [--orgs]           List accounts and who is an admin, or organisations
+  create-user <email>      Create an account and print its password (see below)
+  promote <email>          Make an account a platform administrator
+  demote <email>           Stop an account being a platform administrator
   reset-password <email>   Set a new random password for a user and print it
   version                  Print the version
 
@@ -27,10 +31,25 @@ Options for serve
       --host <address>     Listen on one specific address
       --no-scheduler       Serve the web app without fetching sources
 
+Options for create-user
+      --name <name>        The person's name (default: the part before the @)
+      --org <name>         Start a new organisation with this name, owned by
+                           the new account. Without --org or --org-id the
+                           account joins the only organisation, if there is one.
+      --org-id <id>        Join an existing organisation (ids are listed by
+                           "bidfinder users --orgs")
+      --owner              Join that organisation as an owner, not a member
+      --admin              Also make the account a platform administrator.
+                           The first account on a server always is one.
+      --password-stdin     Read the password from standard input instead of
+                           generating one
+
 Examples
   bidfinder serve --port 8080
   bidfinder serve --local
   bidfinder ingest find-a-tender
+  bidfinder create-user you@example.co.uk --name "Sam Jones" --org "Acme Ltd" --admin
+  bidfinder promote colleague@example.co.uk
 
 Settings such as SMTP_URL and BASE_URL are read from the environment or a .env
 file in the current folder. See .env.example.`;
@@ -54,6 +73,13 @@ try {
       local: { type: 'boolean' },
       'strict-port': { type: 'boolean' },
       'no-scheduler': { type: 'boolean' },
+      name: { type: 'string' },
+      org: { type: 'string' },
+      'org-id': { type: 'string' },
+      orgs: { type: 'boolean' },
+      owner: { type: 'boolean' },
+      admin: { type: 'boolean' },
+      'password-stdin': { type: 'boolean' },
       help: { type: 'boolean', short: 'h' },
       version: { type: 'boolean', short: 'v' },
     },
@@ -106,6 +132,62 @@ if (values.help || command === 'help') {
   } else if (command === 'backup') {
     const { backup } = await import('./scheduler.js');
     console.log(`Backed up to ${await backup(getDb())}`);
+  } else if (command === 'users') {
+    const { listUsers, listOrgs } = await import('./users.js');
+    const db = getDb();
+    if (values.orgs) console.table(listOrgs(db));
+    else {
+      const rows = listUsers(db);
+      if (rows.length) console.table(rows);
+      else console.log('No accounts yet. Create the first with: bidfinder create-user <email> --org "<organisation>"');
+    }
+  } else if (command === 'create-user') {
+    if (!arg) fail('Give the email address for the new account.');
+    if (values.org && values['org-id']) fail('Choose one of --org and --org-id.');
+    const { createUser, generatePassword, listOrgs, UserError } = await import('./users.js');
+    const db = getDb();
+    let orgId;
+    if (values['org-id'] !== undefined) {
+      orgId = Number(values['org-id']);
+      if (!Number.isInteger(orgId)) fail(`--org-id must be a number, got "${values['org-id']}".`);
+    } else if (!values.org) {
+      const orgs = listOrgs(db);
+      if (orgs.length === 0) fail('There is no organisation yet. Give one with --org "<name>".');
+      if (orgs.length > 1) fail(`There is more than one organisation. Choose one with --org-id, or start a new one with --org "<name>":\n${orgs.map((o) => `  ${o.id}  ${o.name}`).join('\n')}`);
+      orgId = orgs[0].id;
+    }
+    let password, generated;
+    if (values['password-stdin']) {
+      let input = '';
+      for await (const chunk of process.stdin) input += chunk;
+      password = input.replace(/\r?\n$/, '');
+    }
+    try {
+      const user = await createUser(db, {
+        email: arg,
+        name: values.name || arg.split('@')[0],
+        password: password ??= generated = generatePassword(),
+        ...(orgId === undefined ? { orgName: values.org } : { orgId, role: values.owner ? 'owner' : 'member' }),
+        admin: values.admin,
+      });
+      const org = db.prepare('SELECT name FROM orgs WHERE id = ?').get(user.orgId).name;
+      console.log(`Created ${user.email} (${user.role} of ${org})${user.isAdmin ? ', a platform administrator' : ''}${user.first && !values.admin ? ' because it is the first account' : ''}.`);
+      if (generated) console.log(`Password: ${generated}\nSign in and change it on the Account page.`);
+    } catch (err) {
+      if (err instanceof UserError) fail(err.message);
+      throw err;
+    }
+  } else if (command === 'promote' || command === 'demote') {
+    if (!arg) fail('Give the email address of the account.');
+    const { setPlatformAdmin, UserError } = await import('./users.js');
+    try {
+      const { user, changed } = setPlatformAdmin(getDb(), arg, command === 'promote');
+      const messages = command === 'promote' ? ['is now', 'was already'] : ['is no longer', 'was not'];
+      console.log(`${user.email} ${messages[changed ? 0 : 1]} a platform administrator.`);
+    } catch (err) {
+      if (err instanceof UserError) { console.error(err.message); process.exit(1); }
+      throw err;
+    }
   } else if (command === 'reset-password') {
     if (!arg) fail('Give the email address of the account.');
     const db = getDb();
