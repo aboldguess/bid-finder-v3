@@ -1,7 +1,7 @@
 // ESA (European Space Agency) invitations to tender and calls for proposals,
 // from esa-star Publication, ESA's public tender portal, through the same
 // public interface its web pages use. No account is needed to read it.
-import { clean, fetchText, htmlText, isoOrNull, opportunity, stillOpen } from './util.js';
+import { clean, fetchText, htmlText, localToIso, opportunity, stillOpen } from './util.js';
 
 const BASE = 'https://esastar-publication-ext.sso.esa.int';
 const TAKE = 100;
@@ -9,13 +9,7 @@ const TAKE = 100;
 const STATUS = { 1: 'Intended', 2: 'Issued' };
 const TYPES = { 5: 'Open competition', 7: 'Call for proposals' };
 // ESA's times carry no zone; they are Central European time.
-const cet = (v) => {
-  const s = clean(v || '');
-  if (!s) return null;
-  if (/[zZ]|[+-]\d{2}:\d{2}$/.test(s)) return isoOrNull(s);
-  const month = Number(s.slice(5, 7));
-  return isoOrNull(`${s}${month >= 4 && month <= 10 ? '+02:00' : '+01:00'}`);
-};
+const cet = (v) => localToIso(v);
 
 export function parsePage(json) {
   const data = typeof json === 'string' ? JSON.parse(json) : json;

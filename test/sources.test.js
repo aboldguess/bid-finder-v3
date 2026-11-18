@@ -30,7 +30,10 @@ const looksRight = (items) => {
   }
 };
 
-test('time zone helpers', () => {
+test('time zone helpers', async () => {
+  const { parseUsDate } = await import('../src/connectors/util.js');
+  assert.equal(parseUsDate('07/01/2026'), '2026-07-02T03:59:00.000Z');
+  assert.equal(parseUsDate('12/01/2026'), '2026-12-02T04:59:00.000Z');
   assert.equal(cetOffset('2026-07-01'), '+02:00');
   assert.equal(cetOffset('2026-12-01'), '+01:00');
   assert.equal(easternOffset('2026-07-01'), '-04:00');
@@ -47,7 +50,7 @@ test('Grants.gov: search results, agency filter, paging by hit count', async () 
   assert.equal(items.length, 3);
   assert.equal(items[0].url, 'https://www.grants.gov/search-results-detail/355824');
   assert.equal(items[0].notice_type, 'Forecast');
-  assert.equal(items[0].opens_at, '2024-08-01T05:00:00.000Z');
+  assert.equal(items[0].opens_at, '2024-08-01T04:00:00.000Z', 'midnight in New York, summer time');
   looksRight(items);
   assert.equal(agencyParam('nasa, DOT-FHWA|bad agency!'), 'NASA|DOT-FHWA|BAD');
   const bodies = [];
@@ -219,9 +222,13 @@ test('watch sources: filter by body, keep going when one portal fails', async ()
   const a = { key: 'a', name: 'A', type: 'tender', fetch: async () => [{ external_id: '1', title: 'Track renewal', funder: 'Network Rail Infrastructure Ltd' }, { external_id: '2', title: 'Other', funder: 'Some Council' }] };
   const b = { key: 'b', name: 'B', type: 'grant', fetch: async () => { throw new Error('down'); } };
   const w = watchConnector({ key: 'w', name: 'W', parts: [{ connector: a }, { connector: b }], match: /network rail/i });
-  const items = await w.fetch({});
+  const err = await w.fetch({}).then(() => null, (e) => e);
+  assert.match(err.message, /Partly failed: B: down/);
+  const items = err.partialItems;
   assert.deepEqual(items.map((i) => i.external_id), ['a:1']);
   assert.equal(items[0].type, 'tender');
+  const ok = watchConnector({ key: 'w2', name: 'W2', parts: [{ connector: a }], match: /network rail/i });
+  assert.equal((await ok.fetch({})).length, 1);
   const dead = watchConnector({ key: 'd', name: 'D', parts: [{ connector: b }] });
   await assert.rejects(dead.fetch({}), /B: down/);
   const keys = connectors.map((c) => c.key);
@@ -242,4 +249,18 @@ test('robots.txt: a server error after a redirect off-site counts as absent only
   const sameHost = async (url) => (String(url).endsWith('/robots.txt') ? { ok: false, status: 503, redirected: false, url, text: async () => '' } : new Response('ok'));
   resetHttpState();
   await assert.rejects(createHttp({ fetchImpl: sameHost, respectRobots: true, robotsOffsiteError: 'allow', minDelayMs: 0, retries: 0 }).get('https://other.example.org/x'), /disallows/);
+});
+
+test('a watch with one portal down keeps what it found but does not move its checkpoint', async () => {
+  const { openDb } = await import('../src/db/index.js');
+  const { runSource, ensureSources } = await import('../src/ingest/run.js');
+  const db = openDb(':memory:');
+  ensureSources(db);
+  const a = { key: 'a', name: 'A', type: 'tender', fetch: async () => [{ external_id: '1', title: 'Track renewal works', funder: 'Network Rail', closes_at: '2030-01-01T00:00:00.000Z' }] };
+  const b = { key: 'b', name: 'B', type: 'tender', fetch: async () => { throw new Error('down'); } };
+  const w = watchConnector({ key: 'watch-network-rail', name: 'W', parts: [{ connector: a }, { connector: b }], match: /network rail/i });
+  const result = await runSource(db, w);
+  assert.match(result.error, /Partly failed/);
+  assert.equal(db.prepare("SELECT COUNT(*) AS n FROM opportunities WHERE source_key = 'watch-network-rail'").get().n, 1);
+  assert.equal(db.prepare("SELECT last_ok_at FROM sources WHERE key = 'watch-network-rail'").get().last_ok_at, null);
 });

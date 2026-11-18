@@ -102,6 +102,9 @@ export async function runSource(db, connector, opts = {}) {
     return { key: connector.key, found: items.length, added };
   } catch (err) {
     const message = String(err.message || err).slice(0, 1000);
+    // A source that partly worked (a watch with one portal down) keeps what it
+    // found, but the checkpoint stays put so the next run covers the gap.
+    if (Array.isArray(err.partialItems)) saveOpportunities(db, connector, err.partialItems);
     db.prepare(`UPDATE sources SET last_run_at = datetime('now'), last_status = 'error', last_error = ? WHERE key = ?`).run(message, connector.key);
     finish.run('error', Date.now() - started, null, null, message, run);
     log.error(`${connector.name} failed: ${message}`, { source: connector.key });

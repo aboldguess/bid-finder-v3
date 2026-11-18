@@ -31,7 +31,12 @@ export function watchConnector({ key, name, homepage, parts, match, intervalMinu
       }
       // One portal being down should not hide what the others found.
       if (errors.length === parts.length) throw new Error(errors.join('; '));
-      if (errors.length) log.warn(`${name}: ${errors.join('; ')}`);
+      if (errors.length) {
+        // Save what the working portals found, but report the run as failed so
+        // its checkpoint does not move past what the failed portal missed.
+        log.warn(`${name}: ${errors.join('; ')}`);
+        throw Object.assign(new Error(`Partly failed: ${errors.join('; ')}`), { partialItems: [...all.values()] });
+      }
       return [...all.values()];
     },
   };

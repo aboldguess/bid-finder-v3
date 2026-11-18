@@ -164,7 +164,8 @@ export function htmlText(html) {
 export function parseUsDate(text, { endOfDay = true } = {}) {
   const m = clean(text).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
   if (!m) return isoOrNull(text);
-  return isoOrNull(`${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}T${endOfDay ? '23:59:00' : '00:00:00'}-05:00`);
+  const day = `${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`;
+  return isoOrNull(`${day}T${endOfDay ? '23:59:00' : '00:00:00'}${easternOffset(day)}`);
 }
 
 // "2026-12-10" -> end of that day in the given UTC offset; full timestamps pass through.
