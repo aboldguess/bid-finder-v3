@@ -1,0 +1,135 @@
+{
+ "content": [
+  {
+   "publicatieId": "449847",
+   "publicatieDatum": "2026-11-17",
+   "typePublicatie": {
+    "code": "REC",
+    "omschrijving": "Rectificatie"
+   },
+   "aanbestedingNaam": "Keuren van arbeidsmiddelen",
+   "opdrachtgeverNaam": "Staatsbosbeheer",
+   "sluitingsDatum": "2026-12-09T16:00:00",
+   "sluitingsDatumMarktconsultatie": "2026-12-09",
+   "aantalDagenTotSluitingsDatum": 22,
+   "procedure": {
+    "code": "OPE",
+    "omschrijving": "Openbaar"
+   },
+   "typeOpdracht": {
+    "code": "D",
+    "omschrijving": "Diensten"
+   },
+   "digitaal": true,
+   "europees": true,
+   "publicatiecode": {
+    "code": "EF16",
+    "omschrijving": "Aankondiging van een opdracht - algemene richtlijn, standaardregeling"
+   },
+   "publicatiestatus": {
+    "code": "PUB",
+    "omschrijving": "Gepubliceerd"
+   },
+   "isVroegtijdigeBeeindiging": false,
+   "opdrachtBeschrijving": "Het meerjarig contracteren van \u00e9\u00e9n professionele opdrachtnemer voor de uitvoering van keuringen van arbeidsmiddelen tegen de beste prijs-kwaliteitsverhouding zodat de organisatie te allen tijde beschikt over veilige, betrouwbare, aantoonbaar gekeurde en conform wet- en regelgeving beheerde arbeidsmiddelen. Het keuren van arbeidsmiddelen op alle werklocaties van Staatsbosbeheer.",
+   "isEformsWijziging": true,
+   "score": null,
+   "kenmerk": 615063,
+   "link": {
+    "href": "https://www.tenderned.nl/aankondigingen/overzicht/449847",
+    "title": "self"
+   }
+  },
+  {
+   "publicatieId": "449839",
+   "publicatieDatum": "2026-11-17",
+   "typePublicatie": {
+    "code": "MAC",
+    "omschrijving": "Marktconsultatie"
+   },
+   "aanbestedingNaam": "Parkeerautomaten",
+   "opdrachtgeverNaam": "Gemeente Utrecht",
+   "sluitingsDatum": "2026-12-09T23:59:59",
+   "sluitingsDatumMarktconsultatie": "2026-12-09",
+   "aantalDagenTotSluitingsDatum": 22,
+   "procedure": {
+    "code": "MAC",
+    "omschrijving": "Marktconsultatie"
+   },
+   "typeOpdracht": {
+    "code": "L",
+    "omschrijving": "Leveringen"
+   },
+   "digitaal": true,
+   "europees": false,
+   "publicatiecode": {
+    "code": "EFE1",
+    "omschrijving": "Vrijwillige aankondiging van voorafgaande marktconsultatie"
+   },
+   "publicatiestatus": {
+    "code": "PUB",
+    "omschrijving": "Gepubliceerd"
+   },
+   "isVroegtijdigeBeeindiging": false,
+   "looptijd": {
+    "code": "BKN",
+    "omschrijving": "Bekend"
+   },
+   "opdrachtBeschrijving": "De Gemeente Utrecht bereidt de verwerving van circa 300 parkeerautomaten voor de openbare ruimte voor. De opdracht omvat het beschikbaar krijgen, in bedrijf stellen, beheren en onderhouden van deze parkeerautomaten. Voordat de gemeente een keuze maakt, wil zij onderzoeken of er marktpartijen zijn die circa 300 parkeerautomaten kunnen leveren binnen het beschikbare budget van \u20ac 1.800.000,-. 300 parkeerautomaten ten bedrage van \u20ac1.800.000.",
+   "isEformsWijziging": false,
+   "score": null,
+   "kenmerk": 625749,
+   "link": {
+    "href": "https://www.tenderned.nl/aankondigingen/overzicht/449839",
+    "title": "self"
+   }
+  },
+  {
+   "publicatieId": "449832",
+   "publicatieDatum": "2026-11-17",
+   "typePublicatie": {
+    "code": "REC",
+    "omschrijving": "Rectificatie"
+   },
+   "aanbestedingNaam": "Nieuwbouw Voorgezet onderwijs campus Noordoostpolder",
+   "opdrachtgeverNaam": "Gemeente Noordoostpolder",
+   "sluitingsDatum": "2026-06-23T10:00:00",
+   "sluitingsDatumMarktconsultatie": "2026-06-23",
+   "aantalDagenTotSluitingsDatum": -147,
+   "procedure": {
+    "code": "CCD",
+    "omschrijving": "Concurrentiegerichte dialoog"
+   },
+   "typeOpdracht": {
+    "code": "W",
+    "omschrijving": "Werken"
+   },
+   "digitaal": true,
+   "europees": true,
+   "publicatiecode": {
+    "code": "EF16",
+    "omschrijving": "Aankondiging van een opdracht - algemene richtlijn, standaardregeling"
+   },
+   "publicatiestatus": {
+    "code": "PUB",
+    "omschrijving": "Gepubliceerd"
+   },
+   "isVroegtijdigeBeeindiging": false,
+   "opdrachtBeschrijving": "De scope van deze aanbesteding betreft de realisatie van de Nieuwbouw Voorgezet onderwijs campus op basis van Technisch Ontwerp (TO) / bestek inclusief de realisatie van een deel van de buitenruimte - fase 2. \nOp basis van een Technisch Ontwerp/Bestek zoekt de Aanbestedende Dienst  een aannemer voor de realisatiewerkzaamheden van de bouwkundige en installatietechnische werkzaamheden en voor het bouwrijp maken en de inrichting van het terrein. \n\nDe aanbestedende dienst zoekt een opdrachtnemer die de volgende disciplines verenigd: \n\u2022\tInstallateur Elektrotechnisch (E)\n\u2022\tInstallateur Werktuigbouwkundig (W)\n\u2022\tAannemer Bouwkundig\n\u2022\tAannemer Buitenruime (t.b.v. fase 2) 1",
+   "isEformsWijziging": true,
+   "score": null,
+   "kenmerk": 586296,
+   "link": {
+    "href": "https://www.tenderned.nl/aankondigingen/overzicht/449832",
+    "title": "self"
+   }
+  }
+ ],
+ "first": true,
+ "last": false,
+ "totalElements": 146936,
+ "totalPages": 48979,
+ "size": 3,
+ "numberOfElements": 3,
+ "number": 0
+}

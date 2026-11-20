@@ -53,7 +53,7 @@ export function saveOpportunities(db, connector, items) {
   let added = 0;
   db.transaction(() => {
     for (const item of items) {
-      const row = { source_key: connector.key, type: connector.type, external_id: String(item.external_id).slice(0, 500) };
+      const row = { source_key: connector.key, type: item.type === 'grant' || item.type === 'tender' ? item.type : connector.type, external_id: String(item.external_id).slice(0, 500) };
       for (const f of TEXT) row[f] = String(item[f] ?? '').slice(0, f === 'summary' ? 20000 : 2000);
       for (const f of NULLABLE) row[f] = item[f] ?? null;
       row.currency = item.currency || 'GBP';
@@ -71,7 +71,7 @@ function sourceRow(db, key) {
 }
 
 function context(db, connector, source, opts) {
-  const http = createHttp({ minDelayMs: connector.minDelayMs ?? 1000, respectRobots: Boolean(connector.respectRobots), guard: Boolean(connector.guard) });
+  const http = createHttp({ minDelayMs: connector.minDelayMs ?? 1000, respectRobots: Boolean(connector.respectRobots), robotsOffsiteError: connector.robotsOffsiteError, guard: Boolean(connector.guard) });
   let sourceConfig = {};
   try { sourceConfig = JSON.parse(source?.config || '{}'); } catch { /* treat as empty */ }
   return {
@@ -102,6 +102,9 @@ export async function runSource(db, connector, opts = {}) {
     return { key: connector.key, found: items.length, added };
   } catch (err) {
     const message = String(err.message || err).slice(0, 1000);
+    // A source that partly worked (a watch with one portal down) keeps what it
+    // found, but the checkpoint stays put so the next run covers the gap.
+    if (Array.isArray(err.partialItems)) saveOpportunities(db, connector, err.partialItems);
     db.prepare(`UPDATE sources SET last_run_at = datetime('now'), last_status = 'error', last_error = ? WHERE key = ?`).run(message, connector.key);
     finish.run('error', Date.now() - started, null, null, message, run);
     log.error(`${connector.name} failed: ${message}`, { source: connector.key });

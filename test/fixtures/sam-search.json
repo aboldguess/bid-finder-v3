@@ -1,0 +1,265 @@
+{
+ "_embedded": {
+  "results": [
+   {
+    "isCanceled": false,
+    "_rScore": 0,
+    "_type": "opportunity",
+    "publishDate": "2026-11-17T21:04:26+00:00",
+    "isActive": true,
+    "title": "Dayton National Cemetery Janitorial Services",
+    "type": {
+     "code": "r",
+     "value": "Sources Sought"
+    },
+    "descriptions": [
+     {
+      "lastModifiedDate": "2026-11-17T21:04:26.068+00:00",
+      "content": "<p>Sources Sought Notice Only. Janitorial Services at Dayton National Cemetery.&nbsp;</p>\n\n<p>Please email capability statement and SAM.gov UEI number to contact@example.org no later than 11-24-2026.</p>\n"
+     }
+    ],
+    "solicitationNumber": "36C78626Q50258",
+    "responseDate": "2026-11-24T21:30:00+00:00",
+    "parentNoticeId": "ca46917041c64b2db06e0b57e4b6b6ef",
+    "award": {
+     "awardee": {
+      "ueiSAM": null,
+      "name": null
+     }
+    },
+    "responseTimeZone": "America/New_York",
+    "modifiedDate": "2026-11-17T21:04:26+00:00",
+    "organizationHierarchy": [
+     {
+      "organizationId": "100006568",
+      "code": "3600",
+      "address": {
+       "zip": null,
+       "country": "US",
+       "city": null,
+       "streetAddress": null,
+       "streetAddress2": null,
+       "state": null
+      },
+      "level": 1,
+      "name": "VETERANS AFFAIRS, DEPARTMENT OF",
+      "type": "DEPARTMENT",
+      "status": "active"
+     },
+     {
+      "organizationId": "300000214",
+      "code": "3600",
+      "address": {
+       "zip": null,
+       "country": null,
+       "city": null,
+       "streetAddress": null,
+       "streetAddress2": null,
+       "state": null
+      },
+      "level": 2,
+      "name": "VETERANS AFFAIRS, DEPARTMENT OF",
+      "type": "AGENCY",
+      "status": "active"
+     },
+     {
+      "organizationId": "100173491",
+      "code": "36C786",
+      "address": {
+       "zip": "22134",
+       "country": "USA",
+       "city": "QUANTICO",
+       "streetAddress": "CENTRALIZED CONTRACTING DIVISION",
+       "streetAddress2": "5105 RUSSELL ROAD",
+       "state": "VA"
+      },
+      "level": 3,
+      "name": "NATIONAL CEMETERY ADMIN (36C786)",
+      "type": "OFFICE",
+      "status": "active"
+     }
+    ],
+    "_id": "08b295e9a9194e4fa2bcaa548b4e6b17",
+    "responseDateActual": "2026-11-24T16:30:00-05:00",
+    "modifications": {
+     "count": 1
+    }
+   },
+   {
+    "isCanceled": false,
+    "_rScore": 0,
+    "_type": "opportunity",
+    "publishDate": "2026-11-17T21:03:49+00:00",
+    "isActive": true,
+    "title": "WT COX",
+    "type": {
+     "code": "p",
+     "value": "Presolicitation"
+    },
+    "descriptions": [
+     {
+      "lastModifiedDate": "2026-11-17T21:03:49.554+00:00",
+      "content": "<p>THIS IS A NOTICE OF INTENT, NOT A SOLICITATION FOR COMPETITIVE PROPOSALS.&nbsp; A SOLICITATION DOCUMENT WILL NOT BE ISSUED AND PROPOSALS WILL NOT BE REQUESTED.&nbsp;</p>\n\n<p>OALM intends to negotiate under RFO <strong>- </strong>FAR 6.302-1, Only "
+     }
+    ],
+    "solicitationNumber": "SSN75N98020D00083",
+    "responseDate": "2026-12-01T18:00:00+00:00",
+    "parentNoticeId": null,
+    "award": {
+     "awardee": {
+      "ueiSAM": null,
+      "name": null
+     }
+    },
+    "responseTimeZone": "America/New_York",
+    "modifiedDate": "2026-11-17T21:03:49+00:00",
+    "organizationHierarchy": [
+     {
+      "organizationId": "100004222",
+      "code": "7500",
+      "address": {
+       "zip": "20201",
+       "country": "US",
+       "city": "Washington",
+       "streetAddress": "Hubert H. Humphrey Building 200 Independence Avenue, SW ",
+       "streetAddress2": null,
+       "state": "DC"
+      },
+      "level": 1,
+      "name": "HEALTH AND HUMAN SERVICES, DEPARTMENT OF",
+      "type": "DEPARTMENT",
+      "status": "active"
+     },
+     {
+      "organizationId": "100019747",
+      "code": "7529",
+      "address": {
+       "zip": "20892",
+       "country": "US",
+       "city": "Bethesda",
+       "streetAddress": "3100 Center Drive Room 1B59",
+       "streetAddress2": null,
+       "state": "MD"
+      },
+      "level": 2,
+      "name": "NATIONAL INSTITUTES OF HEALTH",
+      "type": "AGENCY",
+      "status": "active"
+     },
+     {
+      "organizationId": "100189057",
+      "code": "75N980",
+      "address": {
+       "zip": "20892",
+       "country": "USA",
+       "city": "BETHESDA",
+       "streetAddress": "6011 EXECUTIVE BLVD., SUITE 503L",
+       "streetAddress2": null,
+       "state": "MD"
+      },
+      "level": 3,
+      "name": "NATIONAL INSTITUTES OF HEALTH OLAO",
+      "type": "OFFICE",
+      "status": "active"
+     }
+    ],
+    "_id": "092d831a7f6345b38a7e1947f2974374",
+    "responseDateActual": "2026-12-01T13:00:00-05:00",
+    "modifications": {
+     "count": 0
+    }
+   },
+   {
+    "isCanceled": false,
+    "_rScore": 0,
+    "_type": "opportunity",
+    "publishDate": "2026-11-17T21:02:59+00:00",
+    "isActive": true,
+    "title": "GSA Fleet Lease Vehicle Marshalling Services Idaho Falls, ID",
+    "type": {
+     "code": "r",
+     "value": "Sources Sought"
+    },
+    "descriptions": [
+     {
+      "lastModifiedDate": "2026-11-17T21:02:59.979+00:00",
+      "content": "<p><strong>GSA Fleet Lease Vehicle Auction &amp; Marshalling Services</strong></p>\n\n<p><strong>1.0 Description </strong></p>\n\n<p>The General Services Administration (GSA) Office of Fleet Management (GSA Fleet) has a requirement to acquire contractor "
+     }
+    ],
+    "solicitationNumber": "47QMCA27N0004",
+    "responseDate": "2026-11-24T20:00:00+00:00",
+    "parentNoticeId": "5629a5f4a5a0441fac26299da78c5d01",
+    "award": {
+     "awardee": {
+      "ueiSAM": null,
+      "name": null
+     }
+    },
+    "responseTimeZone": "America/Chicago",
+    "modifiedDate": "2026-11-17T21:02:59+00:00",
+    "organizationHierarchy": [
+     {
+      "organizationId": "100006688",
+      "code": "4700",
+      "address": {
+       "zip": null,
+       "country": "US",
+       "city": null,
+       "streetAddress": null,
+       "streetAddress2": null,
+       "state": null
+      },
+      "level": 1,
+      "name": "GENERAL SERVICES ADMINISTRATION",
+      "type": "DEPARTMENT",
+      "status": "active"
+     },
+     {
+      "organizationId": "100120624",
+      "code": "4732",
+      "address": {
+       "zip": null,
+       "country": null,
+       "city": null,
+       "streetAddress": null,
+       "streetAddress2": null,
+       "state": null
+      },
+      "level": 2,
+      "name": "FEDERAL ACQUISITION SERVICE",
+      "type": "AGENCY",
+      "status": "active"
+     },
+     {
+      "organizationId": "500025360",
+      "code": "47QMCA",
+      "address": {
+       "zip": "20405",
+       "country": "USA",
+       "city": "WASHINGTON",
+       "streetAddress": "1800 F STREET, NW",
+       "streetAddress2": null,
+       "state": "DC"
+      },
+      "level": 3,
+      "name": "GSA/FAS AUTOMOTIVE CENTER",
+      "type": "OFFICE",
+      "status": "active"
+     }
+    ],
+    "_id": "1b1ff40b37d24d9c882f68cd878ae647",
+    "responseDateActual": "2026-11-24T14:00:00-06:00",
+    "modifications": {
+     "count": 3
+    }
+   }
+  ]
+ },
+ "page": {
+  "size": 3,
+  "totalElements": 31142,
+  "totalPages": 10381,
+  "number": 0,
+  "maxAllowedRecords": 10000
+ }
+}

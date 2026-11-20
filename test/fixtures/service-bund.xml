@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>service.bund.de - öffentliche Ausschreibungen der Vergabestellen der Bundes-, Landes- und Kommunalverwaltung.</title>
+    <link>http://www.service.bund.de/ausschreibungen</link>
+    <description>RSS-Feed mit aktuellen Ausschreibungen der Vergabestellen der Bundes-, Landes- und Kommunalverwaltung.</description>
+    <language>de-de</language>
+    <pubDate>Tue, 17 Nov 2026 22:09:37 +0100</pubDate>
+    <lastBuildDate>Tue, 17 Nov 2026 22:09:37 +0100</lastBuildDate>
+    <managingEditor>contact@example.org</managingEditor>
+    <webMaster>contact@example.org</webMaster>
+    <generator>Government Site Builder (GSB7.0)</generator>
+    <image>
+      <url>http://www.service.bund.de/cae/servlet/contentblob/546/normal/66/logo_a.jpg</url>
+      <title>service.bund.de - öffentliche Ausschreibungen</title>
+      <link>http://www.service.bund.de/ausschreibungen</link>
+    </image>
+    <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+    <ttl>60</ttl>
+    <item>
+<title>Reinigung Sportbad 2027</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/331953.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>85057 Ingolstadt</strong>
+<br />Vergabestelle: <strong>Stadtwerke Ingolstadt Beteiligungen GmbH, Ringlerstr. 28, 85057 Ingolstadt, Tel.: +49 841800, Fax: +49 841804139, E-Mail: contact@example.org, Internet: www.sw-i.de</strong>
+<br />Veröffentlichungsende: <strong>13.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 17:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/331953.html</guid>
+    </item>
+    <item>
+<title>09.12 Baumeisterarbeiten</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/332107.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>91161 Hilpoltstein</strong>
+<br />Vergabestelle: <strong>Rummelsberger Diakonie e.V., Rummelsberg 51, 90592 Schwarzenbruck, Tel.: 09128/50-2147, Fax: 09128/50-2042, E-Mail: contact@example.org, Internet: www.rummelsberg.de</strong>
+<br />Veröffentlichungsende: <strong>21.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 17:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/332107.html</guid>
+    </item>
+    <item>
+<title>09.69 Aufzugsanlage</title>
+<link>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/332109.html#track=feed-callforbids</link>
+<description>
+<![CDATA[
+   Erf&uuml;llungsort: <strong>91161 Hilpoltstein</strong>
+<br />Vergabestelle: <strong>Rummelsberger Diakonie e.V., Rummelsberg 51, 90592 Schwarzenbruck, Tel.: 09128/50-2147, Fax: 09128/50-2042, E-Mail: contact@example.org, Internet: www.rummelsberg.de</strong>
+<br />Veröffentlichungsende: <strong>21.01.2027 00:00</strong><br />
+<br />
+]]>
+</description>
+<pubDate>Tue, 17 Nov 2026 17:00:00 +0100</pubDate>
+<guid>https://www.service.bund.de/IMPORTE/Ausschreibungen/baysol/2026/11/332109.html</guid>
+    </item>
+  </channel>
+</rss>
