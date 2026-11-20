@@ -106,7 +106,7 @@ export function createApp(db) {
       }
     }
     const sourceNames = Object.fromEntries(db.prepare('SELECT key, name FROM sources ORDER BY name').all().map((s) => [s.key, s.name]));
-    Object.assign(res.locals, { user: req.user, org: req.org, path: req.path, sourceNames, flash: req.session.flash, version: config.version });
+    Object.assign(res.locals, { user: req.user, org: req.org, path: req.path, sourceNames, flash: req.session.flash, version: config.version, canRegister: !req.user && ctx.registrationOpen(config) });
     delete req.session.flash;
     next();
   });

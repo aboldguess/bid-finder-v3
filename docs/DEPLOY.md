@@ -26,7 +26,13 @@ The script writes `.env` with three generated secrets, builds the image and star
 - `app`: Bid Finder, running as a non-root user on a read-only filesystem, with its data in the `data` volume.
 - `caddy`: the reverse proxy. It obtains a Let's Encrypt certificate for your domain, renews it, redirects HTTP to HTTPS and keeps `/metrics` off the internet.
 
-Open `https://bids.example.co.uk` and register. **The first account is the administrator.** After that, sign-up is closed and colleagues join through invite links from the Team page.
+Open `https://bids.example.co.uk` and choose **Set up this server**. **The first account is the administrator.** After that, sign-up is closed and colleagues join through invite links from the Team page.
+
+If you would rather not expose a sign-up page at all, create the first account from the server before you share the address:
+
+```bash
+docker compose exec app bidfinder create-user you@example.co.uk --name "Your Name" --org "Your Company"
+```
 
 Keep a copy of `.env` somewhere safe. `BIDFINDER_SECRET_KEY` encrypts the portal logins and API keys you store; without it they cannot be read and must be entered again.
 
@@ -54,6 +60,8 @@ docker compose logs -f app                  # watch what it is doing
 docker compose exec app bidfinder sources   # last run of each source
 docker compose exec app bidfinder ingest    # fetch everything now
 docker compose exec app bidfinder reset-password you@example.co.uk
+docker compose exec app bidfinder users     # accounts and administrators
+docker compose exec app bidfinder promote colleague@example.co.uk
 ```
 
 ## Updating

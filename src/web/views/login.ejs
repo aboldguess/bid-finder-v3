@@ -10,6 +10,6 @@
     <button class="button">Sign in</button>
   </form>
   <% if (canRegister) { %><p class="muted">First time here? <a href="/register">Create the first account</a></p>
-  <% } else { %><p class="muted">Need an account? Ask your administrator for an invitation.</p><% } %>
+  <% } else { %><p class="muted">Need an account? Ask your administrator for an invitation. Whoever runs the server can also create one with <code>bidfinder create-user</code>.</p><% } %>
 </section>
 <%- include('partials/foot') %>

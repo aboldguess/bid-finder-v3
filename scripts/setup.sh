@@ -46,6 +46,7 @@ if [ "$START" = 1 ]; then
   DOMAIN="$(sed -n 's/^DOMAIN=//p' .env | tail -1)"
   echo
   echo "Bid Finder is starting at https://$DOMAIN"
-  echo "The first account you register becomes the administrator."
+  echo "Open it and choose 'Set up this server': the first account becomes the administrator."
+  echo "Or create it here: docker compose exec app bidfinder create-user you@example.com --org \"Your Company\""
   echo "Logs: docker compose logs -f app"
 fi

@@ -3,8 +3,7 @@ import bcrypt from 'bcryptjs';
 import { config } from '../../config.js';
 import { loginThrottle } from '../security.js';
 import { localPath, newToken, sha256, validEmail } from '../context.js';
-
-const PROFILE_TYPES = 'grant\ntender';
+import { createUser, MIN_PASSWORD } from '../../users.js';
 
 export function accountRoutes(app, ctx) {
   const { db, flash, requireUser, requireOwner, audit } = ctx;
@@ -37,26 +36,16 @@ export function accountRoutes(app, ctx) {
     const error =
       !form.name || !form.email || (!invite && !form.orgName) ? 'Please fill in every field.'
       : !validEmail(form.email) ? 'That email address does not look right.'
-      : password.length < 10 ? 'Use a password of at least 10 characters.'
+      : password.length < MIN_PASSWORD ? `Use a password of at least ${MIN_PASSWORD} characters.`
       : db.prepare('SELECT 1 FROM users WHERE email = ?').get(form.email) ? 'An account with that email already exists.'
       : null;
     if (error) return registerPage(req, res, { status: 400, error, form });
 
-    const hash = await bcrypt.hash(password, 12);
-    const userId = db.transaction(() => {
-      // The very first account on a fresh install runs the platform.
-      const first = db.prepare('SELECT COUNT(*) AS n FROM users').get().n === 0;
-      const user = db.prepare('INSERT INTO users (email, name, password_hash, is_platform_admin) VALUES (?, ?, ?, ?)').run(form.email, form.name, hash, first ? 1 : 0).lastInsertRowid;
-      if (invite) {
-        db.prepare(`INSERT INTO memberships (user_id, org_id, role) VALUES (?, ?, 'member')`).run(user, invite.org_id);
-        db.prepare('UPDATE invites SET used_at = ? WHERE token_hash = ?').run(new Date().toISOString(), invite.token_hash);
-      } else {
-        const org = db.prepare(`INSERT INTO orgs (name, kind) VALUES (?, 'company')`).run(form.orgName).lastInsertRowid;
-        db.prepare(`INSERT INTO memberships (user_id, org_id, role) VALUES (?, ?, 'owner')`).run(user, org);
-        db.prepare('INSERT INTO profiles (org_id, digest_emails, types) VALUES (?, ?, ?)').run(org, form.email, PROFILE_TYPES);
-      }
-      return user;
-    })();
+    const { id: userId } = await createUser(db, {
+      email: form.email, name: form.name, password,
+      ...(invite ? { orgId: invite.org_id, role: 'member' } : { orgName: form.orgName }),
+    });
+    if (invite) db.prepare('UPDATE invites SET used_at = ? WHERE token_hash = ?').run(new Date().toISOString(), invite.token_hash);
     req.session.regenerate(() => {
       req.session.userId = userId;
       flash(req, invite ? `Welcome to ${invite.org_name}.` : 'Welcome. Tell us what you are looking for and every opportunity will be ranked for you.');
