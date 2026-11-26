@@ -2,6 +2,7 @@
 // web pages and the operational endpoints (health, readiness, metrics).
 import crypto from 'node:crypto';
 import path from 'node:path';
+import net from 'node:net';
 import express from 'express';
 import session from 'express-session';
 import helmet from 'helmet';
@@ -36,6 +37,20 @@ export function createApp(db, { mail, stripe } = {}) {
   app.set('trust proxy', config.trustProxy);
   app.disable('x-powered-by');
   app.locals.fmt = fmt;
+
+  // Behind a Cloudflare Tunnel every request arrives from cloudflared on this
+  // machine; the visitor's address is in CF-Connecting-IP. Trust that header
+  // only from a trusted proxy, so nobody can pick their own address to dodge
+  // rate limits.
+  const trustedProxy = app.get('trust proxy fn');
+  app.use((req, res, next) => {
+    const header = config.clientIpHeader && req.get(config.clientIpHeader);
+    const ip = header && header.trim();
+    if (ip && net.isIP(ip) && trustedProxy(req.socket.remoteAddress, 0)) {
+      Object.defineProperty(req, 'ip', { value: ip, configurable: true, enumerable: true });
+    }
+    next();
+  });
 
   // Request id, access log and request metrics.
   app.use((req, res, next) => {

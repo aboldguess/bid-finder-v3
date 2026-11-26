@@ -1,0 +1,37 @@
+# Bid Finder web app. install.sh fills in @USER@ and @APP_DIR@ and copies this to
+# /etc/systemd/system/. Settings live in /etc/bidfinder.env. Fetching, alerts and
+# backups run in bidfinder-worker, so slow work never holds up web pages.
+[Unit]
+Description=Bid Finder web app
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=@USER@
+WorkingDirectory=@APP_DIR@
+EnvironmentFile=/etc/bidfinder.env
+# --strict-port: the Cloudflare Tunnel points at one fixed port, so fail loudly
+# rather than quietly moving to another. install.sh picks a free port up front.
+ExecStart=/usr/bin/node src/cli.js serve --no-scheduler --strict-port
+Restart=always
+RestartSec=3
+TimeoutStopSec=20
+
+# Creates /var/lib/bidfinder owned by @USER@ (database, backups).
+StateDirectory=bidfinder
+StateDirectoryMode=0750
+
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

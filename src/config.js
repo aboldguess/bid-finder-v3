@@ -39,6 +39,10 @@ export const config = {
   secureCookies: bool(process.env.SECURE_COOKIES, baseUrl.startsWith('https://')),
   // Which proxies may set X-Forwarded-For. Docker Compose sets this to cover Caddy.
   trustProxy: process.env.TRUST_PROXY || 'loopback',
+  // A header holding the visitor's real address, set by the proxy in front,
+  // e.g. CF-Connecting-IP behind a Cloudflare Tunnel. Read only on requests
+  // from a trusted proxy (TRUST_PROXY), and used for rate limits and logs.
+  clientIpHeader: (process.env.CLIENT_IP_HEADER || '').toLowerCase(),
   // Hosted mode: one server shared by many customer organisations. Anyone can
   // sign up and start an organisation, and must accept the terms to do so.
   // Off by default, so a self-hosted install keeps its closed sign-up.

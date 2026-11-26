@@ -119,7 +119,9 @@ cd bid-finder-v3
 
 That generates the secrets, builds the image and starts Bid Finder behind Caddy, which obtains and renews the HTTPS certificate by itself. [docs/DEPLOY.md](docs/DEPLOY.md) walks through it from buying the domain onwards.
 
-For a Raspberry Pi or other small Linux box without Docker, `./scripts/install-pi.sh [--port 3001]` installs Node.js and runs Bid Finder as a systemd service.
+For a Raspberry Pi or other small Linux box without Docker, `./scripts/install-pi.sh [--port 3001]` installs Node.js and runs Bid Finder as a systemd service on your network.
+
+To run the hosted, paid service from a Pi at home behind a Cloudflare Tunnel (sign-up, billing, email through Resend, nightly offsite backups), use `sudo ./deploy/pi/install.sh --domain bids.example.co.uk` and follow [deploy/pi/README.md](deploy/pi/README.md).
 
 ## Documentation
 

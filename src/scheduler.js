@@ -2,6 +2,7 @@
 // alerts and digests, and does nightly housekeeping and backups.
 import fs from 'node:fs';
 import path from 'node:path';
+import Database from 'better-sqlite3';
 import { config } from './config.js';
 import { log } from './log.js';
 import { prune, runAll } from './ingest/run.js';
@@ -23,6 +24,10 @@ export async function backup(db, { dir = path.join(config.dataDir, 'backups'), k
   fs.mkdirSync(dir, { recursive: true });
   const file = path.join(dir, `bidfinder-${now.toISOString().slice(0, 10)}.db`);
   await db.backup(file);
+  // One self-contained file (no -wal/-shm beside it), ready to copy offsite.
+  const copy = new Database(file);
+  copy.pragma('journal_mode = DELETE');
+  copy.close();
   const old = fs.readdirSync(dir).filter((f) => /^bidfinder-\d{4}-\d{2}-\d{2}\.db$/.test(f)).sort().slice(0, -keep);
   for (const f of old) fs.rmSync(path.join(dir, f));
   return file;

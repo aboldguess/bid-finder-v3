@@ -1,0 +1,14 @@
+# Nightly backup with an offsite copy, started by bidfinder-backup.timer.
+# install.sh fills in @USER@ and @APP_DIR@.
+[Unit]
+Description=Bid Finder backup and offsite copy
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=@USER@
+WorkingDirectory=@APP_DIR@
+EnvironmentFile=/etc/bidfinder.env
+ExecStart=/bin/bash deploy/pi/backup.sh
+Nice=10

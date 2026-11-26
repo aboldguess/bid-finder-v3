@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Runs a bidfinder command on the Pi with its settings, as the service's user.
+#   ~/bid-finder-v3/deploy/pi/bidfinder users
+#   ~/bid-finder-v3/deploy/pi/bidfinder create-user you@example.com --org "Your Company" --admin
+set -euo pipefail
+cd "$(dirname "$0")/../.."
+exec sudo -u "$(stat -c %U .)" bash -c 'set -a; . /etc/bidfinder.env; set +a; exec /usr/bin/node src/cli.js "$@"' bidfinder "$@"
