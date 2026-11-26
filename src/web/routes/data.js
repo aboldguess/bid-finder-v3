@@ -82,16 +82,23 @@ export function dataRoutes(app, ctx) {
     if (wholeOrg) {
       if (req.org.role !== 'owner') return fail(req, res, 'Only an owner can delete the organisation.');
       if ((req.body.confirm || '').trim() !== org.name) return fail(req, res, `Type the organisation's name, ${org.name}, to confirm.`);
-      const leaving = db.prepare(`SELECT m.user_id FROM memberships m WHERE m.org_id = ? AND NOT EXISTS (SELECT 1 FROM memberships x WHERE x.user_id = m.user_id AND x.org_id != ?)`).all(org.id, org.id).map((r) => r.user_id);
-      if (lastAdmins(leaving)) return fail(req, res, 'This organisation includes the only platform administrator, so it cannot be deleted. Promote someone in another organisation first.');
-      if (org.stripe_subscription_id && ['active', 'past_due', 'trialing'].includes(org.billing_status)) {
+      const leaving = () => db.prepare(`SELECT m.user_id FROM memberships m WHERE m.org_id = ? AND NOT EXISTS (SELECT 1 FROM memberships x WHERE x.user_id = m.user_id AND x.org_id != ?)`).all(org.id, org.id).map((r) => r.user_id);
+      const keepsAdmin = 'This organisation includes the only platform administrator, so it cannot be deleted. Promote someone in another organisation first.';
+      if (lastAdmins(leaving())) return fail(req, res, keepsAdmin);
+      // Ask Stripe, not our own billing status: an administrator may have set it to comped or lapsed
+      // by hand while the subscription carried on charging.
+      if (org.stripe_subscription_id) {
         try {
-          await ctx.stripe.cancelSubscription(org.stripe_subscription_id);
+          const sub = await ctx.stripe.getSubscription(org.stripe_subscription_id);
+          if (!['canceled', 'incomplete_expired'].includes(sub.status)) await ctx.stripe.cancelSubscription(org.stripe_subscription_id);
         } catch (err) {
           log.error(`Cancelling subscription for org ${org.id} before deletion failed: ${err.message}`);
           return fail(req, res, 'We could not cancel your subscription with our payment provider, so nothing was deleted. Please try again in a few minutes.');
         }
       }
+      // Checked again after waiting on Stripe, with no await before the delete, so two
+      // administrators' organisations deleted at the same moment cannot both go.
+      if (lastAdmins(leaving())) return fail(req, res, keepsAdmin);
       const removed = deleteOrg(db, org.id);
       audit(req, 'org.deleted', `organisation ${org.id} and ${removed.length} ${removed.length === 1 ? 'account' : 'accounts'}`, null);
       return req.session.destroy(() => res.redirect('/?deleted=org'));
