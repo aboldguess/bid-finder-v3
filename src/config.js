@@ -47,6 +47,8 @@ export const config = {
   // sign up and start an organisation, and must accept the terms to do so.
   // Off by default, so a self-hosted install keeps its closed sign-up.
   hosted: bool(process.env.HOSTED),
+  // Shown in the hosted footer and legal pages as the address for questions.
+  supportEmail: process.env.SUPPORT_EMAIL || '',
   // Sign-up is open for the first account only, unless this is set (or HOSTED is). Others join by invite.
   allowRegistration: bool(process.env.ALLOW_REGISTRATION),
   // Sign-up forms sent sooner than this after they were shown are treated as bots.

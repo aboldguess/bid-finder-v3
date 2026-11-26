@@ -14,7 +14,7 @@ import { isPrivateAddress } from '../http/ssrf.js';
 import { schedulerHealthy } from '../scheduler.js';
 import { SqliteStore, csrf } from './security.js';
 import { createContext } from './context.js';
-import { banner, entitlement } from '../billing/plans.js';
+import { banner, entitlement, getPlan, getSetting, listPlans, pounds } from '../billing/plans.js';
 import { billingRoutes, stripeWebhook } from './routes/billing.js';
 import { welcomeRoutes } from './routes/welcome.js';
 import { createStripe } from '../billing/stripe.js';
@@ -27,6 +27,14 @@ import { emailRoutes } from './routes/email.js';
 import { opportunityRoutes } from './routes/opportunities.js';
 import { searchRoutes } from './routes/searches.js';
 import { adminRoutes } from './routes/admin.js';
+
+// The made-up match shown on the hosted home page.
+const EXAMPLE_MATCH = {
+  id: 0, title: 'Design and build of a hydraulic test rig for rail bogie components', type: 'tender', funder: 'A national rail infrastructure owner',
+  source_key: 'find-a-tender', award_min: 1500000, award_max: 1850000, currency: 'GBP', closes_at: new Date(Date.now() + 23 * 864e5).toISOString(), url: '/register',
+  summary: 'Design, manufacture, installation and commissioning of a servo-hydraulic fatigue test rig, including control system, instrumentation and data acquisition.',
+  match: { score: 91, reasons: ['Title mentions "test rig", "hydraulic"', 'CPV 71333000 is in your category 7133', 'Value is inside your range', 'East Midlands is one of your regions'] },
+};
 
 export function createApp(db, { mail, stripe } = {}) {
   ensureSources(db);
@@ -131,7 +139,7 @@ export function createApp(db, { mail, stripe } = {}) {
     // Only the sources this organisation may see, so private portal names never leak.
     const sourceNames = Object.fromEntries(visibleSources(db, req.org?.id).map((s) => [s.key, s.name]));
     req.access = entitlement(db, req.org);
-    Object.assign(res.locals, { access: req.access, promo: config.hosted ? banner(db) : null, user: req.user, org: req.org, path: req.path, sourceNames, flash: req.session.flash, version: config.version, hosted: config.hosted, canRegister: !req.user && ctx.registrationOpen(config) });
+    Object.assign(res.locals, { access: req.access, promo: config.hosted ? banner(db) : null, user: req.user, org: req.org, path: req.path, sourceNames, flash: req.session.flash, version: config.version, hosted: config.hosted, supportEmail: config.supportEmail, canRegister: !req.user && ctx.registrationOpen(config) });
     delete req.session.flash;
     next();
   });
@@ -153,7 +161,28 @@ export function createApp(db, { mail, stripe } = {}) {
     // Public figures only: private sources are not counted.
     const stats = db.prepare(`SELECT COUNT(*) AS open FROM opportunities o WHERE (o.closes_at IS NULL OR o.closes_at > ?) AND ${VISIBLE}`).get(new Date().toISOString(), -1);
     const sources = db.prepare('SELECT COUNT(*) AS n FROM sources WHERE enabled = 1 AND org_id IS NULL').get().n;
+    if (config.hosted) {
+      // The public marketing page. Only public sources are named.
+      const names = db.prepare('SELECT name FROM sources WHERE enabled = 1 AND org_id IS NULL ORDER BY rowid').all().map((s) => s.name);
+      const trialPlan = getPlan(db, getSetting(db, 'trial_plan', 'team'));
+      return res.render('home', {
+        stats, sources: names, canRegister: ctx.registrationOpen(config), plans: listPlans(db, { publicOnly: true }), pounds,
+        trialDays: Number(getSetting(db, 'trial_days', '14')), trialPlan: trialPlan?.name || '', example: EXAMPLE_MATCH,
+      });
+    }
     res.render('landing', { stats, sources, canRegister: ctx.registrationOpen(config) });
+  });
+
+  // Search engines: index the public pages of a hosted service, nothing else.
+  app.get('/robots.txt', (req, res) => {
+    res.type('text/plain').send(config.hosted
+      ? `User-agent: *\nAllow: /$\nAllow: /pricing\nAllow: /terms\nAllow: /privacy\nDisallow: /\nSitemap: ${config.baseUrl}/sitemap.xml\n`
+      : 'User-agent: *\nDisallow: /\n');
+  });
+  app.get('/sitemap.xml', (req, res) => {
+    if (!config.hosted) return res.status(404).end();
+    const urls = ['/', '/pricing', '/terms', '/privacy'].map((p) => `<url><loc>${config.baseUrl}${p}</loc></url>`).join('');
+    res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}</urlset>`);
   });
 
   app.get('/api', ctx.requireUser, (req, res) => res.render('api-docs', { spec: openapi(), baseUrl: config.baseUrl }));

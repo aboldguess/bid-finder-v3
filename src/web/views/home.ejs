@@ -1,0 +1,66 @@
+<%- include('partials/head', { title: 'Find public contracts and grants that fit your firm', description: 'Bid Finder watches UK and international tender portals and grant funders, ranks every notice against your firm and alerts you to the ones worth bidding for. Free for ' + trialDays + ' days.' }) %>
+<section class="hero home-hero">
+  <p class="eyebrow">Tender and grant alerts for small firms</p>
+  <h1>Stop searching portals. Get the contracts worth bidding for, ranked and in your inbox.</h1>
+  <p class="lead">Bid Finder reads every new notice from <%= sources.length %> public portals and grant funders, scores it against what your firm does, and tells you why it fits. Set up takes two minutes.</p>
+  <p class="row nowrap cta">
+    <% if (canRegister) { %><a class="button big" href="/register">Start your free <%= trialDays %>-day trial</a><% } %>
+    <a class="button big ghost" href="/pricing">See prices</a>
+  </p>
+  <p class="muted small-print">No card needed to start. Cancel any time.<% if (stats.open) { %> <strong><%= stats.open.toLocaleString('en-GB') %></strong> open opportunities right now.<% } %></p>
+</section>
+
+<section class="home-band">
+  <h2 class="band-title">Every day we check</h2>
+  <ul class="source-list"><% sources.forEach((s) => { %><li><%= s %></li><% }) %></ul>
+</section>
+
+<section class="home-steps">
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li><strong>Tell us what you do.</strong> Pick your sectors, add a few words of your own, and choose where you bid.</li>
+    <li><strong>We rank everything.</strong> Each notice gets a fit score out of 100 from its title, description, CPV codes, value, region and deadline, with the reasons spelled out.</li>
+    <li><strong>You hear first.</strong> New matches arrive by email, Slack or webhook as they are published, or as a daily or weekly round-up.</li>
+  </ol>
+</section>
+
+<section class="home-example">
+  <div>
+    <h2>See why it fits, at a glance</h2>
+    <p class="muted">No more opening fifty notices to find the two that matter. Each match shows its score, value, deadline and the words that made it fit. Shortlist it, add notes for your team, and track the bid from qualifying through to won.</p>
+  </div>
+  <div class="example-card" aria-label="An example match">
+    <%- include('partials/card', { o: example, interactive: false }) %>
+  </div>
+</section>
+
+<section class="features">
+  <div><h3>One ranked feed</h3><p>Contracts and grants together, best fit first, with copies of the same notice on different portals folded into one.</p></div>
+  <div><h3>Alerts that respect your inbox</h3><p>Saved searches for each kind of work, sent instantly or as a round-up, never the same notice twice.</p></div>
+  <div><h3>A pipeline for your team</h3><p>Shortlist, take notes, invite colleagues and see every bid's stage in one place.</p></div>
+  <div><h3>Your private portals too</h3><p>On Pro, we can also watch supplier portals you have logins for. What we find there is visible only to your organisation.</p></div>
+  <div><h3>Works with your tools</h3><p>Slack, webhooks, an API and a shareable read-only shortlist for people without an account.</p></div>
+  <div><h3>UK-based and private</h3><p>Hosted in the UK. Your profile, notes and pipeline are never shown to anyone outside your organisation.</p></div>
+</section>
+
+<section class="home-pricing">
+  <h2>Simple pricing</h2>
+  <p class="muted">Every plan starts with <%= trialDays %> days free. Prices exclude VAT.</p>
+  <%- include('partials/plan-cards', { plans, pounds, action: () => ({ href: '/register', label: 'Start free trial' }) }) %>
+</section>
+
+<section class="faq">
+  <h2>Questions</h2>
+  <details><summary>Which portals do you cover?</summary><p>Every source listed above, checked every few hours. We add more as customers ask for them, at no extra cost.</p></details>
+  <details><summary>Do I need a card for the trial?</summary><p>No. You get <%= trialDays %> days<%= trialPlan ? ` with the ${trialPlan} plan's features` : '' %>. If you do not choose a plan, your account becomes read-only: nothing is deleted, and you can pick up where you left off.</p></details>
+  <details><summary>Can I cancel?</summary><p>Yes, any time, from the Billing page. Monthly plans stop at the end of the month you have paid for; annual plans at the end of the year.</p></details>
+  <details><summary>How is the fit score worked out?</summary><p>From matches between your keywords and the notice's title and description, its CPV categories, contract value against the range you can deliver, your regions and countries, and how long is left to respond. Each match lists its reasons, so you can tune your profile.</p></details>
+  <details><summary>Is my data shared with anyone?</summary><p>No. Other customers never see your profile, shortlist, notes, pipeline or private portals. See the <a href="/privacy">privacy notice</a>.</p></details>
+  <details><summary>Do you add VAT?</summary><p>Prices are shown without VAT, which is added at checkout where it applies. Every payment comes with a receipt by email.</p></details>
+</section>
+
+<section class="home-final">
+  <h2>Your next contract is probably already published.</h2>
+  <% if (canRegister) { %><a class="button big" href="/register">Start your free trial</a><% } %>
+</section>
+<%- include('partials/foot') %>
