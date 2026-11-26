@@ -9,6 +9,7 @@ import { emailConfigured } from '../../notify/channels.js';
 import { sendDigest } from '../../notify/digest.js';
 import { localPath, validEmail } from '../context.js';
 import { VISIBLE, visibleSources } from '../../match/visibility.js';
+import { recheckSearches } from '../../notify/alerts.js';
 
 const PAGE = 50;
 
@@ -88,6 +89,7 @@ export function opportunityRoutes(app, ctx) {
       list(b.digest_emails).split('\n').filter(validEmail).join('\n'),
       req.org.id,
     );
+    recheckSearches(db, { orgId: req.org.id });
     if (b.org_name?.trim() && req.org.role === 'owner') db.prepare('UPDATE orgs SET name = ? WHERE id = ?').run(b.org_name.trim().slice(0, 200), req.org.id);
     flash(req, 'Profile saved. Your feed has been re-ranked.');
     res.redirect('/feed');

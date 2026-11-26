@@ -9,7 +9,7 @@ import path from 'node:path';
 import request from 'supertest';
 import { openDb } from '../src/db/index.js';
 import { ensureSources, saveOpportunities } from '../src/ingest/run.js';
-import { baseline, runAlerts } from '../src/notify/alerts.js';
+import { baseline, recheckSearches, runAlerts } from '../src/notify/alerts.js';
 import { createApp } from '../src/web/app.js';
 
 function setup() {
@@ -104,3 +104,31 @@ test('the bidfinder worker command runs the scheduler and records a heartbeat', 
   }
 });
 
+
+test('alerts: after a search\'s filters or the profile change, earlier unsent matches are considered again', async () => {
+  const { db, search, add } = setup();
+  add(2, { prefix: 'old' });
+  baseline(db, search());
+  // Arrived well before the last check and did not match then.
+  saveOpportunities(db, { key: 'find-a-tender', type: 'tender' }, [{ external_id: 'bridge1', title: 'Footbridge repairs', url: 'https://e.example', closes_at: '2099-01-01T00:00:00Z' }]);
+  db.prepare(`UPDATE opportunities SET first_seen_at = datetime('now', '-2 days')`).run();
+  db.prepare(`UPDATE saved_searches SET checked_at = datetime('now', '-1 hour')`).run();
+  const channels = { sendEmail: async () => {} };
+  assert.deepEqual(await runAlerts(db, { channels }), []);
+
+  db.prepare(`UPDATE saved_searches SET filters = '{"q":"footbridge"}'`).run();
+  db.prepare(`UPDATE profiles SET keywords = 'footbridge'`).run();
+  assert.deepEqual(await runAlerts(db, { channels }), [], 'only new arrivals are looked at while the checkpoint stands');
+  recheckSearches(db, { searchId: search().id });
+  const [result] = await runAlerts(db, { channels });
+  assert.equal(result?.count, 1, 'the earlier footbridge notice goes out once the checkpoint is reset');
+  assert.deepEqual(await runAlerts(db, { channels }), [], 'and only once');
+});
+
+test('alerts: a very large batch of new notices does not overflow the full-text step', async () => {
+  const { db, search, add } = setup();
+  baseline(db, search());
+  add(150000, { prefix: 'flood' });
+  const [result] = await runAlerts(db, { channels: { sendEmail: async () => {} } });
+  assert.equal(result.count, 150000);
+});

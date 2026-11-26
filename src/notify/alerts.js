@@ -25,6 +25,14 @@ export function baseline(db, search) {
   })();
 }
 
+// What a search matches has changed (its filters, or the organisation's
+// profile), so its next check looks at every open opportunity again, not only
+// new arrivals. alert_deliveries still stops anything being sent twice.
+export function recheckSearches(db, { orgId, searchId }) {
+  if (searchId) db.prepare('UPDATE saved_searches SET checked_at = NULL WHERE id = ?').run(searchId);
+  else db.prepare('UPDATE saved_searches SET checked_at = NULL WHERE org_id = ?').run(orgId);
+}
+
 export function isAlertDue(search, now = Date.now()) {
   if (search.frequency === 'off') return false;
   if (search.frequency === 'instant' || !search.last_alert_at) return true;
