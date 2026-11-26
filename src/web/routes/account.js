@@ -69,6 +69,14 @@ export function accountRoutes(app, ctx) {
       : null;
     if (error) return registerPage(req, res, { status: 400, error, form });
 
+    // Take a place in the daily allowance before the slow password hash, so sign-ups sent
+    // in parallel cannot all pass the check first. It is given back if creation fails.
+    const full = limits.signupCreated.retryAfter(ip);
+    if (full) {
+      audit(req, 'signup.limited', ip);
+      return tooMany(res, full).render('error', { message: 'Too many sign-up attempts from your network. Try again later.' });
+    }
+    limits.signupCreated.hit(ip);
     let created;
     try {
       created = await createUser(db, {
@@ -86,11 +94,11 @@ export function accountRoutes(app, ctx) {
         } : null,
       });
     } catch (err) {
+      limits.signupCreated.unhit(ip);
       if (err instanceof SeatError) return invite && findInvite(req.params.token) ? seatsFull(res) : registerPage(req, res);
       throw err;
     }
     const userId = created.id;
-    limits.signupCreated.hit(ip);
     const emailed = config.hosted && await ctx.sendVerification({ id: userId, email: created.email, name: created.name });
     audit(req, invite ? 'signup.invited' : 'signup', `${form.email}${invite ? '' : ` started ${form.orgName}`}`);
     req.session.regenerate(() => {

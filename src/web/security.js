@@ -81,6 +81,11 @@ export function createLimiter({ max, windowMs, now = Date.now }) {
       if (!h || now() - h.first >= windowMs) hits.set(key, { count: 1, first: now() });
       else h.count++;
     },
+    // Gives back a hit that was taken in advance for something that then failed.
+    unhit(key) {
+      const h = hits.get(key);
+      if (h && h.count > 0) h.count--;
+    },
     clear(key) { hits.delete(key); },
   };
 }
