@@ -37,8 +37,8 @@ hosted('hosted mode: anyone can sign up and each sign-up starts its own organisa
   assert.match(landing.text, /Create your account/);
   const second = await signUp(app, 'ann@acme.example', { orgName: 'Acme' });
   const third = await signUp(app, 'bob@beta.example', { orgName: 'Beta' });
-  assert.equal(second.res.headers.location, '/profile');
-  assert.equal(third.res.headers.location, '/profile');
+  assert.equal(second.res.headers.location, '/welcome');
+  assert.equal(third.res.headers.location, '/welcome');
 
   const users = db.prepare(`
     SELECT u.email, u.is_platform_admin AS admin, u.terms_accepted_at AS terms, o.name AS org, m.role, o.plan

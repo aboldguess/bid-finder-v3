@@ -1,6 +1,6 @@
 <%- include('partials/head', { title: 'Dashboard', wide: true }) %>
 <div class="pagehead"><h1>Dashboard</h1><span class="muted"><%= org.name %></span></div>
-<% if (profileEmpty) { %><p class="notice">Your feed is not personalised yet. <a href="/profile">Add keywords and CPV categories to your profile</a> and everything will be ranked by fit.</p><% } %>
+<% if (profileEmpty) { %><p class="notice">Your feed is not personalised yet. <a href="/welcome">Tell us what kind of work you do</a> (it takes a minute) and everything will be ranked by fit.</p><% } %>
 <% if (ingesting) { %><p class="notice">Fetching the latest opportunities now. Numbers will fill in over the next few minutes.</p><% } %>
 <section class="kpis">
   <a class="kpi" href="/feed"><span class="kpi-n"><%= summary.matches.toLocaleString('en-GB') %></span><span class="kpi-l">Open matches</span></a>

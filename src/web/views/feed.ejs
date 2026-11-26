@@ -2,7 +2,7 @@
 <div class="pagehead"><h1>Opportunities</h1>
   <a class="button small ghost" href="/searches/new?<%= query %>">Save this search and get alerts</a>
 </div>
-<% if (profileEmpty) { %><p class="notice">Your feed is not personalised yet. <a href="/profile">Add keywords and CPV categories to your profile</a> and everything will be ranked by fit.</p><% } %>
+<% if (profileEmpty) { %><p class="notice">Your feed is not personalised yet. <a href="/welcome">Tell us what kind of work you do</a> (it takes a minute) and everything will be ranked by fit.</p><% } %>
 <% if (ingesting) { %><p class="notice">Fetching the latest opportunities now. Refresh in a minute.</p><% } %>
 <form class="filters" method="get" action="/feed">
   <input type="search" name="q" value="<%= filters.q %>" placeholder="Search titles, buyers and descriptions" aria-label="Search" class="f-q">

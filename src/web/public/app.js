@@ -55,3 +55,41 @@ for (const form of document.querySelectorAll('[data-credential-form]')) {
 document.addEventListener('click', (event) => {
   for (const menu of document.querySelectorAll('details.usermenu[open]')) if (!menu.contains(event.target)) menu.open = false;
 });
+
+// Welcome page: as choices change, show how many open opportunities match and the best few.
+const preview = document.querySelector('[data-preview]');
+if (preview) {
+  const form = document.getElementById('welcome-form');
+  const totalEl = preview.querySelector('[data-preview-total]');
+  const labelEl = preview.querySelector('[data-preview-label]');
+  const list = preview.querySelector('[data-preview-list]');
+  let timer;
+  let seq = 0;
+  const refresh = async () => {
+    const params = new URLSearchParams();
+    for (const [k, v] of new FormData(form)) if (k !== '_csrf') params.append(k, v);
+    const mine = ++seq;
+    preview.classList.add('loading');
+    try {
+      const res = await fetch(`${preview.dataset.preview}?${params}`, { headers: { accept: 'application/json' } });
+      const data = await res.json();
+      if (mine !== seq) return;
+      const chosen = params.getAll('presets').length || (params.get('keywords') || '').trim();
+      totalEl.textContent = chosen ? data.total.toLocaleString('en-GB') : '–';
+      labelEl.textContent = !chosen ? 'pick a kind of work to see your matches' : data.total === 1 ? 'open opportunity matches' : 'open opportunities match';
+      list.replaceChildren(...data.top.map((o) => {
+        const li = document.createElement('li');
+        const title = document.createElement('span');
+        title.textContent = o.title;
+        const meta = document.createElement('small');
+        meta.textContent = [o.buyer, o.closes_at ? `closes ${new Date(o.closes_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}` : ''].filter(Boolean).join(' · ');
+        li.append(title, meta);
+        return li;
+      }));
+    } catch { /* the preview is a nicety; the form still works */ } finally {
+      if (mine === seq) preview.classList.remove('loading');
+    }
+  };
+  form.addEventListener('change', () => { clearTimeout(timer); timer = setTimeout(refresh, 150); });
+  form.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(refresh, 400); });
+}
