@@ -111,8 +111,8 @@ export function adminRoutes(app, ctx) {
     // One customer's login must never fetch results that someone else can see.
     if (credential?.org_id != null && credential.org_id !== orgId) throw new Error('That credential belongs to one organisation, so the source must be private to the same organisation.');
     return {
-      org_id: orgId,
       ...source,
+      org_id: orgId,
       name: source.kind === 'builtin' ? source.name : String(b.name || '').trim().slice(0, 120),
       type: source.kind === 'builtin' ? source.type : (b.type === 'grant' ? 'grant' : 'tender'),
       config: JSON.stringify(values),
