@@ -30,5 +30,30 @@
       <button class="button small">Change password</button>
     </form>
   </div>
+  <div class="panel" id="your-data">
+    <h2>Your organisation's data</h2>
+    <p class="muted">Download everything <%= org.name %> has in Bid Finder as a JSON file: profile, members, saved searches, shortlist, notes and pipeline, digests and private portals. Passwords, webhook addresses and API keys are left out.</p>
+    <a class="button small ghost" href="/account/export" download>Download our data</a>
+  </div>
+  <div class="panel delete-panel" id="delete">
+    <h2>Delete</h2>
+    <form method="post" action="/account/delete" class="stack">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <% if (org.role === 'owner') { %>
+        <fieldset>
+          <legend>What to delete</legend>
+          <label class="inline"><input type="radio" name="scope" value="org" checked> <span>The whole organisation, <strong><%= org.name %></strong>: everyone's access, profile, searches, shortlist, pipeline and private portals<%= locals.hosted ? ', and any subscription is cancelled' : '' %></span></label>
+          <label class="inline"><input type="radio" name="scope" value="me"> <span>Only my account (another owner keeps the organisation)</span></label>
+        </fieldset>
+        <label>To delete the organisation, type its name <input name="confirm" autocomplete="off" placeholder="<%= org.name %>"></label>
+      <% } else { %>
+        <input type="hidden" name="scope" value="me">
+        <p>Deleting your account removes your name and email address. <%= org.name %> keeps its searches, shortlist and pipeline.</p>
+      <% } %>
+      <label>Your password <input type="password" name="password" required autocomplete="current-password"></label>
+      <p class="muted">This cannot be undone. Download your data first if you might want it.</p>
+      <p><button class="button danger">Delete permanently</button></p>
+    </form>
+  </div>
 </section>
 <%- include('partials/foot') %>

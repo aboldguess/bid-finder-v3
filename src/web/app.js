@@ -17,6 +17,7 @@ import { createContext } from './context.js';
 import { banner, entitlement, getPlan, getSetting, listPlans, pounds } from '../billing/plans.js';
 import { billingRoutes, stripeWebhook } from './routes/billing.js';
 import { welcomeRoutes } from './routes/welcome.js';
+import { dataRoutes } from './routes/data.js';
 import { createStripe } from '../billing/stripe.js';
 import { VISIBLE, visibleSources } from '../match/visibility.js';
 import { fmt } from './format.js';
@@ -158,6 +159,9 @@ export function createApp(db, { mail, stripe } = {}) {
 
   app.get('/', (req, res) => {
     if (req.user) return res.redirect('/dashboard');
+    // After deleting, the session is gone, so the confirmation rides on the address.
+    if (req.query.deleted === 'org') res.locals.flash = 'Your organisation and its data have been deleted.';
+    if (req.query.deleted === 'account') res.locals.flash = 'Your account has been deleted.';
     // Public figures only: private sources are not counted.
     const stats = db.prepare(`SELECT COUNT(*) AS open FROM opportunities o WHERE (o.closes_at IS NULL OR o.closes_at > ?) AND ${VISIBLE}`).get(new Date().toISOString(), -1);
     const sources = db.prepare('SELECT COUNT(*) AS n FROM sources WHERE enabled = 1 AND org_id IS NULL').get().n;
@@ -191,6 +195,7 @@ export function createApp(db, { mail, stripe } = {}) {
   accountRoutes(app, ctx);
   opportunityRoutes(app, ctx);
   welcomeRoutes(app, ctx);
+  dataRoutes(app, ctx);
   searchRoutes(app, ctx);
   adminRoutes(app, ctx);
   billingRoutes(app, ctx);

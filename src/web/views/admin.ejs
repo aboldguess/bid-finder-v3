@@ -1,6 +1,6 @@
 <%- include('partials/head', { title: 'Admin', wide: true }) %>
 <div class="pagehead"><h1>Admin</h1>
-  <% if (hosted) { %><a class="button small ghost" href="/admin/plans">Plans, prices and promotions</a><% } %>
+  <% if (hosted) { %><a class="button small ghost" href="/admin/plans">Plans, prices and promotions</a><a class="button small ghost" href="/admin/legal">Legal pages</a><% } %>
   <form method="post" action="/admin/ingest"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="button small" <%= ingesting ? 'disabled' : '' %>><%= ingesting ? 'Refresh running…' : 'Refresh all sources now' %></button></form>
 </div>
 <div class="sectionhead"><h2>Sources</h2>

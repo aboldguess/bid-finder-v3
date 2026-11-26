@@ -35,6 +35,7 @@ export function createStripe({ secretKey = config.stripe.secretKey, fetchImpl = 
     createPortal: (params) => call('POST', '/billing_portal/sessions', params),
     getSubscription: (id) => call('GET', `/subscriptions/${encodeURIComponent(id)}`),
     updateSubscription: (id, params) => call('POST', `/subscriptions/${encodeURIComponent(id)}`, params),
+    cancelSubscription: (id) => call('DELETE', `/subscriptions/${encodeURIComponent(id)}`),
   };
 }
 

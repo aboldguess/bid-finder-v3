@@ -1,7 +1,12 @@
-<%- include('partials/head', { title }) %>
-<section class="narrow panel">
+<%- include('partials/head', { title, description: title + ' for Bid Finder.' }) %>
+<section class="narrow panel legal">
   <h1><%= title %></h1>
-  <p>The full wording is being finalised and will be published here before launch.</p>
-  <p class="muted">Questions in the meantime? Reply to any email from us.</p>
+  <% if (html) { %>
+    <% if (updated) { %><p class="muted">Last updated <%= fmt.date(updated) %></p><% } %>
+    <%- html %>
+  <% } else { %>
+    <p><%= placeholder %></p>
+    <p class="muted">Questions in the meantime? <%= locals.supportEmail ? '' : 'Reply to any email from us.' %><% if (locals.supportEmail) { %>Email <a href="mailto:<%= supportEmail %>"><%= supportEmail %></a>.<% } %></p>
+  <% } %>
 </section>
 <%- include('partials/foot') %>

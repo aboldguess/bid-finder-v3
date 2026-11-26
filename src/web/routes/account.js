@@ -112,12 +112,6 @@ export function accountRoutes(app, ctx) {
     });
   });
 
-  // Legal pages for hosted mode. The wording is supplied separately; until it
-  // is, these say so rather than linking nowhere.
-  for (const [slug, title] of [['terms', 'Terms of service'], ['privacy', 'Privacy notice']]) {
-    app.get(`/${slug}`, (req, res) => (config.hosted ? res.render('legal', { title }) : res.status(404).render('error', { message: 'Page not found.' })));
-  }
-
   app.post('/logout', (req, res) => req.session.destroy(() => res.redirect('/')));
 
   // --- Account: password and API tokens -------------------------------------
