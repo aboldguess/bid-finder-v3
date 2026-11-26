@@ -1,0 +1,17 @@
+<%- include('partials/head', { title: 'Legal pages', wide: true }) %>
+<p class="back"><a href="/admin">← Admin</a></p>
+<div class="pagehead"><h1>Legal pages</h1></div>
+<p class="muted">Paste the wording for each page. Plain text: leave a blank line between paragraphs, start a heading with <code>#</code>, and a bullet with <code>-</code>. The page shows the date it last changed.</p>
+<form method="post" action="/admin/legal" class="stack">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <% pages.forEach((p) => { %>
+    <section class="panel">
+      <div class="sectionhead"><h2><%= p.title %></h2><a href="/<%= p.slug %>" target="_blank">View</a></div>
+      <% if (p.updated) { %><p class="muted">Last updated <%= fmt.date(p.updated) %></p><% } else { %><p class="muted">Not written yet: the page says the wording is coming.</p><% } %>
+      <label class="sr-only" for="legal-<%= p.slug %>"><%= p.title %></label>
+      <textarea id="legal-<%= p.slug %>" name="<%= p.slug %>" rows="18" class="mono"><%= p.text %></textarea>
+    </section>
+  <% }) %>
+  <p><button class="button">Save and publish</button></p>
+</form>
+<%- include('partials/foot') %>

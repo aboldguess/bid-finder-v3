@@ -316,3 +316,12 @@ main > details { margin-top: 26px; }
 .site-footer { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: center; }
 .site-footer nav { display: flex; gap: 16px; }
 .site-footer a { color: inherit; }
+
+/* Account deletion, legal pages */
+.button.danger { background: var(--bad); border-color: var(--bad); color: #fff; }
+.button.danger:hover { filter: brightness(.92); background: var(--bad); color: #fff; }
+.delete-panel { border-color: color-mix(in srgb, var(--bad) 35%, var(--line)); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+textarea.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .88rem; width: 100%; }
+.legal h2 { font-size: 1.15rem; margin: 22px 0 6px; }
+.legal p, .legal li { line-height: 1.6; }
