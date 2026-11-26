@@ -135,6 +135,16 @@ export const migrations = [
   );
   CREATE INDEX idx_email_tokens_user ON email_tokens(user_id, purpose);
   `,
+  // 4: private sources. A source or credential with an org_id belongs to
+  // that one organisation; NULL means shared with everyone, as before. There
+  // is deliberately no ON DELETE action: an organisation that still owns a
+  // source cannot be deleted by accident, which would otherwise risk its
+  // private results becoming visible to all.
+  `
+  ALTER TABLE sources ADD COLUMN org_id INTEGER REFERENCES orgs(id);
+  ALTER TABLE credentials ADD COLUMN org_id INTEGER REFERENCES orgs(id);
+  CREATE INDEX idx_sources_org ON sources(org_id);
+  `,
 ];
 
 export function migrate(db) {

@@ -2,7 +2,7 @@
 // organisations and the audit trail.
 import crypto from 'node:crypto';
 import { connectorForSource } from '../../connectors/index.js';
-import { isIngestRunning, runAll, testSource } from '../../ingest/run.js';
+import { isIngestRunning, linkDuplicates, runAll, testSource } from '../../ingest/run.js';
 import { runAlerts } from '../../notify/alerts.js';
 import { assertPublicUrl } from '../../http/ssrf.js';
 import { saveCredential } from '../../secrets/vault.js';
@@ -33,15 +33,23 @@ export function adminRoutes(app, ctx) {
   const { db, flash, requireUser, requireAdmin, audit } = ctx;
   const guard = [requireUser, requireAdmin];
   const getSource = (key) => db.prepare('SELECT * FROM sources WHERE key = ?').get(key);
-  const credentials = () => db.prepare('SELECT id, name, kind, created_at FROM credentials ORDER BY name').all();
+  const credentials = () => db.prepare('SELECT c.id, c.name, c.kind, c.created_at, c.org_id, o.name AS org_name FROM credentials c LEFT JOIN orgs o ON o.id = c.org_id ORDER BY c.name').all();
+  const orgList = () => db.prepare('SELECT id, name FROM orgs ORDER BY name').all();
+  // '' or a missing value means shared with everyone; otherwise an existing organisation's id.
+  const orgIdFrom = (value) => {
+    if (value === undefined || value === '' || value === null) return null;
+    const id = Number(value);
+    if (!db.prepare('SELECT 1 FROM orgs WHERE id = ?').get(id)) throw new Error('That organisation no longer exists.');
+    return id;
+  };
   const parse = (text) => { try { return JSON.parse(text || '{}'); } catch { return {}; } };
   const fieldsFor = (source) => (source.kind === 'builtin' ? connectorForSource(source)?.settings || [] : CUSTOM_FIELDS[source.kind] || []);
 
   app.get('/admin', guard, (req, res) => {
     const sources = db.prepare(`
-      SELECT s.*, c.name AS credential_name,
+      SELECT s.*, c.name AS credential_name, og.name AS org_name,
         (SELECT COUNT(*) FROM opportunities o WHERE o.source_key = s.key AND (o.closes_at IS NULL OR o.closes_at > ?)) AS open_count
-      FROM sources s LEFT JOIN credentials c ON c.id = s.credential_id ORDER BY s.kind, s.name
+      FROM sources s LEFT JOIN credentials c ON c.id = s.credential_id LEFT JOIN orgs og ON og.id = s.org_id ORDER BY s.kind, s.name
     `).all(new Date().toISOString()).map((s) => ({ ...s, connector: connectorForSource(s) }));
     const orgs = db.prepare(`
       SELECT o.*, (SELECT COUNT(*) FROM memberships m WHERE m.org_id = o.id) AS members,
@@ -71,13 +79,13 @@ export function adminRoutes(app, ctx) {
   // --- Source settings ------------------------------------------------------
 
   const editPage = (req, res, source, extra = {}) => res.status(extra.status || 200).render('source-form', {
-    source, values: parse(source.config), fields: fieldsFor(source), credentials: credentials(), connector: source.key ? connectorForSource(source) : null,
+    source, values: parse(source.config), fields: fieldsFor(source), credentials: credentials(), orgs: orgList(), connector: source.key ? connectorForSource(source) : null,
     error: null, preview: null, ...extra,
   });
 
   app.get('/admin/sources/new', guard, (req, res) => {
     const kind = req.query.kind === 'portal' ? 'portal' : 'rss';
-    editPage(req, res, { key: '', name: '', kind, type: 'tender', config: '{}', interval_minutes: kind === 'portal' ? 720 : 360, credential_id: null });
+    editPage(req, res, { key: '', name: '', kind, type: 'tender', config: '{}', interval_minutes: kind === 'portal' ? 720 : 360, credential_id: null, org_id: null });
   });
 
   app.get('/admin/sources/:key', guard, (req, res) => {
@@ -96,8 +104,14 @@ export function adminRoutes(app, ctx) {
       if (v) values[f.key] = v;
     }
     const credentialId = Number(b.credential_id) || null;
-    if (credentialId && !db.prepare('SELECT 1 FROM credentials WHERE id = ?').get(credentialId)) throw new Error('That credential no longer exists.');
+    const credential = credentialId && db.prepare('SELECT org_id FROM credentials WHERE id = ?').get(credentialId);
+    if (credentialId && !credential) throw new Error('That credential no longer exists.');
+    // Built-in sources are always shared. A custom one can be private to one organisation.
+    const orgId = source.kind === 'builtin' ? null : orgIdFrom(b.org_id);
+    // One customer's login must never fetch results that someone else can see.
+    if (credential?.org_id != null && credential.org_id !== orgId) throw new Error('That credential belongs to one organisation, so the source must be private to the same organisation.');
     return {
+      org_id: orgId,
       ...source,
       name: source.kind === 'builtin' ? source.name : String(b.name || '').trim().slice(0, 120),
       type: source.kind === 'builtin' ? source.type : (b.type === 'grant' ? 'grant' : 'tender'),
@@ -116,7 +130,7 @@ export function adminRoutes(app, ctx) {
       next = await readForm(req, base);
       if (!next.name) throw new Error('Give the source a name.');
     } catch (err) {
-      return editPage(req, res, { ...base, name: req.body.name || base.name, config: JSON.stringify(req.body) }, { status: 400, error: err.message });
+      return editPage(req, res, { ...base, name: req.body.name || base.name, org_id: Number(req.body.org_id) || base.org_id || null, config: JSON.stringify(req.body) }, { status: 400, error: err.message });
     }
     if (req.body.action === 'test') {
       try {
@@ -127,14 +141,18 @@ export function adminRoutes(app, ctx) {
       }
     }
     if (existing) {
-      db.prepare('UPDATE sources SET name = ?, type = ?, config = ?, credential_id = ?, interval_minutes = ?, next_run_at = NULL WHERE key = ?')
-        .run(next.name, next.type, next.config, next.credential_id, next.interval_minutes, existing.key);
+      db.transaction(() => {
+        db.prepare('UPDATE sources SET name = ?, type = ?, config = ?, credential_id = ?, interval_minutes = ?, org_id = ?, next_run_at = NULL WHERE key = ?')
+          .run(next.name, next.type, next.config, next.credential_id, next.interval_minutes, next.org_id, existing.key);
+        // Who can see a notice decides how copies are folded together, so work it out again.
+        if (existing.org_id !== next.org_id) linkDuplicates(db);
+      })();
     } else {
       next.key = `custom-${next.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40)}-${crypto.randomBytes(2).toString('hex')}`;
-      db.prepare('INSERT INTO sources (key, name, kind, type, config, credential_id, interval_minutes, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, 1)')
-        .run(next.key, next.name, next.kind, next.type, next.config, next.credential_id, next.interval_minutes);
+      db.prepare('INSERT INTO sources (key, name, kind, type, config, credential_id, interval_minutes, org_id, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)')
+        .run(next.key, next.name, next.kind, next.type, next.config, next.credential_id, next.interval_minutes, next.org_id);
     }
-    audit(req, existing ? 'source.updated' : 'source.created', next.key);
+    audit(req, existing ? 'source.updated' : 'source.created', `${next.key}${next.org_id ? ` private to org ${next.org_id}` : ''}`);
     flash(req, `${next.name} saved. It will run within a minute.`);
     res.redirect('/admin');
   }
@@ -164,11 +182,14 @@ export function adminRoutes(app, ctx) {
       : kind === 'api-key' ? { key: String(b.key || '').trim() }
       : { header: String(b.header || '').trim(), value: String(b.value || '') };
     const complete = name && Object.values(secret).every(Boolean) && (kind !== 'header' || /^[A-Za-z0-9-]+$/.test(secret.header));
+    let orgId;
+    try { orgId = orgIdFrom(b.org_id); } catch (err) { flash(req, err.message); return res.redirect('/admin#credentials'); }
     if (!complete) flash(req, 'Fill in a name and every field for the credential.');
     else if (db.prepare('SELECT 1 FROM credentials WHERE name = ?').get(name)) flash(req, 'A credential with that name already exists.');
     else {
-      saveCredential(db, { name, kind, secret });
-      audit(req, 'credential.created', name);
+      const id = saveCredential(db, { name, kind, secret });
+      if (orgId) db.prepare('UPDATE credentials SET org_id = ? WHERE id = ?').run(orgId, id);
+      audit(req, 'credential.created', `${name}${orgId ? ` for org ${orgId}` : ''}`);
       flash(req, `Credential "${name}" stored, encrypted. It cannot be viewed again, only replaced.`);
     }
     res.redirect('/admin#credentials');

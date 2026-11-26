@@ -1,6 +1,7 @@
 // Builds an organisation's ranked feed: open opportunities scored against
 // its profile, merged with its triage state (shortlist, hidden, pipeline).
 import { cpvMatch, cpvPrefix, scoreOpportunity, splitList } from './score.js';
+import { VISIBLE } from './visibility.js';
 
 export const STAGES = ['qualifying', 'bidding', 'submitted', 'won', 'lost', 'no-bid'];
 export const STAGE_LABELS = { qualifying: 'Qualifying', bidding: 'Bidding', submitted: 'Submitted', won: 'Won', lost: 'Lost', 'no-bid': 'No bid' };
@@ -64,6 +65,9 @@ export function getFeed(db, orgId, {
   else where.push('COALESCE(s.hidden, 0) = 0');
   // Copies of a notice on other portals are folded into the first one seen.
   if (view === 'matches' || view === 'all') where.push('o.duplicate_of IS NULL');
+  // Never another organisation's private sources.
+  where.push(VISIBLE);
+  params.push(orgId);
 
   const rows = db.prepare(`
     SELECT o.*, COALESCE(s.starred, 0) AS starred, COALESCE(s.hidden, 0) AS hidden, COALESCE(s.note, '') AS note, COALESCE(s.stage, '') AS stage
@@ -105,7 +109,7 @@ export function getSummary(db, orgId, { now = Date.now() } = {}) {
     closingSoonCount: items.filter((o) => o.closes_at && o.closes_at <= soon).length,
     newest: items.filter((o) => o.first_seen_at > weekAgo).slice(0, 6),
     shortlisted: items.filter((o) => o.starred).length,
-    pipelineValue: db.prepare(`SELECT COALESCE(SUM(o.award_max), 0) AS v FROM org_opportunity_state s JOIN opportunities o ON o.id = s.opportunity_id WHERE s.org_id = ? AND s.stage IN ('qualifying', 'bidding', 'submitted')`).get(orgId).v,
+    pipelineValue: db.prepare(`SELECT COALESCE(SUM(o.award_max), 0) AS v FROM org_opportunity_state s JOIN opportunities o ON o.id = s.opportunity_id WHERE s.org_id = ? AND s.stage IN ('qualifying', 'bidding', 'submitted') AND ${VISIBLE}`).get(orgId, orgId).v,
     stages,
   };
 }

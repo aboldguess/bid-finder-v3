@@ -13,6 +13,7 @@ import { isPrivateAddress } from '../http/ssrf.js';
 import { schedulerHealthy } from '../scheduler.js';
 import { SqliteStore, csrf } from './security.js';
 import { createContext } from './context.js';
+import { VISIBLE, visibleSources } from '../match/visibility.js';
 import { fmt } from './format.js';
 import { apiRouter } from './api.js';
 import { openapi } from './openapi.js';
@@ -106,7 +107,8 @@ export function createApp(db, { mail } = {}) {
         req.user = req.org = undefined;
       }
     }
-    const sourceNames = Object.fromEntries(db.prepare('SELECT key, name FROM sources ORDER BY name').all().map((s) => [s.key, s.name]));
+    // Only the sources this organisation may see, so private portal names never leak.
+    const sourceNames = Object.fromEntries(visibleSources(db, req.org?.id).map((s) => [s.key, s.name]));
     Object.assign(res.locals, { user: req.user, org: req.org, path: req.path, sourceNames, flash: req.session.flash, version: config.version, hosted: config.hosted, canRegister: !req.user && ctx.registrationOpen(config) });
     delete req.session.flash;
     next();
@@ -114,8 +116,9 @@ export function createApp(db, { mail } = {}) {
 
   app.get('/', (req, res) => {
     if (req.user) return res.redirect('/dashboard');
-    const stats = db.prepare('SELECT COUNT(*) AS open FROM opportunities WHERE closes_at IS NULL OR closes_at > ?').get(new Date().toISOString());
-    const sources = db.prepare('SELECT COUNT(*) AS n FROM sources WHERE enabled = 1').get().n;
+    // Public figures only: private sources are not counted.
+    const stats = db.prepare(`SELECT COUNT(*) AS open FROM opportunities o WHERE (o.closes_at IS NULL OR o.closes_at > ?) AND ${VISIBLE}`).get(new Date().toISOString(), -1);
+    const sources = db.prepare('SELECT COUNT(*) AS n FROM sources WHERE enabled = 1 AND org_id IS NULL').get().n;
     res.render('landing', { stats, sources, canRegister: ctx.registrationOpen(config) });
   });
 

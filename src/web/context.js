@@ -1,6 +1,7 @@
 // Helpers shared by the route modules.
 import crypto from 'node:crypto';
 import { getProfile } from '../match/feed.js';
+import { loadVisible } from '../match/visibility.js';
 import { scoreOpportunity } from '../match/score.js';
 import { createAuthLimits } from './security.js';
 import { emailConfigured, sendEmail } from '../notify/channels.js';
@@ -26,7 +27,8 @@ export function createContext(db, { mail } = {}) {
       db.prepare('INSERT INTO audit_log (user_id, actor, action, detail, ip) VALUES (?, ?, ?, ?, ?)')
         .run(actor?.id ?? null, actor?.email || '', action, String(detail).slice(0, 500), req.ip || '');
     },
-    loadOpportunity: (id) => db.prepare('SELECT * FROM opportunities WHERE id = ?').get(Number(id)),
+    // Only opportunities the organisation may see; another organisation's private ones look like they do not exist.
+    loadOpportunity: (id, orgId) => loadVisible(db, id, orgId),
     // An opportunity with this organisation's score and triage state.
     withMatch(opp, orgId) {
       const state = db.prepare('SELECT * FROM org_opportunity_state WHERE org_id = ? AND opportunity_id = ?').get(orgId, opp.id) || {};
