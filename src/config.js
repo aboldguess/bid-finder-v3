@@ -45,6 +45,8 @@ export const config = {
   hosted: bool(process.env.HOSTED),
   // Sign-up is open for the first account only, unless this is set (or HOSTED is). Others join by invite.
   allowRegistration: bool(process.env.ALLOW_REGISTRATION),
+  // Sign-up forms sent sooner than this after they were shown are treated as bots.
+  signupMinSeconds: Number(process.env.SIGNUP_MIN_SECONDS ?? 3),
   scheduler: !bool(process.env.DISABLE_SCHEDULER),
   digestCron: process.env.DIGEST_CRON || '0 7 * * *',
   maintenanceCron: process.env.MAINTENANCE_CRON || '15 3 * * *',

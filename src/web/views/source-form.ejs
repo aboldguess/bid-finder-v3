@@ -15,6 +15,13 @@
       <div class="row">
         <label>Name <input name="name" required value="<%= source.name %>" placeholder="e.g. Acme supplier portal"></label>
         <label>Lists <select name="type"><option value="tender" <%= source.type === 'tender' ? 'selected' : '' %>>Tenders</option><option value="grant" <%= source.type === 'grant' ? 'selected' : '' %>>Grants</option></select></label>
+        <label>Who sees its results
+          <select name="org_id">
+            <option value="">Every organisation</option>
+            <% orgs.forEach(o => { %><option value="<%= o.id %>" <%= source.org_id === o.id ? 'selected' : '' %>>Only <%= o.name %></option><% }) %>
+          </select>
+          <small>Choose one organisation for a customer's private portal. Nobody else will see its name or anything it finds.</small>
+        </label>
       </div>
     <% } %>
     <% fields.forEach(f => { %>
@@ -28,7 +35,7 @@
       <label>Credential
         <select name="credential_id">
           <option value="">None</option>
-          <% credentials.forEach(c => { %><option value="<%= c.id %>" <%= source.credential_id === c.id ? 'selected' : '' %>><%= c.name %></option><% }) %>
+          <% credentials.forEach(c => { %><option value="<%= c.id %>" <%= source.credential_id === c.id ? 'selected' : '' %>><%= c.name %><%= c.org_name ? ' (' + c.org_name + ')' : '' %></option><% }) %>
         </select>
         <small>Stored in the <a href="/admin#credentials">credential vault</a>.<%= connector?.auth === 'api-key' ? ' This source needs an API key.' : '' %></small>
       </label>

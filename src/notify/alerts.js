@@ -61,6 +61,7 @@ export async function deliver(db, search, items, { channels = {} } = {}) {
 export async function runAlerts(db, { now = Date.now(), channels, only } = {}) {
   const searches = db.prepare(`
     SELECT s.* FROM saved_searches s JOIN orgs o ON o.id = s.org_id WHERE o.plan != 'suspended' AND s.frequency != 'off'
+      AND EXISTS (SELECT 1 FROM memberships m JOIN users u ON u.id = m.user_id WHERE m.org_id = o.id AND u.email_verified_at IS NOT NULL)
   `).all().filter((s) => (!only || s.id === only) && isAlertDue(s, now));
   const out = [];
   for (const search of searches) {

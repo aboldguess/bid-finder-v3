@@ -8,6 +8,7 @@ import { presets } from '../../match/presets.js';
 import { emailConfigured } from '../../notify/channels.js';
 import { sendDigest } from '../../notify/digest.js';
 import { localPath, validEmail } from '../context.js';
+import { VISIBLE, visibleSources } from '../../match/visibility.js';
 
 const PAGE = 50;
 
@@ -16,7 +17,8 @@ export function opportunityRoutes(app, ctx) {
 
   app.get('/dashboard', requireUser, (req, res) => {
     const summary = getSummary(db, req.org.id);
-    const sources = db.prepare('SELECT key, name, enabled, last_status, last_run_at, last_error FROM sources WHERE enabled = 1 ORDER BY name').all();
+    const visible = new Set(visibleSources(db, req.org.id).map((s) => s.key));
+    const sources = db.prepare('SELECT key, name, enabled, last_status, last_run_at, last_error FROM sources WHERE enabled = 1 ORDER BY name').all().filter((s) => visible.has(s.key));
     const searches = db.prepare('SELECT id, name, frequency FROM saved_searches WHERE org_id = ? ORDER BY name').all(req.org.id);
     const profile = getProfile(db, req.org.id);
     const profileEmpty = !splitList(profile.keywords).length && !splitList(profile.cpv_codes).length;
@@ -38,17 +40,17 @@ export function opportunityRoutes(app, ctx) {
   });
 
   app.get('/o/:id', requireUser, (req, res) => {
-    const opp = ctx.loadOpportunity(req.params.id);
+    const opp = ctx.loadOpportunity(req.params.id, req.org.id);
     if (!opp) return res.status(404).render('error', { message: 'Opportunity not found.' });
     const full = ctx.withMatch(opp, req.org.id);
     const also = opp.dedupe_key
-      ? db.prepare('SELECT id, source_key, url FROM opportunities WHERE dedupe_key = ? AND id != ? ORDER BY id').all(opp.dedupe_key, opp.id)
+      ? db.prepare(`SELECT o.id, o.source_key, o.url FROM opportunities o WHERE o.dedupe_key = ? AND o.id != ? AND ${VISIBLE} ORDER BY o.id`).all(opp.dedupe_key, opp.id, req.org.id)
       : [];
     res.render('opportunity', { opp: full, state: full, match: full.match, also, STAGES, STAGE_LABELS });
   });
 
   app.post('/o/:id/state', requireUser, (req, res) => {
-    const opp = ctx.loadOpportunity(req.params.id);
+    const opp = ctx.loadOpportunity(req.params.id, req.org.id);
     if (!opp) return res.status(404).json({ error: 'not found' });
     const changes = {};
     for (const key of ['starred', 'hidden']) if (key in req.body) changes[key] = ['1', 'true', true, 1].includes(req.body[key]) ? 1 : 0;

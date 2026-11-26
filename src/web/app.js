@@ -13,17 +13,19 @@ import { isPrivateAddress } from '../http/ssrf.js';
 import { schedulerHealthy } from '../scheduler.js';
 import { SqliteStore, csrf } from './security.js';
 import { createContext } from './context.js';
+import { VISIBLE, visibleSources } from '../match/visibility.js';
 import { fmt } from './format.js';
 import { apiRouter } from './api.js';
 import { openapi } from './openapi.js';
 import { accountRoutes } from './routes/account.js';
+import { emailRoutes } from './routes/email.js';
 import { opportunityRoutes } from './routes/opportunities.js';
 import { searchRoutes } from './routes/searches.js';
 import { adminRoutes } from './routes/admin.js';
 
-export function createApp(db) {
+export function createApp(db, { mail } = {}) {
   ensureSources(db);
-  const ctx = createContext(db);
+  const ctx = createContext(db, { mail });
   const app = express();
   app.set('view engine', 'ejs');
   app.set('views', path.join(import.meta.dirname, 'views'));
@@ -95,7 +97,7 @@ export function createApp(db) {
   app.use((req, res, next) => {
     const userId = req.session.userId;
     if (userId) {
-      req.user = db.prepare('SELECT id, email, name, is_platform_admin FROM users WHERE id = ?').get(userId);
+      req.user = db.prepare('SELECT id, email, name, is_platform_admin, email_verified_at FROM users WHERE id = ?').get(userId);
       req.org = req.user && db.prepare(`
         SELECT o.*, m.role FROM orgs o JOIN memberships m ON m.org_id = o.id
         WHERE m.user_id = ? ORDER BY m.role = 'owner' DESC, o.id LIMIT 1
@@ -105,7 +107,8 @@ export function createApp(db) {
         req.user = req.org = undefined;
       }
     }
-    const sourceNames = Object.fromEntries(db.prepare('SELECT key, name FROM sources ORDER BY name').all().map((s) => [s.key, s.name]));
+    // Only the sources this organisation may see, so private portal names never leak.
+    const sourceNames = Object.fromEntries(visibleSources(db, req.org?.id).map((s) => [s.key, s.name]));
     Object.assign(res.locals, { user: req.user, org: req.org, path: req.path, sourceNames, flash: req.session.flash, version: config.version, hosted: config.hosted, canRegister: !req.user && ctx.registrationOpen(config) });
     delete req.session.flash;
     next();
@@ -113,13 +116,15 @@ export function createApp(db) {
 
   app.get('/', (req, res) => {
     if (req.user) return res.redirect('/dashboard');
-    const stats = db.prepare('SELECT COUNT(*) AS open FROM opportunities WHERE closes_at IS NULL OR closes_at > ?').get(new Date().toISOString());
-    const sources = db.prepare('SELECT COUNT(*) AS n FROM sources WHERE enabled = 1').get().n;
+    // Public figures only: private sources are not counted.
+    const stats = db.prepare(`SELECT COUNT(*) AS open FROM opportunities o WHERE (o.closes_at IS NULL OR o.closes_at > ?) AND ${VISIBLE}`).get(new Date().toISOString(), -1);
+    const sources = db.prepare('SELECT COUNT(*) AS n FROM sources WHERE enabled = 1 AND org_id IS NULL').get().n;
     res.render('landing', { stats, sources, canRegister: ctx.registrationOpen(config) });
   });
 
   app.get('/api', ctx.requireUser, (req, res) => res.render('api-docs', { spec: openapi(), baseUrl: config.baseUrl }));
 
+  emailRoutes(app, ctx);
   accountRoutes(app, ctx);
   opportunityRoutes(app, ctx);
   searchRoutes(app, ctx);

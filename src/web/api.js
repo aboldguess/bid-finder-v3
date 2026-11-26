@@ -6,6 +6,7 @@ import { config } from '../config.js';
 import { connectorForSource } from '../connectors/index.js';
 import { isIngestRunning, runAll } from '../ingest/run.js';
 import { STAGES, getFeed, normaliseFilters, setState } from '../match/feed.js';
+import { visibleSources } from '../match/visibility.js';
 import { parseFilters, runAlerts, searchResults } from '../notify/alerts.js';
 import { log } from '../log.js';
 import { sha256 } from './context.js';
@@ -69,10 +70,10 @@ export function apiRouter(ctx) {
     next();
   });
 
-  const sourceKeys = () => db.prepare('SELECT key FROM sources').all().map((s) => s.key);
+  const sourceKeys = (orgId) => visibleSources(db, orgId).map((s) => s.key);
 
   api.get('/opportunities', (req, res) => {
-    const filters = normaliseFilters(req.query, { sourceKeys: sourceKeys() });
+    const filters = normaliseFilters(req.query, { sourceKeys: sourceKeys(req.api.org_id) });
     const limit = Math.min(200, Math.max(1, Number(req.query.limit) || 50));
     const offset = Math.max(0, Number(req.query.offset) || 0);
     const since = /^\d{4}-\d{2}-\d{2}/.test(req.query.since || '') ? new Date(req.query.since).toISOString().replace('T', ' ').slice(0, 19) : null;
@@ -81,13 +82,13 @@ export function apiRouter(ctx) {
   });
 
   api.get('/opportunities/:id', (req, res) => {
-    const opp = ctx.loadOpportunity(req.params.id);
+    const opp = ctx.loadOpportunity(req.params.id, req.api.org_id);
     if (!opp) return fail(res, 404, 'Opportunity not found.');
     res.json(serialise(ctx.withMatch(opp, req.api.org_id)));
   });
 
   api.patch('/opportunities/:id', (req, res) => {
-    const opp = ctx.loadOpportunity(req.params.id);
+    const opp = ctx.loadOpportunity(req.params.id, req.api.org_id);
     if (!opp) return fail(res, 404, 'Opportunity not found.');
     const b = req.body || {};
     const changes = {};
@@ -117,8 +118,9 @@ export function apiRouter(ctx) {
   api.get('/sources', (req, res) => {
     const now = new Date().toISOString();
     const rows = db.prepare(`
-      SELECT s.*, (SELECT COUNT(*) FROM opportunities o WHERE o.source_key = s.key AND (o.closes_at IS NULL OR o.closes_at > ?)) AS open_count FROM sources s ORDER BY s.name
-    `).all(now);
+      SELECT s.*, (SELECT COUNT(*) FROM opportunities o WHERE o.source_key = s.key AND (o.closes_at IS NULL OR o.closes_at > ?)) AS open_count FROM sources s
+      WHERE s.org_id IS NULL OR s.org_id = ? ORDER BY s.name
+    `).all(now, req.api.org_id);
     res.json({ running: isIngestRunning(), items: rows.map((s) => ({
       key: s.key, name: s.name, kind: s.kind, type: s.type, enabled: Boolean(s.enabled), access: connectorForSource(s)?.access || null,
       interval_minutes: s.interval_minutes, last_run_at: s.last_run_at, last_status: s.last_status, last_error: s.last_error,

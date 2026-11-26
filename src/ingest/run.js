@@ -36,6 +36,9 @@ export function linkDuplicates(db) {
     UPDATE opportunities SET duplicate_of = (
       SELECT c.id FROM opportunities c
       WHERE c.dedupe_key = opportunities.dedupe_key AND c.id < opportunities.id AND c.source_key != opportunities.source_key
+        -- The original must be visible to everyone who can see the copy: a
+        -- public notice is never folded into a private source's copy.
+        AND (SELECT org_id FROM sources WHERE key = c.source_key) IS NULL
       ORDER BY c.id LIMIT 1)
     WHERE dedupe_key IS NOT NULL
   `).run();

@@ -10,7 +10,7 @@
   <tbody>
   <% sources.forEach(s => { %>
     <tr class="<%= s.enabled ? '' : 'disabled' %>">
-      <td><span class="dot <%= !s.enabled ? '' : s.last_status === 'ok' ? 'ok' : s.last_status === 'error' ? 'bad' : '' %>"></span><a href="/admin/sources/<%= s.key %>"><%= s.name %></a><% if (s.credential_name) { %> <span class="chip small" title="Credential attached">🔑 <%= s.credential_name %></span><% } %></td>
+      <td><span class="dot <%= !s.enabled ? '' : s.last_status === 'ok' ? 'ok' : s.last_status === 'error' ? 'bad' : '' %>"></span><a href="/admin/sources/<%= s.key %>"><%= s.name %></a><% if (s.credential_name) { %> <span class="chip small" title="Credential attached">🔑 <%= s.credential_name %></span><% } %><% if (s.org_id) { %> <span class="chip small" title="Only this organisation sees its results">Private to <%= s.org_name %></span><% } %></td>
       <td class="muted"><%= s.connector?.access || s.kind %></td>
       <td class="muted"><%= s.enabled ? fmt.every(s.interval_minutes) : 'Off' %></td>
       <td><%= s.open_count.toLocaleString('en-GB') %></td>
@@ -32,7 +32,7 @@
     <p class="muted">Logins and API keys for sources that need them. Encrypted at rest and never shown again after saving.</p>
     <ul class="list panel">
       <% credentials.forEach(c => { %>
-        <li><span><strong><%= c.name %></strong> <span class="muted"><%= { login: 'Username and password', 'api-key': 'API key', header: 'HTTP header' }[c.kind] %> · added <%= fmt.stamp(c.created_at) %></span></span>
+        <li><span><strong><%= c.name %></strong> <span class="muted"><%= { login: 'Username and password', 'api-key': 'API key', header: 'HTTP header' }[c.kind] %><%= c.org_name ? ' · belongs to ' + c.org_name : ' · shared' %> · added <%= fmt.stamp(c.created_at) %></span></span>
           <form method="post" action="/admin/credentials/<%= c.id %>/delete"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link danger" data-confirm="Delete this credential? Sources using it will stop working.">Delete</button></form></li>
       <% }) %>
       <% if (!credentials.length) { %><li class="muted">Nothing stored yet.</li><% } %>
@@ -43,6 +43,7 @@
       <div class="row">
         <label>Name <input name="name" required placeholder="e.g. Delta eSourcing login"></label>
         <label>Kind <select name="kind"><option value="login">Username and password</option><option value="api-key">API key</option><option value="header">HTTP header</option></select></label>
+        <label>Belongs to <select name="org_id"><option value="">Shared (our own login or key)</option><% orgs.forEach(o => { %><option value="<%= o.id %>"><%= o.name %></option><% }) %></select><small>A customer's own portal login. Only sources private to that customer can use it.</small></label>
       </div>
       <div class="row" data-kind="login"><label>Username <input name="username" autocomplete="off"></label><label>Password <input name="password" type="password" autocomplete="new-password"></label></div>
       <div class="row" data-kind="api-key" hidden><label>API key <input name="key" type="password" autocomplete="off"></label></div>

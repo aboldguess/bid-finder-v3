@@ -9,11 +9,11 @@ import { createApp } from '../src/web/app.js';
 
 const token = (html) => html.match(/name="_csrf" value="([^"]+)"/)[1];
 
-async function signUp(app, email, { terms = '1', orgName = 'Acme' } = {}) {
+async function signUp(app, email, { terms = '1', orgName = 'Acme', ...extra } = {}) {
   const agent = request.agent(app);
   const page = await agent.get('/register');
   const res = await agent.post('/register').type('form').send({
-    _csrf: token(page.text), name: 'Pat', email, password: 'correct horse battery', orgName, ...(terms ? { terms } : {}),
+    _csrf: token(page.text), name: 'Pat', email, password: 'correct horse battery', orgName, ...(terms ? { terms } : {}), ...extra,
   });
   return { agent, page, res };
 }
@@ -82,4 +82,73 @@ test('self-hosted mode is unchanged: no consent tick, no legal pages, sign-up cl
   assert.equal(db.prepare('SELECT terms_accepted_at FROM users').get().terms_accepted_at, null);
   assert.equal((await request(app).get('/register')).status, 403);
   assert.equal((await request(app).get('/terms')).status, 404);
+});
+
+// --- Abuse protection -----------------------------------------------------
+
+hosted('sign-up: a filled honeypot or a form sent too fast creates nothing', async () => {
+  const db = openDb(':memory:');
+  const app = createApp(db);
+  const page = await request.agent(app).get('/register');
+  assert.match(page.text, /name="website"/, 'the honeypot is on the form');
+
+  const bot = await signUp(app, 'bot@spam.example', { website: 'http://spam.example' });
+  assert.equal(bot.res.status, 400);
+  assert.match(bot.res.text, /Something went wrong with that form/);
+
+  const before = config.signupMinSeconds;
+  config.signupMinSeconds = 3;
+  try {
+    const fast = await signUp(app, 'fast@spam.example');
+    assert.equal(fast.res.status, 400, 'sent instantly, so treated as a bot');
+  } finally { config.signupMinSeconds = before; }
+
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM users').get().n, 0);
+  assert.deepEqual(db.prepare(`SELECT detail FROM audit_log WHERE action = 'signup.bot' ORDER BY id`).all().map((r) => r.detail.split(' ')[0]), ['honeypot', 'too-fast']);
+});
+
+hosted('sign-up: one address can make 5 accounts a day and 10 attempts an hour', async () => {
+  const db = openDb(':memory:');
+  const app = createApp(db);
+  for (let i = 0; i < 5; i++) assert.equal((await signUp(app, `user${i}@example.com`, { orgName: `Org ${i}` })).res.status, 302);
+  const sixth = await signUp(app, 'user5@example.com', { orgName: 'Org 5' });
+  assert.equal(sixth.res.status, 429);
+  assert.ok(Number(sixth.res.headers['retry-after']) > 3600, 'told to come back much later');
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM users').get().n, 5);
+
+  // Sent all at once, they cannot all pass the check while passwords are being hashed.
+  const db3 = openDb(':memory:');
+  const app3 = createApp(db3);
+  const burst = await Promise.all(Array.from({ length: 8 }, (_, i) => signUp(app3, `burst${i}@example.com`, { orgName: `Burst ${i}` })));
+  assert.equal(burst.filter((b) => b.res.status === 302).length, 5);
+  assert.equal(db3.prepare('SELECT COUNT(*) AS n FROM users').get().n, 5, 'still five accounts a day');
+
+  // Failed attempts count too, so a bot cannot keep guessing.
+  const app2 = createApp(openDb(':memory:'));
+  for (let i = 0; i < 10; i++) assert.equal((await signUp(app2, 'not-an-email')).res.status, 400);
+  assert.equal((await signUp(app2, 'real@example.com')).res.status, 429);
+});
+
+test('sign-in: one address is blocked after 30 failures across any emails', async () => {
+  const db = openDb(':memory:');
+  const app = createApp(db);
+  const agent = request.agent(app);
+  const page = await agent.get('/login');
+  const attempt = (email) => agent.post('/login').type('form').send({ _csrf: token(page.text), email, password: 'wrong password' });
+  for (let i = 0; i < 30; i++) assert.equal((await attempt(`person${i}@example.com`)).status, 401);
+  const blocked = await attempt('someone-new@example.com');
+  assert.equal(blocked.status, 429);
+  assert.ok(blocked.headers['retry-after']);
+  assert.match(blocked.text, /Too many failed sign-ins/);
+});
+
+test('rate limiter: counts per key and resets after its window', async () => {
+  const { createLimiter } = await import('../src/web/security.js');
+  let t = 0;
+  const limit = createLimiter({ max: 2, windowMs: 1000, now: () => t });
+  limit.hit('a'); limit.hit('a');
+  assert.equal(limit.retryAfter('a'), 1);
+  assert.equal(limit.retryAfter('b'), 0, 'other keys are unaffected');
+  t = 1000;
+  assert.equal(limit.retryAfter('a'), 0, 'the window has passed');
 });

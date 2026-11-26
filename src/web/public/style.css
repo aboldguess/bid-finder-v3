@@ -229,3 +229,6 @@ main > h2, section > h2:not(:first-child) { margin-top: 26px; }
 .list.panel + .panel, .table-wrap + .panel { margin-top: 14px; }
 details > summary .inline-h { margin: 0; }
 main > details { margin-top: 26px; }
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.flash.warn { border-left-color: #c77700; background: color-mix(in srgb, #c77700 12%, var(--panel)); }
+.linkbutton { background: none; border: 0; padding: 0; font: inherit; color: var(--accent); text-decoration: underline; cursor: pointer; }
