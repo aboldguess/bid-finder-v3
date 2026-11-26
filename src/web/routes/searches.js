@@ -1,7 +1,7 @@
 // Saved searches and their alerts.
 import { getFeed, normaliseFilters } from '../../match/feed.js';
 import { splitList } from '../../match/score.js';
-import { baseline, deliver, parseFilters, searchResults } from '../../notify/alerts.js';
+import { baseline, deliver, parseFilters, recheckSearches, searchResults } from '../../notify/alerts.js';
 import { emailConfigured } from '../../notify/channels.js';
 import { assertPublicUrl } from '../../http/ssrf.js';
 import { encrypt } from '../../secrets/vault.js';
@@ -73,6 +73,7 @@ export function searchRoutes(app, ctx) {
     let id = existing?.id;
     if (existing) {
       db.prepare('UPDATE saved_searches SET name = ?, filters = ?, frequency = ?, emails = ?, slack_webhook = ?, webhook_url = ? WHERE id = ?').run(...values, id);
+      if (existing.filters !== values[1]) recheckSearches(db, { searchId: id });
     } else {
       id = db.prepare('INSERT INTO saved_searches (name, filters, frequency, emails, slack_webhook, webhook_url, org_id, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
         .run(...values, req.org.id, req.user.id).lastInsertRowid;

@@ -35,6 +35,9 @@ export function createStripe({ secretKey = config.stripe.secretKey, fetchImpl = 
     createPortal: (params) => call('POST', '/billing_portal/sessions', params),
     getSubscription: (id) => call('GET', `/subscriptions/${encodeURIComponent(id)}`),
     updateSubscription: (id, params) => call('POST', `/subscriptions/${encodeURIComponent(id)}`, params),
+    cancelSubscription: (id) => call('DELETE', `/subscriptions/${encodeURIComponent(id)}`),
+    openCheckouts: async (customer) => (await call('GET', `/checkout/sessions?status=open&limit=100&customer=${encodeURIComponent(customer)}`)).data || [],
+    expireCheckout: (id) => call('POST', `/checkout/sessions/${encodeURIComponent(id)}/expire`),
   };
 }
 
@@ -58,7 +61,9 @@ export const signForTest = (rawBody, secret, t = Math.floor(Date.now() / 1000)) 
 
 // Stripe's subscription status, as ours.
 export const statusFrom = (stripeStatus) => ({
-  trialing: 'active', active: 'active', past_due: 'past_due', unpaid: 'past_due',
+  trialing: 'active', active: 'active', past_due: 'past_due',
+  // Stripe has stopped retrying the card, so access ends as if cancelled.
+  unpaid: 'lapsed',
   canceled: 'lapsed', incomplete_expired: 'lapsed', paused: 'lapsed',
 }[stripeStatus] || null);
 
@@ -77,6 +82,16 @@ export function lineItem(plan, period) {
   };
 }
 
+// A finished checkout that would give an organisation a second subscription
+// while it still has a live one (two checkout tabs, say). Returns its id.
+export function secondSubscription(db, event) {
+  const o = event.data?.object || {};
+  if (event.type !== 'checkout.session.completed' || o.mode !== 'subscription' || !o.subscription) return null;
+  const org = db.prepare('SELECT stripe_subscription_id, billing_status FROM orgs WHERE id = ?').get(Number(o.client_reference_id || o.metadata?.org_id));
+  const live = org?.stripe_subscription_id && org.stripe_subscription_id !== o.subscription && ['active', 'past_due'].includes(org.billing_status);
+  return live ? o.subscription : null;
+}
+
 // Applies one webhook event to the database. Returns what it did, for logs and tests.
 export function applyEvent(db, event) {
   if (db.prepare('SELECT 1 FROM stripe_events WHERE id = ?').get(event.id)) return 'duplicate';
@@ -87,7 +102,9 @@ export function applyEvent(db, event) {
       const orgId = Number(o.client_reference_id || o.metadata?.org_id);
       const org = db.prepare('SELECT id, stripe_customer_id FROM orgs WHERE id = ?').get(orgId);
       // The customer was created by us for this organisation; never let a session move it to another.
-      if (org && (!org.stripe_customer_id || org.stripe_customer_id === o.customer)) {
+      if (secondSubscription(db, event)) {
+        result = `org ${orgId} already subscribed, ignored ${o.subscription}`;
+      } else if (org && (!org.stripe_customer_id || org.stripe_customer_id === o.customer)) {
         db.prepare(`UPDATE orgs SET stripe_customer_id = ?, stripe_subscription_id = ?, plan_key = COALESCE(?, plan_key), billing_period = COALESCE(?, billing_period), billing_status = 'active' WHERE id = ?`)
           .run(o.customer, o.subscription, o.metadata?.plan_key || null, o.metadata?.period || null, org.id);
         result = `org ${org.id} active`;

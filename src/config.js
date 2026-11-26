@@ -69,6 +69,9 @@ export const config = {
     webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
     // Let Stripe Tax work out and add VAT. Needs Stripe Tax set up in the Stripe dashboard.
     tax: bool(process.env.STRIPE_TAX),
+    // Pages our forms redirect to (Checkout and the Customer Portal). The
+    // Content-Security-Policy must allow them or the browser blocks the redirect.
+    origins: ['https://checkout.stripe.com', 'https://billing.stripe.com'],
   },
   smtp: {
     url: process.env.SMTP_URL || '',
