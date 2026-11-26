@@ -1,0 +1,11 @@
+[Unit]
+Description=Nightly Bid Finder backup
+
+[Timer]
+OnCalendar=*-*-* 04:15:00
+RandomizedDelaySec=10min
+# If the Pi was off at 04:15, run the backup as soon as it is back.
+Persistent=true
+
+[Install]
+WantedBy=timers.target

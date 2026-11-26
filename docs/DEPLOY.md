@@ -1,5 +1,7 @@
 # Deploying on your own domain
 
+To run the **hosted, paid service** on a Raspberry Pi at home behind a Cloudflare Tunnel, with email, backups and monitoring set up for you, follow [deploy/pi/README.md](../deploy/pi/README.md) instead. This page covers a self-hosted install for one firm on a rented server with Docker.
+
 This takes about fifteen minutes. You need a domain name and a small Linux server. One CPU and 1 GB of memory is plenty.
 
 ## 1. Get a server and a domain

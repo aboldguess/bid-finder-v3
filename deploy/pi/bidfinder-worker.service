@@ -1,0 +1,37 @@
+# Bid Finder background worker: fetches portals, sends alerts and digests, and
+# does nightly clean-up and a local backup. install.sh fills in @USER@ and
+# @APP_DIR@ and copies this to /etc/systemd/system/. Settings: /etc/bidfinder.env.
+[Unit]
+Description=Bid Finder worker
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=@USER@
+WorkingDirectory=@APP_DIR@
+EnvironmentFile=/etc/bidfinder.env
+ExecStart=/usr/bin/node src/cli.js worker
+# Fetching is slow and low priority next to web pages.
+Nice=5
+Restart=always
+RestartSec=3
+TimeoutStopSec=20
+
+# Creates /var/lib/bidfinder owned by @USER@ (database, backups).
+StateDirectory=bidfinder
+StateDirectoryMode=0750
+
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target
