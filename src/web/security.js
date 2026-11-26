@@ -1,4 +1,5 @@
-// Session store, CSRF protection and login throttling.
+// Session store, CSRF protection, login throttling, rate limits and sign-up
+// bot checks.
 import crypto from 'node:crypto';
 import session from 'express-session';
 
@@ -60,3 +61,53 @@ export const loginThrottle = {
     failures.delete(this.key(req));
   },
 };
+
+// Fixed-window counter: at most `max` hits per key in `windowMs`. Kept in
+// memory, which suits one web process; limits reset when it restarts.
+export function createLimiter({ max, windowMs, now = Date.now }) {
+  const hits = new Map();
+  const sweep = () => { for (const [k, h] of hits) if (now() - h.first >= windowMs) hits.delete(k); };
+  return {
+    max,
+    // Seconds until the key may try again, or 0 if it is under the limit.
+    retryAfter(key) {
+      const h = hits.get(key);
+      if (!h || now() - h.first >= windowMs || h.count < max) return 0;
+      return Math.max(1, Math.ceil((h.first + windowMs - now()) / 1000));
+    },
+    hit(key) {
+      if (hits.size > 10000) sweep();
+      const h = hits.get(key);
+      if (!h || now() - h.first >= windowMs) hits.set(key, { count: 1, first: now() });
+      else h.count++;
+    },
+    clear(key) { hits.delete(key); },
+  };
+}
+
+// Limits for the public account forms, one set per app.
+export const createAuthLimits = (opts = {}) => ({
+  // Failed sign-ins from one address across every email: stops password spraying.
+  loginIp: createLimiter({ max: 30, windowMs: 15 * 60e3, ...opts }),
+  // Sign-up attempts (good or bad) from one address.
+  signupAttempts: createLimiter({ max: 10, windowMs: 60 * 60e3, ...opts }),
+  // Accounts actually created from one address.
+  signupCreated: createLimiter({ max: 5, windowMs: 24 * 60 * 60e3, ...opts }),
+  // Password reset requests, per address and per email (used by the reset form).
+  resetIp: createLimiter({ max: 10, windowMs: 60 * 60e3, ...opts }),
+  resetEmail: createLimiter({ max: 3, windowMs: 60 * 60e3, ...opts }),
+});
+
+export const tooMany = (res, seconds) => res.set('Retry-After', String(seconds)).status(429);
+
+// Bot checks for sign-up: a hidden field people never see (a honeypot) and a
+// minimum time between showing the form and sending it. Neither needs a
+// third-party CAPTCHA or its cookies.
+export const HONEYPOT = 'website';
+export const markFormShown = (req) => { req.session.formShownAt = Date.now(); };
+export function looksLikeBot(req, minSeconds) {
+  if (String(req.body?.[HONEYPOT] || '').trim()) return 'honeypot';
+  const shown = Number(req.session.formShownAt) || 0;
+  if (minSeconds > 0 && (!shown || Date.now() - shown < minSeconds * 1000)) return 'too-fast';
+  return null;
+}

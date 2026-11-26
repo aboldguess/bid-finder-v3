@@ -1,12 +1,12 @@
 // Sign-up, sign-in, invites, team, account settings and API tokens.
 import bcrypt from 'bcryptjs';
 import { config } from '../../config.js';
-import { loginThrottle } from '../security.js';
+import { HONEYPOT, looksLikeBot, loginThrottle, markFormShown, tooMany } from '../security.js';
 import { localPath, newToken, sha256, validEmail } from '../context.js';
 import { createUser, MIN_PASSWORD } from '../../users.js';
 
 export function accountRoutes(app, ctx) {
-  const { db, flash, requireUser, requireOwner, audit } = ctx;
+  const { db, flash, requireUser, requireOwner, audit, limits } = ctx;
   const findInvite = (token) => token && db.prepare(`
     SELECT i.*, o.name AS org_name FROM invites i JOIN orgs o ON o.id = i.org_id
     WHERE i.token_hash = ? AND i.used_at IS NULL AND i.expires_at > ?
@@ -17,7 +17,8 @@ export function accountRoutes(app, ctx) {
     if (req.params.token && !invite) return res.status(404).render('error', { message: 'This invitation has expired or has already been used. Ask for a new one.' });
     if (!invite && !ctx.registrationOpen(config)) return res.status(403).render('error', { message: 'Sign-up is closed on this server. Ask your administrator for an invitation.' });
     const first = db.prepare('SELECT COUNT(*) AS n FROM users').get().n === 0;
-    res.status(status).render('register', { error, form: { email: invite?.email || '', ...form }, invite, inviteToken: req.params.token || '', first });
+    markFormShown(req);
+    res.status(status).render('register', { error, form: { email: invite?.email || '', ...form }, invite, inviteToken: req.params.token || '', first, honeypot: HONEYPOT });
   };
 
   app.get('/register', (req, res) => registerPage(req, res));
@@ -27,6 +28,19 @@ export function accountRoutes(app, ctx) {
     const invite = findInvite(req.params.token);
     if (req.params.token && !invite) return registerPage(req, res);
     if (!invite && !ctx.registrationOpen(config)) return registerPage(req, res);
+    const ip = req.ip || '';
+    const wait = limits.signupAttempts.retryAfter(ip) || limits.signupCreated.retryAfter(ip);
+    if (wait) {
+      audit(req, 'signup.limited', ip);
+      return tooMany(res, wait).render('error', { message: 'Too many sign-up attempts from your network. Try again later.' });
+    }
+    limits.signupAttempts.hit(ip);
+    const bot = looksLikeBot(req, config.signupMinSeconds);
+    if (bot) {
+      audit(req, 'signup.bot', `${bot} ${String(req.body.email || '').slice(0, 100)}`);
+      // Same message whatever tripped it, so bots learn nothing; a real person can simply resend.
+      return registerPage(req, res, { status: 400, error: 'Something went wrong with that form. Please check your details and try again.', form: { name: req.body.name, email: req.body.email, orgName: req.body.orgName } });
+    }
     const form = {
       name: (req.body.name || '').trim().slice(0, 200),
       email: (req.body.email || '').trim().toLowerCase().slice(0, 320),
@@ -48,6 +62,7 @@ export function accountRoutes(app, ctx) {
       termsAcceptedAt: config.hosted ? new Date().toISOString() : null,
       ...(invite ? { orgId: invite.org_id, role: 'member' } : { orgName: form.orgName }),
     });
+    limits.signupCreated.hit(ip);
     if (invite) db.prepare('UPDATE invites SET used_at = ? WHERE token_hash = ?').run(new Date().toISOString(), invite.token_hash);
     audit(req, invite ? 'signup.invited' : 'signup', `${form.email}${invite ? '' : ` started ${form.orgName}`}`);
     req.session.regenerate(() => {
@@ -66,9 +81,12 @@ export function accountRoutes(app, ctx) {
     const next = localPath(req.body.next, '/dashboard');
     const page = (status, error) => res.status(status).render('login', { error, email, next, canRegister: ctx.registrationOpen(config) });
     if (loginThrottle.blocked(req)) return page(429, 'Too many attempts. Try again in 15 minutes.');
+    const wait = limits.loginIp.retryAfter(req.ip || '');
+    if (wait) return tooMany(res, wait).render('login', { error: 'Too many failed sign-ins from your network. Try again in a few minutes.', email, next, canRegister: ctx.registrationOpen(config) });
     const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
     if (!user || !(await bcrypt.compare(req.body.password || '', user.password_hash))) {
       loginThrottle.fail(req);
+      limits.loginIp.hit(req.ip || '');
       audit(req, 'login.failed', email);
       return page(401, 'Email or password is incorrect.');
     }

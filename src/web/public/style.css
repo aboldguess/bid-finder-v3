@@ -229,3 +229,4 @@ main > h2, section > h2:not(:first-child) { margin-top: 26px; }
 .list.panel + .panel, .table-wrap + .panel { margin-top: 14px; }
 details > summary .inline-h { margin: 0; }
 main > details { margin-top: 26px; }
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }

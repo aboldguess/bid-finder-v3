@@ -2,6 +2,7 @@
 import crypto from 'node:crypto';
 import { getProfile } from '../match/feed.js';
 import { scoreOpportunity } from '../match/score.js';
+import { createAuthLimits } from './security.js';
 
 export const sha256 = (text) => crypto.createHash('sha256').update(text).digest('hex');
 export const newToken = (prefix = '') => `${prefix}${crypto.randomBytes(24).toString('base64url')}`;
@@ -13,6 +14,7 @@ export function createContext(db) {
   return {
     db,
     flash,
+    limits: createAuthLimits(),
     requireUser: (req, res, next) => (req.user ? next() : res.redirect(`/login?next=${encodeURIComponent(req.originalUrl)}`)),
     requireAdmin: (req, res, next) => (req.user?.is_platform_admin ? next() : render403(res, 'Platform administrators only.')),
     requireOwner: (req, res, next) => (req.org?.role === 'owner' ? next() : render403(res, 'Only the organisation owner can do that.')),
