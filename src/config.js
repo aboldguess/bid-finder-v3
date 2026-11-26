@@ -59,6 +59,13 @@ export const config = {
   logFormat: process.env.LOG_FORMAT || (process.env.NODE_ENV === 'production' ? 'json' : 'text'),
   logLevel: process.env.LOG_LEVEL || 'info',
   metricsToken: process.env.METRICS_TOKEN || '',
+  // Card payments in hosted mode. Without a secret key the billing page says payments are not set up.
+  stripe: {
+    secretKey: process.env.STRIPE_SECRET_KEY || '',
+    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
+    // Let Stripe Tax work out and add VAT. Needs Stripe Tax set up in the Stripe dashboard.
+    tax: bool(process.env.STRIPE_TAX),
+  },
   smtp: {
     url: process.env.SMTP_URL || '',
     from: process.env.MAIL_FROM || 'Bid Finder <no-reply@localhost>',
