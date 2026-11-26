@@ -1,9 +1,11 @@
 // First-run set-up: from sign-up to a ranked feed in a couple of minutes.
 // Pick the kinds of work you do, see live how many open opportunities match,
 // and save. Everything can be refined later on the profile page.
+import { VISIBLE } from '../../match/visibility.js';
 import { getFeed, getProfile } from '../../match/feed.js';
 import { mergePresets, presets } from '../../match/presets.js';
 import { cpvPrefix, splitList } from '../../match/score.js';
+import { recheckSearches } from '../../notify/alerts.js';
 
 const asList = (v) => [].concat(v ?? []).flatMap((x) => String(x).split(','));
 const COUNTRY = /^[A-Z]{2}$/;
@@ -32,7 +34,8 @@ export function welcomeRoutes(app, ctx) {
   const { db, flash, requireUser } = ctx;
 
   app.get('/welcome', requireUser, (req, res) => {
-    const total = db.prepare(`SELECT COUNT(*) AS n FROM opportunities WHERE duplicate_of IS NULL AND (closes_at IS NULL OR closes_at > ?)`).get(new Date().toISOString()).n;
+    // Only what this organisation may see: another customer's private sources never add to the count.
+    const total = db.prepare(`SELECT COUNT(*) AS n FROM opportunities o WHERE o.duplicate_of IS NULL AND (o.closes_at IS NULL OR o.closes_at > ?) AND ${VISIBLE}`).get(new Date().toISOString(), req.org.id).n;
     res.render('welcome', { presets, profile: getProfile(db, req.org.id), total });
   });
 
@@ -60,6 +63,7 @@ export function welcomeRoutes(app, ctx) {
         updated_at = datetime('now')
       WHERE org_id = ?
     `).run(draft.keywords, draft.cpv_codes, draft.types, draft.countries, req.user.email, req.org.id);
+    recheckSearches(db, { orgId: req.org.id });
     const { total } = getFeed(db, req.org.id, { view: 'matches', limit: 0 });
     ctx.audit(req, 'onboarding', `${draft.presets.join(', ') || 'own keywords'}; ${total} matches`);
     flash(req, `Your feed is ready: ${total.toLocaleString('en-GB')} open ${total === 1 ? 'opportunity matches' : 'opportunities match'}, best first. A daily email of new matches goes to ${req.user.email}. Fine-tune it any time on the Profile page.`);

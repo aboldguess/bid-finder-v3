@@ -2,6 +2,16 @@
 # Runs a bidfinder command on the Pi with its settings, as the service's user.
 #   ~/bid-finder-v3/deploy/pi/bidfinder users
 #   ~/bid-finder-v3/deploy/pi/bidfinder create-user you@example.com --org "Your Company" --admin
+#
+# The settings file is read the way systemd reads it for the services (Node's
+# --env-file), not run as shell code, so a value such as
+# MAIL_FROM=Bid Finder <alerts@example.co.uk> works here just as it does there.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
-exec sudo -u "$(stat -c %U .)" bash -c 'set -a; . /etc/bidfinder.env; set +a; exec /usr/bin/node src/cli.js "$@"' bidfinder "$@"
+ENV_FILE="${BIDFINDER_ENV:-/etc/bidfinder.env}"
+OWNER="$(stat -c %U .)"
+NODE="$(command -v node || echo /usr/bin/node)"
+if [[ "$(id -un)" == "$OWNER" ]]; then
+  exec "$NODE" --env-file="$ENV_FILE" src/cli.js "$@"
+fi
+exec sudo -u "$OWNER" "$NODE" --env-file="$ENV_FILE" src/cli.js "$@"
