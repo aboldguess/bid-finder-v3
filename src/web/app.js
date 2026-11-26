@@ -13,6 +13,8 @@ import { isPrivateAddress } from '../http/ssrf.js';
 import { schedulerHealthy } from '../scheduler.js';
 import { SqliteStore, csrf } from './security.js';
 import { createContext } from './context.js';
+import { banner, entitlement } from '../billing/plans.js';
+import { billingRoutes } from './routes/billing.js';
 import { VISIBLE, visibleSources } from '../match/visibility.js';
 import { fmt } from './format.js';
 import { apiRouter } from './api.js';
@@ -109,9 +111,22 @@ export function createApp(db, { mail } = {}) {
     }
     // Only the sources this organisation may see, so private portal names never leak.
     const sourceNames = Object.fromEntries(visibleSources(db, req.org?.id).map((s) => [s.key, s.name]));
-    Object.assign(res.locals, { user: req.user, org: req.org, path: req.path, sourceNames, flash: req.session.flash, version: config.version, hosted: config.hosted, canRegister: !req.user && ctx.registrationOpen(config) });
+    req.access = entitlement(db, req.org);
+    Object.assign(res.locals, { access: req.access, promo: config.hosted ? banner(db) : null, user: req.user, org: req.org, path: req.path, sourceNames, flash: req.session.flash, version: config.version, hosted: config.hosted, canRegister: !req.user && ctx.registrationOpen(config) });
     delete req.session.flash;
     next();
+  });
+
+  // When a hosted trial ends or a subscription is cancelled, the organisation
+  // can still sign in and look, but changes are paused until it pays. Paying,
+  // the account itself and signing out keep working, and so does the admin
+  // area for platform administrators.
+  const ALWAYS = /^\/(logout|billing|account|verify|admin)(\/|$)/;
+  app.use((req, res, next) => {
+    if (!req.access?.readOnly || ['GET', 'HEAD', 'OPTIONS'].includes(req.method) || ALWAYS.test(req.path)) return next();
+    if (req.is('json') || req.xhr) return res.status(402).json({ error: 'Your trial has ended. Choose a plan to make changes.' });
+    ctx.flash(req, 'Your trial has ended, so changes are paused. Choose a plan to carry on where you left off.');
+    res.redirect(303, '/billing');
   });
 
   app.get('/', (req, res) => {
@@ -129,6 +144,7 @@ export function createApp(db, { mail } = {}) {
   opportunityRoutes(app, ctx);
   searchRoutes(app, ctx);
   adminRoutes(app, ctx);
+  billingRoutes(app, ctx);
 
   app.use((req, res) => res.status(404).render('error', { message: 'Page not found.' }));
    

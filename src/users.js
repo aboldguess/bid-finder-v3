@@ -2,6 +2,7 @@
 // sign-up page and the `bidfinder` command line, so both follow the same rules.
 import crypto from 'node:crypto';
 import bcrypt from 'bcryptjs';
+import { startTrial } from './billing/plans.js';
 
 export const MIN_PASSWORD = 10;
 const PROFILE_TYPES = 'grant\ntender';
@@ -16,7 +17,7 @@ export const findUser = (db, email) => db.prepare('SELECT * FROM users WHERE ema
 // Creates a user. Give orgName to start a new organisation the user owns, or
 // orgId to add them to an existing one (as 'member' unless role says otherwise).
 // The first account on a server is always a platform administrator.
-export async function createUser(db, { email, name, password, orgName, orgId, role, admin = false, termsAcceptedAt = null, verified = true }) {
+export async function createUser(db, { email, name, password, orgName, orgId, role, admin = false, termsAcceptedAt = null, verified = true, trial = false }) {
   email = String(email || '').trim().toLowerCase();
   name = String(name || '').trim();
   if (!validEmail(email)) throw new UserError(`"${email}" does not look like an email address.`);
@@ -35,7 +36,9 @@ export async function createUser(db, { email, name, password, orgName, orgId, ro
       .run(email, name, hash, isAdmin ? 1 : 0, termsAcceptedAt, verified ? new Date().toISOString() : null).lastInsertRowid);
     let org = orgId;
     if (org == null) {
-      org = Number(db.prepare(`INSERT INTO orgs (name, kind) VALUES (?, 'company')`).run(String(orgName).trim().slice(0, 200)).lastInsertRowid);
+      // A customer signing up starts a free trial; the operator's own organisation, and any made from the command line, are free.
+      org = Number(db.prepare(`INSERT INTO orgs (name, kind, billing_status) VALUES (?, 'company', ?)`).run(String(orgName).trim().slice(0, 200), trial && !first ? 'trialing' : 'comped').lastInsertRowid);
+      if (trial && !first) startTrial(db, org);
       db.prepare('INSERT INTO profiles (org_id, digest_emails, types) VALUES (?, ?, ?)').run(org, email, PROFILE_TYPES);
       role ||= 'owner';
     }

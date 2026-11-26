@@ -10,6 +10,7 @@
   <script src="/static/app.js" defer></script>
 </head>
 <body>
+<% if (locals.promo) { %><div class="promo" style="background: <%= promo.colour %>"><%= promo.text %> <a href="/pricing" style="color: inherit">See prices</a></div><% } %>
 <header class="topbar">
   <div class="topbar-inner">
     <a class="brand" href="/"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M8 11.5l2.2 2.2L14.5 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Bid Finder</a>
@@ -28,16 +29,19 @@
           <div class="menu-who"><strong><%= user.name %></strong><span><%= user.email %></span></div>
           <a href="/account">Account and API tokens</a>
           <a href="/team">Team</a>
+          <% if (locals.hosted) { %><a href="/billing">Billing</a><% } %>
           <a href="/digests">Digests</a>
           <a href="/api">API</a>
           <form method="post" action="/logout"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button>Sign out</button></form>
         </div>
       </details>
     <% } else { %>
-      <nav class="mainnav right"><% if (locals.canRegister) { %><a href="/register">Create account</a><% } %><a href="/login">Sign in</a></nav>
+      <nav class="mainnav right"><% if (locals.hosted) { %><a href="/pricing">Pricing</a><% } %><% if (locals.canRegister) { %><a href="/register">Create account</a><% } %><a href="/login">Sign in</a></nav>
     <% } %>
   </div>
 </header>
 <main class="<%= typeof wide !== 'undefined' && wide ? 'wide' : '' %>">
+<% if (user && access && access.readOnly) { %><p class="flash warn">Your <%= access.reason === 'trial-ended' ? 'free trial has ended' : 'subscription has ended' %>, so changes and alerts are paused. Everything is still here. <a href="/billing">Choose a plan</a></p>
+<% } else if (user && access && access.status === 'trialing' && access.trialDaysLeft <= 7) { %><p class="flash"><%= access.trialDaysLeft %> <%= access.trialDaysLeft === 1 ? 'day' : 'days' %> left in your free trial. <a href="/billing">Choose a plan</a></p><% } %>
 <% if (user && !user.email_verified_at) { %><form class="flash warn" method="post" action="/account/verify"><input type="hidden" name="_csrf" value="<%= csrfToken %>">Please confirm your email address. Until you do, we will not send you alerts or digests. Nothing arrived? <button class="linkbutton">Send a new link</button></form><% } %>
 <% if (flash) { %><p class="flash" role="status"><%= flash %></p><% } %>

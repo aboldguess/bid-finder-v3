@@ -6,6 +6,7 @@ import { emailConfigured } from '../../notify/channels.js';
 import { assertPublicUrl } from '../../http/ssrf.js';
 import { encrypt } from '../../secrets/vault.js';
 import { validEmail } from '../context.js';
+import { overLimit } from '../../billing/plans.js';
 
 export function searchRoutes(app, ctx) {
   const { db, flash, requireUser, audit } = ctx;
@@ -24,7 +25,7 @@ export function searchRoutes(app, ctx) {
 
   app.get('/searches/new', requireUser, (req, res) => {
     const filters = normaliseFilters(req.query, { sourceKeys: Object.keys(res.locals.sourceNames) });
-    form(req, res, { id: null, name: '', filters, frequency: 'instant', emails: req.user.email, hasSlack: false, hasWebhook: false });
+    form(req, res, { id: null, name: '', filters, frequency: req.access.limits.instant_alerts ? 'instant' : 'daily', emails: req.user.email, hasSlack: false, hasWebhook: false });
   });
 
   app.get('/searches/:id/edit', requireUser, (req, res) => {
@@ -57,6 +58,12 @@ export function searchRoutes(app, ctx) {
     let slack; let hook;
     try {
       if (!draft.name) throw new Error('Give the search a name.');
+      const { limits } = req.access;
+      if (!existing) {
+        const full = overLimit(limits.saved_searches, db.prepare('SELECT COUNT(*) AS n FROM saved_searches WHERE org_id = ?').get(req.org.id).n, 'saved searches');
+        if (full) throw new Error(full);
+      }
+      if (draft.frequency === 'instant' && !limits.instant_alerts) throw new Error('Instant alerts are on the Team plan and above. Choose daily or weekly, or upgrade on the Billing page.');
       slack = await secret(b.slack_webhook, existing?.slack_webhook, (v) => { if (!/^https:\/\/hooks\.slack(-gov)?\.com\//.test(v)) throw new Error('Slack webhook URLs start with https://hooks.slack.com/'); });
       hook = await secret(b.webhook_url, existing?.webhook_url, (v) => assertPublicUrl(v));
     } catch (err) {

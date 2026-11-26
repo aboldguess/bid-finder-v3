@@ -7,6 +7,7 @@ import { runAlerts } from '../../notify/alerts.js';
 import { assertPublicUrl } from '../../http/ssrf.js';
 import { saveCredential } from '../../secrets/vault.js';
 import { log } from '../../log.js';
+import { entitlement, listPlans, overLimit } from '../../billing/plans.js';
 
 // Settings an administrator fills in for each kind of custom source.
 export const CUSTOM_FIELDS = {
@@ -58,7 +59,7 @@ export function adminRoutes(app, ctx) {
     `).all();
     const runs = db.prepare('SELECT r.*, s.name FROM source_runs r JOIN sources s ON s.key = r.source_key ORDER BY r.id DESC LIMIT 25').all();
     const auditRows = db.prepare('SELECT * FROM audit_log ORDER BY id DESC LIMIT 40').all();
-    res.render('admin', { sources, orgs, runs, audit: auditRows, credentials: credentials(), ingesting: isIngestRunning() });
+    res.render('admin', { sources, orgs, runs, audit: auditRows, credentials: credentials(), ingesting: isIngestRunning(), plans: listPlans(db) });
   });
 
   app.post('/admin/ingest', guard, (req, res) => {
@@ -110,6 +111,12 @@ export function adminRoutes(app, ctx) {
     const orgId = source.kind === 'builtin' ? null : orgIdFrom(b.org_id);
     // One customer's login must never fetch results that someone else can see.
     if (credential?.org_id != null && credential.org_id !== orgId) throw new Error('That credential belongs to one organisation, so the source must be private to the same organisation.');
+    if (orgId) {
+      const org = db.prepare('SELECT * FROM orgs WHERE id = ?').get(orgId);
+      const others = db.prepare('SELECT COUNT(*) AS n FROM sources WHERE org_id = ? AND key != ?').get(orgId, source.key || '').n;
+      const full = overLimit(entitlement(db, org).limits.private_sources, others, 'private portals');
+      if (full) throw new Error(`${org.name}: ${full.replace('Upgrade on the Billing page for more.', 'Move them to a plan with more first.')}`);
+    }
     return {
       org_id: orgId,
       ...source,

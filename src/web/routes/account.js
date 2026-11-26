@@ -4,6 +4,7 @@ import { config } from '../../config.js';
 import { HONEYPOT, looksLikeBot, loginThrottle, markFormShown, tooMany } from '../security.js';
 import { localPath, newToken, sha256, validEmail } from '../context.js';
 import { createUser, MIN_PASSWORD } from '../../users.js';
+import { entitlement, overLimit } from '../../billing/plans.js';
 
 export function accountRoutes(app, ctx) {
   const { db, flash, requireUser, requireOwner, audit, limits } = ctx;
@@ -28,6 +29,13 @@ export function accountRoutes(app, ctx) {
     const invite = findInvite(req.params.token);
     if (req.params.token && !invite) return registerPage(req, res);
     if (!invite && !ctx.registrationOpen(config)) return registerPage(req, res);
+    if (invite) {
+      // The invitation itself holds a seat, so only check that the team has not grown past the plan since.
+      const org = db.prepare('SELECT * FROM orgs WHERE id = ?').get(invite.org_id);
+      const { limits, readOnly } = entitlement(db, org);
+      const members = db.prepare('SELECT COUNT(*) AS n FROM memberships WHERE org_id = ?').get(org.id).n;
+      if (readOnly || overLimit(limits.seats, members, 'seats')) return res.status(403).render('error', { message: `${invite.org_name} has no free seats on its plan right now. Ask whoever invited you to upgrade or free a seat.` });
+    }
     const ip = req.ip || '';
     const wait = limits.signupAttempts.retryAfter(ip) || limits.signupCreated.retryAfter(ip);
     if (wait) {
@@ -62,6 +70,7 @@ export function accountRoutes(app, ctx) {
       termsAcceptedAt: config.hosted ? new Date().toISOString() : null,
       // Self-hosted servers often have no email set up, so only hosted mode asks people to confirm their address.
       verified: !config.hosted,
+      trial: config.hosted,
       ...(invite ? { orgId: invite.org_id, role: 'member' } : { orgName: form.orgName }),
     });
     const userId = created.id;
@@ -154,7 +163,12 @@ export function accountRoutes(app, ctx) {
   };
   app.get('/team', requireUser, (req, res) => teamPage(req, res));
 
+  const seatsUsed = (orgId) => db.prepare('SELECT COUNT(*) AS n FROM memberships WHERE org_id = ?').get(orgId).n
+    + db.prepare('SELECT COUNT(*) AS n FROM invites WHERE org_id = ? AND used_at IS NULL AND expires_at > ?').get(orgId, new Date().toISOString()).n;
+
   app.post('/team/invites', requireUser, requireOwner, (req, res) => {
+    const full = overLimit(req.access.limits.seats, seatsUsed(req.org.id), 'team members, counting open invitations');
+    if (full) { flash(req, full); return res.redirect('/team'); }
     const email = (req.body.email || '').trim().toLowerCase();
     const token = newToken();
     db.prepare('INSERT INTO invites (token_hash, org_id, email, created_by, expires_at) VALUES (?, ?, ?, ?, ?)')
