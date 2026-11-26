@@ -49,7 +49,10 @@ export function getFeed(db, orgId, {
   const where = view === 'pipeline' ? [] : ['(o.closes_at IS NULL OR o.closes_at > ?)'];
   const params = view === 'pipeline' ? [orgId] : [orgId, new Date(now).toISOString()];
   const fts = ftsQuery(q);
-  if (fts) {
+  // Alerts (with `since`) look at a handful of new rows: test each against
+  // the full-text index afterwards rather than listing every match first.
+  const ftsEach = Boolean(fts && since);
+  if (fts && !ftsEach) {
     where.push('o.id IN (SELECT rowid FROM opportunities_fts WHERE opportunities_fts MATCH ?)');
     params.push(fts);
   }
@@ -64,7 +67,8 @@ export function getFeed(db, orgId, {
   else if (view === 'pipeline') where.push(`s.stage != ''`);
   else where.push('COALESCE(s.hidden, 0) = 0');
   // Copies of a notice on other portals are folded into the first one seen.
-  if (view === 'matches' || view === 'all') where.push('o.duplicate_of IS NULL');
+  // With `since`, the first-seen index is far more selective; the unary + stops SQLite choosing the duplicate index instead.
+  if (view === 'matches' || view === 'all') where.push(since ? '+o.duplicate_of IS NULL' : 'o.duplicate_of IS NULL');
   // Never another organisation's private sources.
   where.push(VISIBLE);
   params.push(orgId);
@@ -78,7 +82,14 @@ export function getFeed(db, orgId, {
 
   const prefixes = splitList(cpv).map(cpvPrefix);
   const threshold = min_score ?? profile.min_score;
-  let scored = rows.map((o) => ({ ...o, match: scoreOpportunity(o, profile, now) }));
+  let candidates = rows;
+  if (ftsEach && rows.length) {
+    // New rows have the newest ids, and the full-text index can start from an id cheaply.
+    const minId = Math.min(...rows.map((o) => o.id));
+    const hits = new Set(db.prepare('SELECT rowid FROM opportunities_fts WHERE opportunities_fts MATCH ? AND rowid >= ?').all(fts, minId).map((r) => r.rowid));
+    candidates = rows.filter((o) => hits.has(o.id));
+  }
+  let scored = candidates.map((o) => ({ ...o, match: scoreOpportunity(o, profile, now) }));
   if (prefixes.length) scored = scored.filter((o) => cpvMatch(o.cpv_codes, prefixes));
   if (view === 'matches') scored = scored.filter((o) => !o.match.excluded && (o.match.score >= threshold || o.starred));
   scored.sort(SORTS[sort] || SORTS.score);

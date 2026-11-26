@@ -9,6 +9,8 @@ Usage: bidfinder <command> [options]
 
 Commands
   serve                    Start the web app and the background scheduler
+  worker                   Run only the background scheduler (fetching, alerts,
+                           digests, backups), for use with serve --no-scheduler
   ingest [source-key]      Fetch every enabled source now, or just one
   alerts                   Send saved-search alerts that are due
   digest                   Build and send the digests that are due
@@ -107,6 +109,19 @@ if (values.help || command === 'help') {
   const { serve } = await import('./server.js');
   await serve({ port, host, strictPort: Boolean(values['strict-port']), scheduler: values['no-scheduler'] ? false : undefined })
     .catch((err) => { console.error(err.message); process.exit(1); });
+} else if (command === 'worker') {
+  // The scheduler on its own, so slow fetching and scoring never hold up web pages.
+  const { getDb } = await import('./db/index.js');
+  const { startScheduler } = await import('./scheduler.js');
+  const { log } = await import('./log.js');
+  const db = getDb();
+  const { ensureSources } = await import('./ingest/run.js');
+  ensureSources(db);
+  await startScheduler(db);
+  log.info('Worker running. Stop it with Ctrl+C.');
+  const stop = () => { db.close(); process.exit(0); };
+  process.once('SIGTERM', stop);
+  process.once('SIGINT', stop);
 } else {
   const { config } = await import('./config.js');
   const { getDb } = await import('./db/index.js');

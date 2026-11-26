@@ -60,7 +60,7 @@ export function createApp(db, { mail, stripe } = {}) {
   app.get('/readyz', (req, res) => {
     try {
       db.prepare('SELECT 1').get();
-      if (!schedulerHealthy()) return res.status(503).json({ ok: false, reason: 'scheduler stalled' });
+      if (!schedulerHealthy(db)) return res.status(503).json({ ok: false, reason: 'scheduler stalled' });
       res.json({ ok: true, version: config.version });
     } catch (err) {
       res.status(503).json({ ok: false, reason: 'database unavailable' });
