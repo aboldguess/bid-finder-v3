@@ -68,6 +68,8 @@ test('isolation: the web app never shows one organisation another\'s private por
 
   const landing = (await request(app).get('/')).text;
   assert.match(landing, /1 open opportunit/, 'public figures on the landing page leave private results out');
+  assert.match((await bob.get('/welcome')).text, /watching 1 open contracts/, 'the welcome page counts only what Beta can see');
+  assert.match((await ann.get('/welcome')).text, /watching 2 open contracts/, 'Acme counts its own private results');
 });
 
 test('isolation: the API never shows one organisation another\'s private portal', async () => {
@@ -139,6 +141,17 @@ test('admin: a customer\'s credential can only be used by a source private to th
   assert.equal((await save(b.orgId)).status, 400, 'nor private to someone else');
   assert.equal((await save(a.orgId)).status, 302);
   assert.equal(db.prepare(`SELECT org_id FROM sources WHERE name = ?`).get(`Feed for ${a.orgId}`).org_id, a.orgId);
+
+  // Editing a shared source: the chosen organisation is what gets saved.
+  db.prepare(`INSERT INTO sources (key, name, kind, type, config, org_id) VALUES ('custom-shared-feed', 'Shared feed', 'rss', 'tender', '{}', NULL)`).run();
+  const edit = await ops.get('/admin/sources/custom-shared-feed');
+  const update = (orgId) => ops.post('/admin/sources/custom-shared-feed').type('form').send({
+    _csrf: token(edit.text), name: 'Shared feed', type: 'tender', url: 'https://93.184.215.14/feed.rss', credential_id: String(cred.id), org_id: orgId ? String(orgId) : '', interval_minutes: '360',
+  });
+  assert.equal((await update(null)).status, 400, 'a shared source cannot take a customer credential');
+  assert.equal((await update(a.orgId)).status, 302);
+  const edited = db.prepare(`SELECT org_id, credential_id FROM sources WHERE key = 'custom-shared-feed'`).get();
+  assert.deepEqual(edited, { org_id: a.orgId, credential_id: cred.id }, 'the source became private along with the credential');
 
   // Customers never reach the admin pages at all.
   const ann = await signIn(app, 'ann@acme.example');

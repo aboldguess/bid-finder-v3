@@ -33,7 +33,13 @@ async function login(app, email) {
 async function setup({ cancel } = {}) {
   const db = openDb(':memory:');
   const calls = [];
-  const stripe = { configured: true, cancelSubscription: async (id) => { calls.push(id); if (cancel) throw new Error(cancel); return { id, status: 'canceled' }; } };
+  const subs = { sub_acme: 'active' }; // what Stripe holds
+  const stripe = {
+    configured: true,
+    getSubscription: async (id) => ({ id, status: subs[id] || 'canceled' }),
+    // A real cancellation takes a moment, which is when a second request can slip in.
+    cancelSubscription: async (id) => { calls.push(id); await new Promise((r) => setTimeout(r, 100)); if (cancel) throw new Error(cancel); subs[id] = 'canceled'; return { id, status: 'canceled' }; },
+  };
   const app = createApp(db, { mail: async () => {}, stripe });
   await createUser(db, { email: 'ops@operator.example', name: 'Ops', password: PASSWORD, orgName: 'Operator', admin: true });
   const pat = await createUser(db, { email: 'pat@acme.example', name: 'Pat', password: PASSWORD, orgName: 'Acme', trial: true });
@@ -53,7 +59,7 @@ async function setup({ cancel } = {}) {
   setState(db, beta, pub, { starred: 1, note: 'Beta note' });
   db.prepare(`INSERT INTO saved_searches (org_id, name, filters, frequency, emails, slack_webhook) VALUES (?, 'Bridges', '{"q":"bridge"}', 'daily', 'pat@acme.example', 'encrypted-secret')`).run(acme);
   db.prepare(`INSERT INTO audit_log (user_id, actor, action, detail) VALUES (?, 'pat@acme.example', 'login', 'pat@acme.example signed in')`).run(pat.id);
-  return { db, app, calls, acme, beta, pat, sam, pub };
+  return { db, app, calls, subs, acme, beta, pat, sam, pub };
 }
 
 hosted('export: everything the organisation put in, as JSON, without secrets', async () => {
@@ -159,4 +165,40 @@ test('legal text formatting and self-hosted servers', async () => {
   assert.equal(renderLegal(''), '');
   const app = createApp(openDb(':memory:'));
   assert.equal((await request(app).get('/terms')).status, 404);
+});
+
+hosted('deleting: a subscription still live at Stripe is cancelled even if its status here was changed by hand', async () => {
+  const { db, app, calls, acme } = await setup();
+  db.prepare(`UPDATE orgs SET billing_status = 'comped' WHERE id = ?`).run(acme);
+  const pat = await login(app, 'pat@acme.example');
+  const page = await pat.get('/account');
+  await pat.post('/account/delete').type('form').send({ _csrf: token(page.text), scope: 'org', confirm: 'Acme', password: PASSWORD });
+  assert.deepEqual(calls, ['sub_acme']);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM orgs WHERE id = ?').get(acme).n, 0);
+});
+
+hosted('deleting: an already-ended subscription is not cancelled twice', async () => {
+  const { db, app, calls, subs, acme } = await setup();
+  subs.sub_acme = 'canceled';
+  const pat = await login(app, 'pat@acme.example');
+  const page = await pat.get('/account');
+  await pat.post('/account/delete').type('form').send({ _csrf: token(page.text), scope: 'org', confirm: 'Acme', password: PASSWORD });
+  assert.deepEqual(calls, []);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM orgs WHERE id = ?').get(acme).n, 0);
+});
+
+hosted('deleting: two administrators deleting their organisations at once cannot leave none', async () => {
+  const { db, app, acme, beta } = await setup();
+  // The operator stops being an administrator; Pat (Acme) and Bo (Beta) are the only two, both subscribed.
+  db.prepare(`UPDATE users SET is_platform_admin = CASE WHEN email IN ('pat@acme.example', 'bo@beta.example') THEN 1 ELSE 0 END`).run();
+  db.prepare(`UPDATE orgs SET stripe_subscription_id = 'sub_beta' WHERE id = ?`).run(beta);
+  const pat = await login(app, 'pat@acme.example');
+  const bo = await login(app, 'bo@beta.example');
+  const [pa, ba] = [await pat.get('/account'), await bo.get('/account')];
+  await Promise.all([
+    pat.post('/account/delete').type('form').send({ _csrf: token(pa.text), scope: 'org', confirm: 'Acme', password: PASSWORD }),
+    bo.post('/account/delete').type('form').send({ _csrf: token(ba.text), scope: 'org', confirm: 'Beta', password: PASSWORD }),
+  ]);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM users WHERE is_platform_admin = 1').get().n, 1, 'one administrator is always left');
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM orgs WHERE id IN (?, ?)').get(acme, beta).n, 1);
 });

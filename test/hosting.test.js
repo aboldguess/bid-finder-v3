@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import request from 'supertest';
 import Database from 'better-sqlite3';
 import { config } from '../src/config.js';
@@ -171,4 +172,17 @@ test('backups are one self-contained file, ready to copy offsite', async () => {
   assert.equal(copy.pragma('journal_mode', { simple: true }), 'delete');
   assert.equal(copy.prepare('SELECT name FROM orgs').get().name, 'Kept');
   copy.close();
+});
+
+test('the Pi command wrapper reads the settings file the way systemd does', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bf-wrapper-'));
+  const env = path.join(dir, 'bidfinder.env');
+  // MAIL_FROM as setup-mail.js writes it: not valid shell, but fine for systemd and Node.
+  fs.writeFileSync(env, `# Settings\nMAIL_FROM=Bid Finder <alerts@bids.example.co.uk>\nDATA_DIR=${dir}\n`);
+  const { DATA_DIR: _ignored, ...outer } = process.env; // the settings file alone says where the data lives
+  const run = spawnSync('bash', ['deploy/pi/bidfinder', 'create-user', 'pi@example.com', '--org', 'Pi Test'], { env: { ...outer, BIDFINDER_ENV: env }, encoding: 'utf8' });
+  assert.equal(run.status, 0, run.stderr);
+  const db = new Database(path.join(dir, 'bidfinder.db'), { readonly: true });
+  assert.equal(db.prepare('SELECT email FROM users').get().email, 'pi@example.com', 'DATA_DIR after MAIL_FROM was read');
+  db.close();
 });

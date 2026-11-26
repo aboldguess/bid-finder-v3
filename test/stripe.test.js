@@ -14,16 +14,21 @@ const SECRET = 'whsec_test';
 
 function fakeStripe() {
   const calls = [];
+  const subs = {}; // what Stripe currently holds for each subscription
   const rec = (name, result) => async (...args) => { calls.push([name, ...args]); return typeof result === 'function' ? result(...args) : result; };
   return {
     calls,
+    subs,
     configured: true,
     createCustomer: rec('customer', { id: 'cus_1' }),
     createProduct: rec('product', { id: 'prod_1' }),
     createCheckout: rec('checkout', { id: 'cs_1', url: 'https://checkout.stripe.test/cs_1' }),
     createPortal: rec('portal', { url: 'https://billing.stripe.test/p' }),
-    getSubscription: rec('getSub', (id) => ({ id, items: { data: [{ id: 'si_1' }] } })),
+    getSubscription: rec('getSub', (id) => ({ id, customer: 'cus_1', items: { data: [{ id: 'si_1' }] }, ...subs[id] })),
     updateSubscription: rec('updateSub', { id: 'sub_1' }),
+    cancelSubscription: rec('cancelSub', (id) => ({ id, status: 'canceled' })),
+    openCheckouts: rec('openCheckouts', () => Object.values(subs).filter((s) => s.openCheckout).map((s) => ({ id: s.openCheckout }))),
+    expireCheckout: rec('expireCheckout', (id) => ({ id, status: 'expired' })),
   };
 }
 
@@ -81,7 +86,7 @@ hosted('a sale price is what the customer is charged', async () => {
 });
 
 hosted('webhooks: paying activates the plan, a failed payment marks it past due, cancelling makes it read-only', async () => {
-  const { db, pat, org, webhook } = await setup();
+  const { db, stripe, pat, org, webhook } = await setup();
   const page = await pat.get('/billing');
   await pat.post('/billing/checkout').type('form').send({ _csrf: token(page.text), plan: 'pro', period: 'monthly' });
   const orgId = org().id;
@@ -92,6 +97,7 @@ hosted('webhooks: paying activates the plan, a failed payment marks it past due,
   assert.equal(entitlement(db, org()).limits.private_sources, 3);
   assert.equal((await webhook(completed)).body.result, 'duplicate', 'the same event twice is handled once');
 
+  stripe.subs.sub_1 = { status: 'past_due', metadata: { plan_key: 'pro' } };
   await webhook({ id: 'evt_2', type: 'customer.subscription.updated', data: { object: { id: 'sub_1', customer: 'cus_1', status: 'past_due', metadata: { plan_key: 'pro' } } } });
   assert.equal(org().billing_status, 'past_due');
   assert.equal(entitlement(db, org()).readOnly, false, 'still works while the card is retried');
@@ -104,6 +110,37 @@ hosted('webhooks: paying activates the plan, a failed payment marks it past due,
   assert.equal(org().billing_status, 'lapsed');
   assert.equal(entitlement(db, org()).readOnly, true);
   assert.match((await pat.get('/billing')).text, /subscription has ended/);
+
+  // Stripe can deliver an older "active" snapshot after the cancellation. What Stripe holds now wins.
+  stripe.subs.sub_1 = { status: 'canceled' };
+  await webhook({ id: 'evt_5', type: 'customer.subscription.updated', data: { object: { id: 'sub_1', customer: 'cus_1', status: 'active' } } });
+  assert.equal(org().billing_status, 'lapsed', 'a stale update cannot bring a cancelled account back');
+});
+
+hosted('webhooks: a subscription Stripe has stopped collecting on (unpaid) becomes read-only', async () => {
+  const { db, stripe, org, webhook } = await setup();
+  db.prepare(`UPDATE orgs SET stripe_customer_id = 'cus_1', stripe_subscription_id = 'sub_1', billing_status = 'past_due', plan_key = 'team' WHERE name = 'Acme'`).run();
+  stripe.subs.sub_1 = { status: 'unpaid' };
+  await webhook({ id: 'evt_u', type: 'customer.subscription.updated', data: { object: { id: 'sub_1', customer: 'cus_1', status: 'unpaid' } } });
+  assert.equal(org().billing_status, 'lapsed');
+  assert.equal(entitlement(db, org()).readOnly, true);
+});
+
+hosted('two checkouts for one organisation never leave it paying twice', async () => {
+  const { stripe, pat, org, webhook } = await setup();
+  const page = await pat.get('/billing');
+  await pat.post('/billing/checkout').type('form').send({ _csrf: token(page.text), plan: 'team', period: 'monthly' });
+  // A second tab: the first, still-open checkout is expired before a new one starts.
+  stripe.subs.pending = { openCheckout: 'cs_1' };
+  await pat.post('/billing/checkout').type('form').send({ _csrf: token(page.text), plan: 'team', period: 'monthly' });
+  assert.deepEqual(stripe.calls.filter((c) => c[0] === 'expireCheckout').map((c) => c[1]), ['cs_1']);
+
+  // Should both still complete (one finished just before it was expired), the second subscription is cancelled at once.
+  const done = (id, sub) => webhook({ id, type: 'checkout.session.completed', data: { object: { mode: 'subscription', client_reference_id: String(org().id), customer: 'cus_1', subscription: sub, metadata: { plan_key: 'team', period: 'monthly' } } } });
+  await done('evt_a', 'sub_a');
+  await done('evt_b', 'sub_b');
+  assert.equal(org().stripe_subscription_id, 'sub_a');
+  assert.deepEqual(stripe.calls.filter((c) => c[0] === 'cancelSub').map((c) => c[1]), ['sub_b']);
 });
 
 hosted('webhooks: a bad or missing signature is refused and changes nothing', async () => {

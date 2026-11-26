@@ -488,6 +488,16 @@ test('saved searches: created from the UI, secrets stay write-only', async () =>
   const edit = await agent.get('/searches/1/edit');
   assert.doesNotMatch(edit.text, /secretpart/);
   assert.match((await agent.get('/searches/1')).text, /Test rig controls for depot/);
+  // Changing what a search or the profile matches makes the next alert check look at everything again.
+  const checked = () => db.prepare('SELECT checked_at FROM saved_searches WHERE id = 1').get().checked_at;
+  assert.ok(checked());
+  await agent.post('/searches/1').type('form').send({ _csrf: token(edit.text), name: 'Rigs renamed', q: 'rig', cpv: '71300000', frequency: 'daily', emails: 'a@example.com' });
+  assert.ok(checked(), 'a new name alone keeps the checkpoint');
+  await agent.post('/searches/1').type('form').send({ _csrf: token(edit.text), name: 'Rigs renamed', q: 'drill', frequency: 'daily', emails: 'a@example.com' });
+  assert.equal(checked(), null, 'new filters reset it');
+  db.prepare(`UPDATE saved_searches SET checked_at = datetime('now')`).run();
+  await agent.post('/profile').type('form').send({ _csrf: token(edit.text), keywords: 'drill' });
+  assert.equal(checked(), null, 'a new profile resets it');
   for (const page of ['/dashboard', '/pipeline', '/searches', '/team', '/api', '/profile', '/o/1']) assert.equal((await agent.get(page)).status, 200, page);
 });
 

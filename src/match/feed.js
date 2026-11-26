@@ -86,7 +86,9 @@ export function getFeed(db, orgId, {
   let candidates = rows;
   if (ftsEach && rows.length) {
     // New rows have the newest ids, and the full-text index can start from an id cheaply.
-    const minId = Math.min(...rows.map((o) => o.id));
+    // A loop, not Math.min(...ids): a long outage can leave more rows than a call can take as arguments.
+    let minId = Infinity;
+    for (const o of rows) if (o.id < minId) minId = o.id;
     const hits = new Set(db.prepare('SELECT rowid FROM opportunities_fts WHERE opportunities_fts MATCH ? AND rowid >= ?').all(fts, minId).map((r) => r.rowid));
     candidates = rows.filter((o) => hits.has(o.id));
   }
