@@ -103,7 +103,7 @@ export function createApp(db, { mail, stripe } = {}) {
   });
 
   app.use(helmet({
-    contentSecurityPolicy: { directives: { 'upgrade-insecure-requests': null, 'form-action': ["'self'"] } },
+    contentSecurityPolicy: { directives: { 'upgrade-insecure-requests': null, 'form-action': ["'self'", ...(config.hosted ? config.stripe.origins : [])] } },
     hsts: config.secureCookies,
     referrerPolicy: { policy: 'same-origin' },
   }));

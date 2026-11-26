@@ -76,6 +76,10 @@ To rotate `SESSION_SECRET`, change it and restart; everyone is signed out. `BIDF
 
 If you are locked out, `bidfinder reset-password you@example.co.uk` prints a new password.
 
+## Acceptance test
+
+`npm run test:e2e` drives a real browser through the whole hosted journey: home page, trial sign-up, email confirmation, the welcome page, a saved-search alert, paying through a stand-in for Stripe Checkout, another customer's isolation, the subscription ending (read-only), export and deleting the organisation, plus a phone-width check of the public pages and a check that no page logs a script error. It needs Playwright's Chromium (`npx playwright install chromium`) and runs in CI on every pull request.
+
 ## Troubleshooting
 
 **A source shows an error.** The Admin page shows the message and the last 25 runs. Run it by hand to see more: `LOG_LEVEL=debug bidfinder ingest <key>`.

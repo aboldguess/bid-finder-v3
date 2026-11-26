@@ -155,3 +155,9 @@ hosted('only the owner can pay, and a complimentary account has nothing to pay',
 test('formEncode writes Stripe\'s nested form fields', () => {
   assert.equal(decodeURIComponent(formEncode({ a: { b: 1 }, c: [{ d: 'x' }], e: undefined }).toString()), 'a[b]=1&c[0][d]=x');
 });
+
+hosted('the security policy lets plan buttons redirect to Stripe Checkout and the Customer Portal', async () => {
+  const { pat } = await setup();
+  const csp = (await pat.get('/billing')).headers['content-security-policy'];
+  assert.match(csp, /form-action 'self' https:\/\/checkout\.stripe\.com https:\/\/billing\.stripe\.com/);
+});
