@@ -68,6 +68,8 @@ test('isolation: the web app never shows one organisation another\'s private por
 
   const landing = (await request(app).get('/')).text;
   assert.match(landing, /1 open opportunit/, 'public figures on the landing page leave private results out');
+  assert.match((await bob.get('/welcome')).text, /watching 1 open contracts/, 'the welcome page counts only what Beta can see');
+  assert.match((await ann.get('/welcome')).text, /watching 2 open contracts/, 'Acme counts its own private results');
 });
 
 test('isolation: the API never shows one organisation another\'s private portal', async () => {
