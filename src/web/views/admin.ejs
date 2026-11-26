@@ -1,5 +1,6 @@
 <%- include('partials/head', { title: 'Admin', wide: true }) %>
 <div class="pagehead"><h1>Admin</h1>
+  <% if (hosted) { %><a class="button small ghost" href="/admin/plans">Plans, prices and promotions</a><% } %>
   <form method="post" action="/admin/ingest"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="button small" <%= ingesting ? 'disabled' : '' %>><%= ingesting ? 'Refresh running…' : 'Refresh all sources now' %></button></form>
 </div>
 <div class="sectionhead"><h2>Sources</h2>
@@ -63,13 +64,22 @@
   </section>
 </div>
 
-<h2>Organisations</h2>
+<h2 id="orgs">Organisations</h2>
 <div class="table-wrap"><table class="table">
-  <thead><tr><th>Name</th><th>Owner</th><th>Members</th><th>Joined</th><th>Access</th></tr></thead>
+  <thead><tr><th>Name</th><th>Owner</th><th>Members</th><th>Joined</th><% if (hosted) { %><th>Billing</th><% } %><th>Access</th></tr></thead>
   <tbody>
   <% orgs.forEach(o => { %>
     <tr>
       <td><%= o.name %></td><td><%= o.owner_email %></td><td><%= o.members %></td><td><%= o.created_at.slice(0, 10) %></td>
+      <% if (hosted) { %><td>
+        <form method="post" action="/admin/orgs/<%= o.id %>/billing" class="row compact-form">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <select name="billing_status" aria-label="Status"><% ['trialing', 'active', 'past_due', 'lapsed', 'comped'].forEach(s => { %><option <%= o.billing_status === s ? 'selected' : '' %>><%= s %></option><% }) %></select>
+          <select name="plan_key" aria-label="Plan"><option value="">No plan</option><% plans.forEach(p => { %><option value="<%= p.key %>" <%= o.plan_key === p.key ? 'selected' : '' %>><%= p.name %></option><% }) %></select>
+          <label class="muted">Trial ends <input type="date" name="trial_ends_at" value="<%= (o.trial_ends_at || '').slice(0, 10) %>"></label>
+          <button class="link">Save</button>
+        </form>
+      </td><% } %>
       <td>
         <form method="post" action="/admin/orgs/<%= o.id %>/plan" class="row">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">

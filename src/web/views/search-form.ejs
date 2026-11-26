@@ -27,7 +27,7 @@
       <legend>Alerts</legend>
       <label>How often
         <select name="frequency">
-          <% [['instant', 'As soon as a match is found'], ['daily', 'Daily round-up'], ['weekly', 'Weekly round-up'], ['off', 'No alerts']].forEach(([v, label]) => { %><option value="<%= v %>" <%= search.frequency === v ? 'selected' : '' %>><%= label %></option><% }) %>
+          <% [['instant', 'As soon as a match is found'], ['daily', 'Daily round-up'], ['weekly', 'Weekly round-up'], ['off', 'No alerts']].forEach(([v, label]) => { %><option value="<%= v %>" <%= search.frequency === v ? 'selected' : '' %> <%= v === 'instant' && !access.limits.instant_alerts ? 'disabled' : '' %>><%= label %><%= v === 'instant' && !access.limits.instant_alerts ? ' (Team plan and above)' : '' %></option><% }) %>
         </select>
       </label>
       <label>Email to <textarea name="emails" rows="2" placeholder="One address per line"><%= search.emails %></textarea><% if (!smtp) { %><small>Email is not set up on this server yet, so these will not be sent.</small><% } %></label>

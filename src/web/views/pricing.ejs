@@ -1,0 +1,7 @@
+<%- include('partials/head', { title: 'Pricing' }) %>
+<section class="hero">
+  <h1>Simple pricing. Try any plan free for <%= trialDays %> days.</h1>
+  <p class="lead">No card needed to start. Cancel whenever you like. Prices are in pounds and exclude VAT.</p>
+</section>
+<%- include('partials/plan-cards', { plans, pounds, action: (p) => ({ href: user ? '/billing' : '/register', label: user ? 'Choose ' + p.name : 'Start free trial' }) }) %>
+<%- include('partials/foot') %>

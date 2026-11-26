@@ -3,6 +3,7 @@
 // Slack, webhook). "Instant" searches fire straight after ingest, daily and
 // weekly ones when their period has passed.
 import { config } from '../config.js';
+import { entitlement } from '../billing/plans.js';
 import { log } from '../log.js';
 import { getFeed } from '../match/feed.js';
 import { splitList } from '../match/score.js';
@@ -58,11 +59,19 @@ export async function deliver(db, search, items, { channels = {} } = {}) {
   return results;
 }
 
+// Lapsed organisations get no alerts, and a plan without instant alerts gets them at most daily.
+function canAlert(db, search, now) {
+  const access = entitlement(db, db.prepare('SELECT * FROM orgs WHERE id = ?').get(search.org_id), now);
+  if (access.readOnly) return false;
+  if (search.frequency === 'instant' && !access.limits.instant_alerts) return isAlertDue({ ...search, frequency: 'daily' }, now);
+  return true;
+}
+
 export async function runAlerts(db, { now = Date.now(), channels, only } = {}) {
   const searches = db.prepare(`
     SELECT s.* FROM saved_searches s JOIN orgs o ON o.id = s.org_id WHERE o.plan != 'suspended' AND s.frequency != 'off'
       AND EXISTS (SELECT 1 FROM memberships m JOIN users u ON u.id = m.user_id WHERE m.org_id = o.id AND u.email_verified_at IS NOT NULL)
-  `).all().filter((s) => (!only || s.id === only) && isAlertDue(s, now));
+  `).all().filter((s) => (!only || s.id === only) && isAlertDue(s, now) && canAlert(db, s, now));
   const out = [];
   for (const search of searches) {
     const sent = new Set(db.prepare('SELECT opportunity_id FROM alert_deliveries WHERE saved_search_id = ?').all(search.id).map((r) => r.opportunity_id));

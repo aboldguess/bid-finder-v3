@@ -1,0 +1,33 @@
+<%# Plan cards with a monthly/annual switch that needs no script. Takes plans, pounds, action(plan) -> { href | form, label }. %>
+<div class="pricing">
+  <input type="radio" name="period" id="period-monthly" class="period-radio" checked>
+  <input type="radio" name="period" id="period-annual" class="period-radio">
+  <div class="period-switch" role="group" aria-label="Billing period">
+    <label for="period-monthly">Monthly</label>
+    <label for="period-annual">Annual <span class="muted">· 2 months free</span></label>
+  </div>
+  <div class="plans">
+    <% plans.forEach(p => { const act = action(p); %>
+      <article class="plan<%= p.badge ? ' featured' : '' %>" style="--plan: <%= p.colour %>">
+        <% if (p.onSale && p.sale_label) { %><span class="plan-sale"><%= p.sale_label %></span><% } %>
+        <% if (p.badge) { %><span class="plan-badge"><%= p.badge %></span><% } %>
+        <h2><%= p.name %></h2>
+        <p class="muted"><%= p.tagline %></p>
+        <% [['monthly', 'month', p.monthly_pence], ['annual', 'year', p.annual_pence]].forEach(([period, per, normal]) => { %>
+          <p class="plan-price <%= period %>">
+            <% if (p.pay[period] < normal) { %><s class="muted"><%= pounds(normal) %></s> <% } %>
+            <strong><%= pounds(p.pay[period]) %></strong><span class="muted">/<%= per %> + VAT</span>
+          </p>
+        <% }) %>
+        <% if (p.onSale && p.sale_ends_at) { %><p class="plan-ends">Sale ends <%= fmt.date(p.sale_ends_at) %></p><% } %>
+        <ul class="plan-features"><% p.features.forEach(f => { %><li><%= f %></li><% }) %></ul>
+        <% if (act.form) { %>
+          <form method="post" action="<%= act.form %>"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="plan" value="<%= p.key %>">
+            <button class="button" name="period" value="monthly" <%= act.disabled ? 'disabled' : '' %>><%= act.label %></button></form>
+        <% } else { %>
+          <a class="button<%= p.badge ? '' : ' ghost' %>" href="<%= act.href %>"><%= act.label %></a>
+        <% } %>
+      </article>
+    <% }) %>
+  </div>
+</div>

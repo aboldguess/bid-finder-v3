@@ -7,6 +7,7 @@ import { connectorForSource } from '../connectors/index.js';
 import { isIngestRunning, runAll } from '../ingest/run.js';
 import { STAGES, getFeed, normaliseFilters, setState } from '../match/feed.js';
 import { visibleSources } from '../match/visibility.js';
+import { entitlement } from '../billing/plans.js';
 import { parseFilters, runAlerts, searchResults } from '../notify/alerts.js';
 import { log } from '../log.js';
 import { sha256 } from './context.js';
@@ -88,6 +89,7 @@ export function apiRouter(ctx) {
   });
 
   api.patch('/opportunities/:id', (req, res) => {
+    if (entitlement(db, db.prepare('SELECT * FROM orgs WHERE id = ?').get(req.api.org_id)).readOnly) return fail(res, 402, 'This organisation\'s trial has ended. Choose a plan to make changes.');
     const opp = ctx.loadOpportunity(req.params.id, req.api.org_id);
     if (!opp) return fail(res, 404, 'Opportunity not found.');
     const b = req.body || {};

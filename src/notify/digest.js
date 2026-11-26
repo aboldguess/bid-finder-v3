@@ -1,6 +1,7 @@
 // Email digests: new, well-matched opportunities since the last digest.
 // Without SMTP configured, digests are still built and readable in the app.
 import { log } from '../log.js';
+import { entitlement } from '../billing/plans.js';
 import { emailConfigured, renderEmail, sendEmail } from './channels.js';
 import { getFeed } from '../match/feed.js';
 import { splitList } from '../match/score.js';
@@ -55,6 +56,7 @@ export async function runDigests(db, { now = Date.now() } = {}) {
   const results = [];
   for (const org of orgs) {
     if (!isDue(org.digest_frequency, lastDigestAt(db, org.id), now)) continue;
+    if (entitlement(db, org, now).readOnly) continue;
     const r = await sendDigest(db, org, { now });
     if (r) results.push({ org: org.id, ...r });
   }

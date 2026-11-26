@@ -145,6 +145,61 @@ export const migrations = [
   ALTER TABLE credentials ADD COLUMN org_id INTEGER REFERENCES orgs(id);
   CREATE INDEX idx_sources_org ON sources(org_id);
   `,
+  // 5: plans and trials for hosted mode. Prices and limits are edited by
+  // platform administrators; these rows are only the starting point.
+  // Existing organisations are 'comped' (free, unlimited), so upgrading
+  // changes nothing for them.
+  `
+  CREATE TABLE plans (
+    key TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    tagline TEXT NOT NULL DEFAULT '',
+    monthly_pence INTEGER NOT NULL,
+    annual_pence INTEGER NOT NULL,
+    sale_monthly_pence INTEGER,           -- a sale price replaces the normal one while the sale runs
+    sale_annual_pence INTEGER,
+    sale_label TEXT NOT NULL DEFAULT '',  -- e.g. "Black Friday"
+    sale_ends_at TEXT,                    -- no end date: runs until removed
+    badge TEXT NOT NULL DEFAULT '',       -- e.g. "Most popular"
+    colour TEXT NOT NULL DEFAULT '#1565d8',
+    seats INTEGER,                        -- NULL means unlimited
+    saved_searches INTEGER,
+    instant_alerts INTEGER NOT NULL DEFAULT 1,
+    private_sources INTEGER NOT NULL DEFAULT 0,
+    features TEXT NOT NULL DEFAULT '',    -- one selling point per line
+    sort INTEGER NOT NULL DEFAULT 0,
+    public INTEGER NOT NULL DEFAULT 1,    -- shown on the pricing page
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  INSERT INTO plans (key, name, tagline, monthly_pence, annual_pence, badge, colour, seats, saved_searches, instant_alerts, private_sources, features, sort) VALUES
+    ('starter', 'Starter', 'For a sole trader or a small firm bidding now and then.', 2900, 29000, '', '#3b7d5a', 1, 3, 0, 0,
+      'Every public UK and international source
+Fit scores with the reasons
+3 saved searches with daily or weekly alerts
+Daily digest email', 1),
+    ('team', 'Team', 'For a firm that bids every month and works as a team.', 7900, 79000, 'Most popular', '#1565d8', 5, 20, 1, 0,
+      'Everything in Starter
+5 team members
+20 saved searches with instant alerts
+Slack and webhook alerts
+Bid pipeline and shared shortlists
+API access', 2),
+    ('pro', 'Pro', 'For bid teams that want everything, including private portals.', 19900, 199000, 'Best value', '#7a3fc2', 15, NULL, 1, 3,
+      'Everything in Team
+15 team members
+Unlimited saved searches
+Up to 3 private portals watched for you
+Priority support', 3);
+
+  CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+  INSERT INTO settings (key, value) VALUES ('trial_days', '14'), ('trial_plan', 'team'),
+    ('banner_text', ''), ('banner_colour', '#c62828'), ('banner_ends_at', '');
+
+  ALTER TABLE orgs ADD COLUMN plan_key TEXT REFERENCES plans(key);
+  ALTER TABLE orgs ADD COLUMN trial_ends_at TEXT;
+  ALTER TABLE orgs ADD COLUMN billing_status TEXT NOT NULL DEFAULT 'trialing';
+  UPDATE orgs SET billing_status = 'comped';
+  `,
 ];
 
 export function migrate(db) {

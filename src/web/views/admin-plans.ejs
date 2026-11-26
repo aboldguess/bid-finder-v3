@@ -1,0 +1,66 @@
+<%- include('partials/head', { title: 'Plans and pricing', wide: true }) %>
+<p class="back"><a href="/admin">← Admin</a></p>
+<div class="pagehead"><h1>Plans, prices and promotions</h1><a class="button small ghost" href="/pricing" target="_blank">View the pricing page</a></div>
+
+<section class="panel">
+  <h2>Trials and the promotion banner</h2>
+  <form method="post" action="/admin/settings" class="stack">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="row">
+      <label>Free trial (days) <input type="number" name="trial_days" min="0" max="365" value="<%= settings.trial_days %>"></label>
+      <label>Trials get the limits of <select name="trial_plan"><% plans.forEach(p => { %><option value="<%= p.key %>" <%= settings.trial_plan === p.key ? 'selected' : '' %>><%= p.name %></option><% }) %></select></label>
+    </div>
+    <div class="row">
+      <label>Banner across the top of every page <input name="banner_text" maxlength="140" value="<%= settings.banner_text %>" placeholder="BLACK FRIDAY: 40% off annual plans this weekend"><small>Leave empty for no banner.</small></label>
+      <label>Banner colour <input type="color" name="banner_colour" value="<%= settings.banner_colour %>"></label>
+      <label>Banner ends (optional) <input type="date" name="banner_ends_at" value="<%= (settings.banner_ends_at || '').slice(0, 10) %>"></label>
+    </div>
+    <div><button class="button small">Save</button></div>
+  </form>
+</section>
+
+<% const planForm = (p) => { const isNew = !p.key; %>
+  <form method="post" action="/admin/plans" class="stack">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <% if (!isNew) { %><input type="hidden" name="key_existing" value="<%= p.key %>"><% } %>
+    <div class="row">
+      <% if (isNew) { %><label>Key <input name="key" required pattern="[a-z][a-z0-9-]{1,30}" placeholder="enterprise"><small>Fixed once saved; used by billing.</small></label><% } %>
+      <label>Name <input name="name" required value="<%= p.name || '' %>"></label>
+      <label>Badge <input name="badge" maxlength="40" value="<%= p.badge || '' %>" placeholder="Most popular"></label>
+      <label>Colour <input type="color" name="colour" value="<%= p.colour || '#1565d8' %>"></label>
+      <label>Order <input type="number" name="sort" value="<%= p.sort ?? 0 %>"></label>
+    </div>
+    <label>Tag line <input name="tagline" maxlength="200" value="<%= p.tagline || '' %>"></label>
+    <div class="row">
+      <label>Monthly (£) <input name="monthly" required inputmode="decimal" value="<%= p.monthly_pence != null ? p.monthly_pence / 100 : '' %>"></label>
+      <label>Annual (£) <input name="annual" required inputmode="decimal" value="<%= p.annual_pence != null ? p.annual_pence / 100 : '' %>"></label>
+      <label>Sale monthly (£) <input name="sale_monthly" inputmode="decimal" value="<%= p.sale_monthly_pence != null ? p.sale_monthly_pence / 100 : '' %>"></label>
+      <label>Sale annual (£) <input name="sale_annual" inputmode="decimal" value="<%= p.sale_annual_pence != null ? p.sale_annual_pence / 100 : '' %>"></label>
+    </div>
+    <div class="row">
+      <label>Sale label <input name="sale_label" maxlength="40" value="<%= p.sale_label || '' %>" placeholder="Flash sale!"></label>
+      <label>Sale ends <input type="date" name="sale_ends_at" value="<%= (p.sale_ends_at || '').slice(0, 10) %>"><small>Empty: until you remove the sale prices.</small></label>
+    </div>
+    <div class="row">
+      <label>Team members <input name="seats" inputmode="numeric" value="<%= p.seats ?? '' %>" placeholder="Unlimited"></label>
+      <label>Saved searches <input name="saved_searches" inputmode="numeric" value="<%= p.saved_searches ?? '' %>" placeholder="Unlimited"></label>
+      <label>Private portals <input name="private_sources" inputmode="numeric" value="<%= p.private_sources ?? 0 %>"></label>
+    </div>
+    <div class="row">
+      <label class="check"><input type="checkbox" name="instant_alerts" value="1" <%= isNew || p.instant_alerts ? 'checked' : '' %>> <span>Instant alerts (otherwise daily at most)</span></label>
+      <label class="check"><input type="checkbox" name="public" value="1" <%= isNew || p.public ? 'checked' : '' %>> <span>Show on the pricing page</span></label>
+    </div>
+    <label>Selling points, one per line <textarea name="features" rows="5"><%= (p.features || []).join('\n') %></textarea></label>
+    <div><button class="button small"><%= isNew ? 'Add plan' : 'Save ' + p.name %></button></div>
+  </form>
+<% } %>
+
+<h2>Plans</h2>
+<% plans.forEach(p => { %>
+  <details class="panel">
+    <summary><strong style="color: <%= p.colour %>"><%= p.name %></strong> · <%= pounds(p.pay.monthly) %>/month, <%= pounds(p.pay.annual) %>/year<%= p.onSale ? ' (sale)' : '' %><%= p.badge ? ' · ' + p.badge : '' %><%= p.public ? '' : ' · hidden' %></summary>
+    <% planForm(p) %>
+  </details>
+<% }) %>
+<details class="panel"><summary><strong>Add a plan</strong></summary><% planForm({}) %></details>
+<%- include('partials/foot') %>
