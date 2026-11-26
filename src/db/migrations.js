@@ -213,6 +213,11 @@ Priority support', 3);
     received_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
   `,
+  // 7: incremental alerts. When each saved search last looked for new
+  // matches, so the next check only scores what has arrived since.
+  `
+  ALTER TABLE saved_searches ADD COLUMN checked_at TEXT;
+  `,
 ];
 
 export function migrate(db) {

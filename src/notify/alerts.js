@@ -19,7 +19,18 @@ export function searchResults(db, search, opts = {}) {
 // A new search starts from now: what already matches is not alerted on.
 export function baseline(db, search) {
   const mark = db.prepare('INSERT OR IGNORE INTO alert_deliveries (saved_search_id, opportunity_id) VALUES (?, ?)');
-  db.transaction(() => { for (const o of searchResults(db, search).items) mark.run(search.id, o.id); })();
+  db.transaction(() => {
+    for (const o of searchResults(db, search, { limit: Infinity }).items) mark.run(search.id, o.id);
+    db.prepare(`UPDATE saved_searches SET checked_at = datetime('now') WHERE id = ?`).run(search.id);
+  })();
+}
+
+// What a search matches has changed (its filters, or the organisation's
+// profile), so its next check looks at every open opportunity again, not only
+// new arrivals. alert_deliveries still stops anything being sent twice.
+export function recheckSearches(db, { orgId, searchId }) {
+  if (searchId) db.prepare('UPDATE saved_searches SET checked_at = NULL WHERE id = ?').run(searchId);
+  else db.prepare('UPDATE saved_searches SET checked_at = NULL WHERE org_id = ?').run(orgId);
 }
 
 export function isAlertDue(search, now = Date.now()) {
@@ -73,10 +84,19 @@ export async function runAlerts(db, { now = Date.now(), channels, only } = {}) {
       AND EXISTS (SELECT 1 FROM memberships m JOIN users u ON u.id = m.user_id WHERE m.org_id = o.id AND u.email_verified_at IS NOT NULL)
   `).all().filter((s) => (!only || s.id === only) && isAlertDue(s, now) && canAlert(db, s, now));
   const out = [];
+  // SQLite's own timestamp format, which first_seen_at uses.
+  const stamp = (ms) => new Date(ms).toISOString().replace('T', ' ').slice(0, 19);
+  const wasSent = db.prepare('SELECT 1 FROM alert_deliveries WHERE saved_search_id = ? AND opportunity_id = ?');
   for (const search of searches) {
-    const sent = new Set(db.prepare('SELECT opportunity_id FROM alert_deliveries WHERE saved_search_id = ?').all(search.id).map((r) => r.opportunity_id));
-    const fresh = searchResults(db, search, { now }).items.filter((o) => !sent.has(o.id));
-    if (!fresh.length) continue;
+    // Only score what arrived since this search last looked (with a few
+    // minutes' overlap for slow transactions), not every open opportunity.
+    // alert_deliveries stops anything being sent twice.
+    const startedAt = stamp(Date.now());
+    const since = search.checked_at ? stamp(Date.parse(`${search.checked_at.replace(' ', 'T')}Z`) - 5 * 60e3) : null;
+    // No top-500 cap here: a busy day of high scorers must not hide a new, lower-scoring match.
+    const fresh = searchResults(db, search, { now, since, limit: Infinity }).items.filter((o) => !wasSent.get(search.id, o.id));
+    const checked = () => db.prepare('UPDATE saved_searches SET checked_at = ? WHERE id = ?').run(startedAt, search.id);
+    if (!fresh.length) { checked(); continue; }
     const results = await deliver(db, search, fresh, { channels });
     // Mark as delivered once any channel took them (or there is nowhere to send), so a dead webhook cannot cause repeats.
     const anyOk = Object.values(results).some(Boolean) || !Object.keys(results).length;
@@ -84,6 +104,7 @@ export async function runAlerts(db, { now = Date.now(), channels, only } = {}) {
       const mark = db.prepare('INSERT OR IGNORE INTO alert_deliveries (saved_search_id, opportunity_id) VALUES (?, ?)');
       db.transaction(() => { for (const o of fresh) mark.run(search.id, o.id); })();
       db.prepare(`UPDATE saved_searches SET last_alert_at = datetime('now') WHERE id = ?`).run(search.id);
+      checked();
     }
     out.push({ search: search.id, count: fresh.length, ...results });
   }

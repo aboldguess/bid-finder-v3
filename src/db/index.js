@@ -15,6 +15,10 @@ export function openDb(file = config.dbFile) {
   db.pragma('busy_timeout = 5000');
   db.exec(schema);
   migrate(db);
+  // Gathers the statistics SQLite's planner needs to pick the right index
+  // (for example first-seen time for alerts). Cheap: only re-analyses tables that changed a lot.
+  db.pragma('optimize=0x10002');
+  if (!db.prepare(`SELECT 1 FROM sqlite_master WHERE name = 'sqlite_stat1'`).get()) db.exec('ANALYZE');
   return db;
 }
 

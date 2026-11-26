@@ -9,7 +9,14 @@ import { runAlerts } from './notify/alerts.js';
 import { runDigests } from './notify/digest.js';
 
 let lastTick = 0;
-export const schedulerHealthy = () => !config.scheduler || !lastTick || Date.now() - lastTick < 10 * 60e3;
+let running = false;
+// A scheduler in this process must have ticked in the last 10 minutes. A web
+// process without one checks the separate worker's heartbeat instead.
+export function schedulerHealthy(db) {
+  if (running) return !lastTick || Date.now() - lastTick < 10 * 60e3;
+  const beat = db?.prepare(`SELECT value FROM settings WHERE key = 'worker_heartbeat'`).get()?.value;
+  return !beat || Date.now() - Number(beat) < 10 * 60e3;
+}
 
 // Online backup of the SQLite database, keeping the most recent few.
 export async function backup(db, { dir = path.join(config.dataDir, 'backups'), keep = config.backupsToKeep, now = new Date() } = {}) {
@@ -21,16 +28,31 @@ export async function backup(db, { dir = path.join(config.dataDir, 'backups'), k
   return file;
 }
 
+// Re-gathers the statistics SQLite's planner uses to choose indexes, at most
+// every few hours. Without them it can scan every open opportunity for each
+// alert check instead of reading only the new ones.
+let analyzedAt = 0;
+export function refreshStats(db, minAgeMs = 6 * 3600e3) {
+  if (Date.now() - analyzedAt < minAgeMs) return;
+  db.exec('ANALYZE');
+  analyzedAt = Date.now();
+}
+
 export async function tick(db) {
   lastTick = Date.now();
+  db.prepare(`INSERT INTO settings (key, value) VALUES ('worker_heartbeat', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value`).run(String(lastTick));
   const results = await runAll(db, { dueOnly: true });
-  if (results.length) await runAlerts(db);
+  if (results.length) {
+    refreshStats(db);
+    await runAlerts(db);
+  }
   return results;
 }
 
 export async function startScheduler(db) {
   // Imported here so that loading this module (for the health check) starts no timers.
   const { default: cron } = await import('node-cron');
+  running = true;
   const safely = (name, fn) => () => fn().catch((err) => log.error(`${name} failed`, err));
   const opts = { timezone: config.timezone };
   // Sources that are due run on the next minute; a fresh install starts straight away.
@@ -39,6 +61,7 @@ export async function startScheduler(db) {
   cron.schedule(config.digestCron, safely('Digests', async () => { await runDigests(db); await runAlerts(db); }), opts);
   cron.schedule(config.maintenanceCron, safely('Maintenance', async () => {
     const removed = prune(db);
+    refreshStats(db, 0);
     const file = await backup(db);
     log.info(`Maintenance: removed ${removed} expired opportunities, backed up to ${file}`);
   }), opts);
