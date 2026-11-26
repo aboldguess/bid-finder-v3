@@ -116,6 +116,13 @@ hosted('sign-up: one address can make 5 accounts a day and 10 attempts an hour',
   assert.ok(Number(sixth.res.headers['retry-after']) > 3600, 'told to come back much later');
   assert.equal(db.prepare('SELECT COUNT(*) AS n FROM users').get().n, 5);
 
+  // Sent all at once, they cannot all pass the check while passwords are being hashed.
+  const db3 = openDb(':memory:');
+  const app3 = createApp(db3);
+  const burst = await Promise.all(Array.from({ length: 8 }, (_, i) => signUp(app3, `burst${i}@example.com`, { orgName: `Burst ${i}` })));
+  assert.equal(burst.filter((b) => b.res.status === 302).length, 5);
+  assert.equal(db3.prepare('SELECT COUNT(*) AS n FROM users').get().n, 5, 'still five accounts a day');
+
   // Failed attempts count too, so a bot cannot keep guessing.
   const app2 = createApp(openDb(':memory:'));
   for (let i = 0; i < 10; i++) assert.equal((await signUp(app2, 'not-an-email')).res.status, 400);
