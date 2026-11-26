@@ -171,3 +171,28 @@ test('self-hosted: no limits, no pricing or billing pages, nothing read-only', a
   assert.equal(access.readOnly, false);
   assert.equal(access.limits.seats, null);
 });
+
+hosted('plan limits: two people accepting invitations at once cannot both take the last seat', async () => {
+  const { db, app, orgId } = await setup();
+  // Acme has one member and its plan allows two, so one invitation can succeed.
+  db.prepare(`UPDATE plans SET seats = 2 WHERE key = 'starter'`).run();
+  db.prepare(`UPDATE orgs SET billing_status = 'active', plan_key = 'starter' WHERE id = ?`).run(orgId);
+  const invite = (email) => {
+    const t = crypto.randomBytes(16).toString('hex');
+    db.prepare('INSERT INTO invites (token_hash, org_id, email, expires_at) VALUES (?, ?, ?, ?)')
+      .run(crypto.createHash('sha256').update(t).digest('hex'), orgId, email, new Date(Date.now() + 864e5).toISOString());
+    return t;
+  };
+  const accept = async (t, email) => {
+    const agent = request.agent(app);
+    const page = await agent.get(`/invite/${t}`);
+    return agent.post(`/invite/${t}`).type('form').send({ _csrf: token(page.text), name: 'New', email, password: 'correct horse battery', terms: '1' });
+  };
+  const [a, b] = [invite('one@acme.example'), invite('two@acme.example')];
+  // Both pass the first check before either has finished hashing its password.
+  const results = await Promise.all([accept(a, 'one@acme.example'), accept(b, 'two@acme.example')]);
+  assert.deepEqual(results.map((r) => r.status).sort(), [302, 403]);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM memberships WHERE org_id = ?').get(orgId).n, 2);
+  assert.equal(db.prepare(`SELECT COUNT(*) AS n FROM users WHERE email IN ('one@acme.example', 'two@acme.example')`).get().n, 1, 'the refused person has no stray account');
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM invites WHERE used_at IS NULL').get().n, 1, 'the unused invitation still works later');
+});
