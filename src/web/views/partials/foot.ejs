@@ -1,4 +1,9 @@
 </main>
-<footer class="footer">Bid Finder <%= version %> · self-hosted tender and grant monitoring</footer>
+<% if (locals.hosted) { %>
+<footer class="footer site-footer">
+  <span>© <%= new Date().getFullYear() %> Bid Finder</span>
+  <nav aria-label="Site"><a href="/pricing">Pricing</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><% if (locals.supportEmail) { %><a href="mailto:<%= supportEmail %>">Contact</a><% } %></nav>
+</footer>
+<% } else { %><footer class="footer">Bid Finder <%= version %> · self-hosted tender and grant monitoring</footer><% } %>
 </body>
 </html>

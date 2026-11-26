@@ -34,7 +34,7 @@ hosted('hosted mode: anyone can sign up and each sign-up starts its own organisa
 
   // Sign-up stays open after the first account.
   const landing = await request(app).get('/');
-  assert.match(landing.text, /Create your account/);
+  assert.match(landing.text, /Start your free 14-day trial/);
   const second = await signUp(app, 'ann@acme.example', { orgName: 'Acme' });
   const third = await signUp(app, 'bob@beta.example', { orgName: 'Beta' });
   assert.equal(second.res.headers.location, '/welcome');
