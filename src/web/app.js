@@ -103,12 +103,12 @@ export function createApp(db, { mail, stripe } = {}) {
   });
 
   app.use(helmet({
-    contentSecurityPolicy: { directives: { 'upgrade-insecure-requests': null, 'form-action': ["'self'"] } },
+    contentSecurityPolicy: { directives: { 'upgrade-insecure-requests': null, 'form-action': ["'self'", ...(config.hosted ? config.stripe.origins : [])] } },
     hsts: config.secureCookies,
     referrerPolicy: { policy: 'same-origin' },
   }));
   app.use('/api/v1', apiRouter(ctx));
-  if (config.hosted) app.post('/stripe/webhook', express.raw({ type: '*/*', limit: '1mb' }), stripeWebhook(db));
+  if (config.hosted) app.post('/stripe/webhook', express.raw({ type: '*/*', limit: '1mb' }), stripeWebhook(db, ctx.stripe));
 
   app.use('/static', express.static(path.join(import.meta.dirname, 'public'), { maxAge: '1h' }));
   app.use(express.urlencoded({ extended: false, limit: '100kb' }));
