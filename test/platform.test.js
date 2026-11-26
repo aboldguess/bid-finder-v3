@@ -9,6 +9,7 @@ import path from 'node:path';
 import http from 'node:http';
 import request from 'supertest';
 import { openDb } from '../src/db/index.js';
+import { migrations } from '../src/db/migrations.js';
 import { createHttp, redact, resetHttpState, createJar } from '../src/http/client.js';
 import { parseRobots, robotsDecision } from '../src/http/robots.js';
 import { assertPublicUrl, isPrivateAddress } from '../src/http/ssrf.js';
@@ -465,7 +466,7 @@ test('admin: credentials are write-only, custom sources are validated, actions a
   assert.equal(db.prepare(`SELECT COUNT(*) AS n FROM sources WHERE kind = 'portal'`).get().n, 0);
   await agent.post('/admin/sources/find-a-tender/delete').type('form').send({ _csrf: csrf });
   assert.ok(db.prepare(`SELECT 1 FROM sources WHERE key = 'find-a-tender'`).get(), 'built-in sources cannot be deleted');
-  assert.deepEqual(db.prepare('SELECT action FROM audit_log ORDER BY id').all().map((a) => a.action), ['credential.created', 'source.created', 'source.deleted']);
+  assert.deepEqual(db.prepare('SELECT action FROM audit_log ORDER BY id').all().map((a) => a.action), ['signup', 'credential.created', 'source.created', 'source.deleted']);
 });
 
 test('saved searches: created from the UI, secrets stay write-only', async () => {
@@ -535,10 +536,10 @@ test('an existing v3 database is upgraded in place', () => {
     INSERT INTO opportunities (source_key, external_id, type, title, url) VALUES ('contracts-finder', 'e1', 'tender', 'Kept through upgrade', 'https://e.example');`);
   old.close();
   const db = openDb(file);
-  assert.equal(db.pragma('user_version', { simple: true }), 1);
+  assert.equal(db.pragma('user_version', { simple: true }), migrations.length);
   const row = db.prepare('SELECT title, cpv_codes, currency, duplicate_of FROM opportunities').get();
   assert.deepEqual(row, { title: 'Kept through upgrade', cpv_codes: '', currency: 'GBP', duplicate_of: null });
   db.close();
-  assert.equal(openDb(file).pragma('user_version', { simple: true }), 1, 'migrations run once');
+  assert.equal(openDb(file).pragma('user_version', { simple: true }), migrations.length, 'migrations run once');
   fs.rmSync(dir, { recursive: true });
 });

@@ -31,6 +31,7 @@ export function accountRoutes(app, ctx) {
       name: (req.body.name || '').trim().slice(0, 200),
       email: (req.body.email || '').trim().toLowerCase().slice(0, 320),
       orgName: (req.body.orgName || '').trim().slice(0, 200),
+      terms: Boolean(req.body.terms),
     };
     const password = req.body.password || '';
     const error =
@@ -38,14 +39,17 @@ export function accountRoutes(app, ctx) {
       : !validEmail(form.email) ? 'That email address does not look right.'
       : password.length < MIN_PASSWORD ? `Use a password of at least ${MIN_PASSWORD} characters.`
       : db.prepare('SELECT 1 FROM users WHERE email = ?').get(form.email) ? 'An account with that email already exists.'
+      : config.hosted && !form.terms ? 'Please agree to the terms and the privacy notice to create an account.'
       : null;
     if (error) return registerPage(req, res, { status: 400, error, form });
 
     const { id: userId } = await createUser(db, {
       email: form.email, name: form.name, password,
+      termsAcceptedAt: config.hosted ? new Date().toISOString() : null,
       ...(invite ? { orgId: invite.org_id, role: 'member' } : { orgName: form.orgName }),
     });
     if (invite) db.prepare('UPDATE invites SET used_at = ? WHERE token_hash = ?').run(new Date().toISOString(), invite.token_hash);
+    audit(req, invite ? 'signup.invited' : 'signup', `${form.email}${invite ? '' : ` started ${form.orgName}`}`);
     req.session.regenerate(() => {
       req.session.userId = userId;
       flash(req, invite ? `Welcome to ${invite.org_name}.` : 'Welcome. Tell us what you are looking for and every opportunity will be ranked for you.');
@@ -74,6 +78,12 @@ export function accountRoutes(app, ctx) {
       res.redirect(next);
     });
   });
+
+  // Legal pages for hosted mode. The wording is supplied separately; until it
+  // is, these say so rather than linking nowhere.
+  for (const [slug, title] of [['terms', 'Terms of service'], ['privacy', 'Privacy notice']]) {
+    app.get(`/${slug}`, (req, res) => (config.hosted ? res.render('legal', { title }) : res.status(404).render('error', { message: 'Page not found.' })));
+  }
 
   app.post('/logout', (req, res) => req.session.destroy(() => res.redirect('/')));
 

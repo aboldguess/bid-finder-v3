@@ -30,6 +30,8 @@ Options for serve
       --local              Accept connections from this machine only
       --host <address>     Listen on one specific address
       --no-scheduler       Serve the web app without fetching sources
+      --hosted             Run as a shared hosted service: anyone can sign up
+                           and start an organisation (same as HOSTED=true)
 
 Options for create-user
       --name <name>        The person's name (default: the part before the @)
@@ -73,6 +75,7 @@ try {
       local: { type: 'boolean' },
       'strict-port': { type: 'boolean' },
       'no-scheduler': { type: 'boolean' },
+      hosted: { type: 'boolean' },
       name: { type: 'string' },
       org: { type: 'string' },
       'org-id': { type: 'string' },
@@ -100,6 +103,7 @@ if (values.help || command === 'help') {
     if (!Number.isInteger(port) || port < 1 || port > 65535) fail(`Port must be a whole number from 1 to 65535, got "${values.port}".`);
   }
   const host = values.host || (values.local ? '127.0.0.1' : values.lan ? '0.0.0.0' : undefined);
+  if (values.hosted) process.env.HOSTED = 'true';
   const { serve } = await import('./server.js');
   await serve({ port, host, strictPort: Boolean(values['strict-port']), scheduler: values['no-scheduler'] ? false : undefined })
     .catch((err) => { console.error(err.message); process.exit(1); });

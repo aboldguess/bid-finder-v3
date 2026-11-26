@@ -39,7 +39,11 @@ export const config = {
   secureCookies: bool(process.env.SECURE_COOKIES, baseUrl.startsWith('https://')),
   // Which proxies may set X-Forwarded-For. Docker Compose sets this to cover Caddy.
   trustProxy: process.env.TRUST_PROXY || 'loopback',
-  // Sign-up is open for the first account only, unless this is set. Others join by invite.
+  // Hosted mode: one server shared by many customer organisations. Anyone can
+  // sign up and start an organisation, and must accept the terms to do so.
+  // Off by default, so a self-hosted install keeps its closed sign-up.
+  hosted: bool(process.env.HOSTED),
+  // Sign-up is open for the first account only, unless this is set (or HOSTED is). Others join by invite.
   allowRegistration: bool(process.env.ALLOW_REGISTRATION),
   scheduler: !bool(process.env.DISABLE_SCHEDULER),
   digestCron: process.env.DIGEST_CRON || '0 7 * * *',

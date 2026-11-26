@@ -9,6 +9,7 @@
     <label>Work email <input type="email" name="email" required value="<%= form.email || '' %>" autocomplete="email"></label>
     <label>Password <input type="password" name="password" required minlength="10" autocomplete="new-password"><small>At least 10 characters.</small></label>
     <% if (!invite) { %><label>Company name <input name="orgName" required value="<%= form.orgName || '' %>" autocomplete="organization"></label><% } %>
+    <% if (hosted) { %><label class="check"><input type="checkbox" name="terms" value="1" required <%= form.terms ? 'checked' : '' %>> <span>I agree to the <a href="/terms" target="_blank">terms of service</a> and have read the <a href="/privacy" target="_blank">privacy notice</a>.</span></label><% } %>
     <button class="button">Create account</button>
   </form>
   <p class="muted">Already have an account? <a href="/login">Sign in</a></p>

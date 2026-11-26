@@ -4,7 +4,7 @@
   <h1>Every tender worth bidding for, found and ranked before your competitors open their inbox.</h1>
   <p class="lead">Bid Finder watches Find a Tender, Contracts Finder, Public Contracts Scotland, Sell2Wales, TED, SAM.gov, the UK grant funders and the private portals you have accounts on. It scores every notice against your firm and tells you why it fits.</p>
   <p class="row">
-    <% if (canRegister) { %><a class="button" href="/register">Set up this server</a><% } %>
+    <% if (canRegister) { %><a class="button" href="/register"><%= hosted ? 'Create your account' : 'Set up this server' %></a><% } %>
     <a class="button <%= canRegister ? 'ghost' : '' %>" href="/login">Sign in</a>
   </p>
   <% if (stats.open) { %><p class="muted"><%= stats.open.toLocaleString('en-GB') %> open opportunities tracked across <%= sources %> sources right now.</p><% } %>

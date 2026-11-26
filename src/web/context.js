@@ -26,7 +26,7 @@ export function createContext(db) {
       const state = db.prepare('SELECT * FROM org_opportunity_state WHERE org_id = ? AND opportunity_id = ?').get(orgId, opp.id) || {};
       return { ...opp, starred: state.starred || 0, hidden: state.hidden || 0, note: state.note || '', stage: state.stage || '', match: scoreOpportunity(opp, getProfile(db, orgId)) };
     },
-    registrationOpen: (config) => config.allowRegistration || db.prepare('SELECT COUNT(*) AS n FROM users').get().n === 0,
+    registrationOpen: (config) => config.hosted || config.allowRegistration || db.prepare('SELECT COUNT(*) AS n FROM users').get().n === 0,
   };
 }
 

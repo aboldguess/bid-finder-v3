@@ -113,6 +113,10 @@ export const migrations = [
     ip TEXT NOT NULL DEFAULT ''
   );
   `,
+  // 2: hosted mode. When each person accepted the terms and privacy notice at sign-up.
+  `
+  ALTER TABLE users ADD COLUMN terms_accepted_at TEXT;
+  `,
 ];
 
 export function migrate(db) {
