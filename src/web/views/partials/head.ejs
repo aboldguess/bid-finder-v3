@@ -39,4 +39,5 @@
   </div>
 </header>
 <main class="<%= typeof wide !== 'undefined' && wide ? 'wide' : '' %>">
+<% if (user && !user.email_verified_at) { %><form class="flash warn" method="post" action="/account/verify"><input type="hidden" name="_csrf" value="<%= csrfToken %>">Please confirm your email address. Until you do, we will not send you alerts or digests. Nothing arrived? <button class="linkbutton">Send a new link</button></form><% } %>
 <% if (flash) { %><p class="flash" role="status"><%= flash %></p><% } %>

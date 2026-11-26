@@ -17,13 +17,14 @@ import { fmt } from './format.js';
 import { apiRouter } from './api.js';
 import { openapi } from './openapi.js';
 import { accountRoutes } from './routes/account.js';
+import { emailRoutes } from './routes/email.js';
 import { opportunityRoutes } from './routes/opportunities.js';
 import { searchRoutes } from './routes/searches.js';
 import { adminRoutes } from './routes/admin.js';
 
-export function createApp(db) {
+export function createApp(db, { mail } = {}) {
   ensureSources(db);
-  const ctx = createContext(db);
+  const ctx = createContext(db, { mail });
   const app = express();
   app.set('view engine', 'ejs');
   app.set('views', path.join(import.meta.dirname, 'views'));
@@ -95,7 +96,7 @@ export function createApp(db) {
   app.use((req, res, next) => {
     const userId = req.session.userId;
     if (userId) {
-      req.user = db.prepare('SELECT id, email, name, is_platform_admin FROM users WHERE id = ?').get(userId);
+      req.user = db.prepare('SELECT id, email, name, is_platform_admin, email_verified_at FROM users WHERE id = ?').get(userId);
       req.org = req.user && db.prepare(`
         SELECT o.*, m.role FROM orgs o JOIN memberships m ON m.org_id = o.id
         WHERE m.user_id = ? ORDER BY m.role = 'owner' DESC, o.id LIMIT 1
@@ -120,6 +121,7 @@ export function createApp(db) {
 
   app.get('/api', ctx.requireUser, (req, res) => res.render('api-docs', { spec: openapi(), baseUrl: config.baseUrl }));
 
+  emailRoutes(app, ctx);
   accountRoutes(app, ctx);
   opportunityRoutes(app, ctx);
   searchRoutes(app, ctx);

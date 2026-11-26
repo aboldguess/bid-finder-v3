@@ -1,0 +1,12 @@
+<%- include('partials/head', { title: 'Choose a new password' }) %>
+<section class="narrow panel">
+  <h1>Choose a new password</h1>
+  <% if (error) { %><p class="error" role="alert"><%= error %></p><% } %>
+  <form method="post" action="/reset/<%= token %>" class="stack">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label>New password <input type="password" name="password" required minlength="<%= min %>" autocomplete="new-password" autofocus><small>At least <%= min %> characters.</small></label>
+    <label>Type it again <input type="password" name="confirm" required minlength="<%= min %>" autocomplete="new-password"></label>
+    <button class="button">Save and sign in</button>
+  </form>
+</section>
+<%- include('partials/foot') %>

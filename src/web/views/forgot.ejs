@@ -1,0 +1,20 @@
+<%- include('partials/head', { title: 'Forgotten password' }) %>
+<section class="narrow panel">
+  <h1>Forgotten your password?</h1>
+  <% if (!canEmail) { %>
+    <p>This server cannot send email, so it cannot send you a reset link. Ask your administrator to reset it with <code>bidfinder reset-password</code>.</p>
+  <% } else if (sent) { %>
+    <p role="status">If there is an account for <strong><%= email %></strong>, we have sent it a link to choose a new password. It works for one hour.</p>
+    <p class="muted">Nothing arrived? Check your spam folder, or try again in a few minutes.</p>
+  <% } else { %>
+    <% if (error) { %><p class="error" role="alert"><%= error %></p><% } %>
+    <p class="muted">Enter the email you sign in with and we will send you a link to choose a new password.</p>
+    <form method="post" action="/forgot" class="stack">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>Email <input type="email" name="email" required value="<%= email %>" autocomplete="email" autofocus></label>
+      <button class="button">Send me a link</button>
+    </form>
+  <% } %>
+  <p class="muted"><a href="/login">Back to sign in</a></p>
+</section>
+<%- include('partials/foot') %>

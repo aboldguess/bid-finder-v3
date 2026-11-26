@@ -16,7 +16,7 @@ export const findUser = (db, email) => db.prepare('SELECT * FROM users WHERE ema
 // Creates a user. Give orgName to start a new organisation the user owns, or
 // orgId to add them to an existing one (as 'member' unless role says otherwise).
 // The first account on a server is always a platform administrator.
-export async function createUser(db, { email, name, password, orgName, orgId, role, admin = false, termsAcceptedAt = null }) {
+export async function createUser(db, { email, name, password, orgName, orgId, role, admin = false, termsAcceptedAt = null, verified = true }) {
   email = String(email || '').trim().toLowerCase();
   name = String(name || '').trim();
   if (!validEmail(email)) throw new UserError(`"${email}" does not look like an email address.`);
@@ -31,7 +31,8 @@ export async function createUser(db, { email, name, password, orgName, orgId, ro
   return db.transaction(() => {
     const first = db.prepare('SELECT COUNT(*) AS n FROM users').get().n === 0;
     const isAdmin = first || Boolean(admin);
-    const id = Number(db.prepare('INSERT INTO users (email, name, password_hash, is_platform_admin, terms_accepted_at) VALUES (?, ?, ?, ?, ?)').run(email, name, hash, isAdmin ? 1 : 0, termsAcceptedAt).lastInsertRowid);
+    const id = Number(db.prepare('INSERT INTO users (email, name, password_hash, is_platform_admin, terms_accepted_at, email_verified_at) VALUES (?, ?, ?, ?, ?, ?)')
+      .run(email, name, hash, isAdmin ? 1 : 0, termsAcceptedAt, verified ? new Date().toISOString() : null).lastInsertRowid);
     let org = orgId;
     if (org == null) {
       org = Number(db.prepare(`INSERT INTO orgs (name, kind) VALUES (?, 'company')`).run(String(orgName).trim().slice(0, 200)).lastInsertRowid);
@@ -68,3 +69,42 @@ export function listUsers(db) {
 export const listOrgs = (db) => db.prepare(`
   SELECT o.id, o.name, (SELECT COUNT(*) FROM memberships m WHERE m.org_id = o.id) AS members FROM orgs o ORDER BY o.id
 `).all();
+
+// --- Links sent by email: verify an address, reset a password -------------
+
+const sha256 = (text) => crypto.createHash('sha256').update(text).digest('hex');
+export const TOKEN_TTL = { verify: 48 * 3600e3, reset: 3600e3 };
+
+// Issues a single-use token, replacing any unused one for the same purpose.
+export function issueEmailToken(db, user, purpose, { now = Date.now() } = {}) {
+  const token = crypto.randomBytes(32).toString('base64url');
+  db.transaction(() => {
+    db.prepare('DELETE FROM email_tokens WHERE user_id = ? AND purpose = ? AND used_at IS NULL').run(user.id, purpose);
+    db.prepare('INSERT INTO email_tokens (token_hash, user_id, purpose, email, expires_at) VALUES (?, ?, ?, ?, ?)')
+      .run(sha256(token), user.id, purpose, user.email, new Date(now + TOKEN_TTL[purpose]).toISOString());
+  })();
+  return token;
+}
+
+// The user a token belongs to, if it is unused, unexpired and the account
+// still has the address it was sent to. Does not use it up.
+export function checkEmailToken(db, token, purpose, { now = Date.now() } = {}) {
+  if (!token || typeof token !== 'string' || token.length > 100) return null;
+  return db.prepare(`
+    SELECT u.*, t.token_hash FROM email_tokens t JOIN users u ON u.id = t.user_id
+    WHERE t.token_hash = ? AND t.purpose = ? AND t.used_at IS NULL AND t.expires_at > ? AND t.email = u.email
+  `).get(sha256(token), purpose, new Date(now).toISOString()) || null;
+}
+
+export const useEmailToken = (db, row) =>
+  db.prepare('UPDATE email_tokens SET used_at = ? WHERE token_hash = ? AND used_at IS NULL').run(new Date().toISOString(), row.token_hash).changes === 1;
+
+export function markVerified(db, userId) {
+  db.prepare('UPDATE users SET email_verified_at = COALESCE(email_verified_at, ?) WHERE id = ?').run(new Date().toISOString(), userId);
+}
+
+export async function setPassword(db, userId, password) {
+  if (String(password || '').length < MIN_PASSWORD) throw new UserError(`Use a password of at least ${MIN_PASSWORD} characters.`);
+  db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(await bcrypt.hash(password, 12), userId);
+  db.prepare(`DELETE FROM sessions WHERE json_extract(sess, '$.userId') = ?`).run(userId);
+}
