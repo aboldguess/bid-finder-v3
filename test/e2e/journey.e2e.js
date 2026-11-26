@@ -28,6 +28,7 @@ const notice = (id, title, extra = {}) => ({ external_id: id, title, url: `https
 async function fakeStripe(appBase) {
   const sessions = new Map();
   const calls = [];
+  const ended = new Set();
   const { server, base } = await listen(async (req, res) => {
     const id = req.url.split('/').pop();
     const s = sessions.get(id);
@@ -44,7 +45,10 @@ async function fakeStripe(appBase) {
     createCustomer: async () => { calls.push('customer'); return { id: `cus_${++n}` }; },
     createCheckout: async (params) => { const id = `cs_${++n}`; sessions.set(id, params); calls.push('checkout'); return { id, url: `${base}/pay/${id}` }; },
     createPortal: async () => ({ url: `${base}/portal` }),
-    cancelSubscription: async (id) => { calls.push(`cancel ${id}`); return { id, status: 'canceled' }; },
+    getSubscription: async (id) => ({ id, status: ended.has(id) ? 'canceled' : 'active' }),
+    cancelSubscription: async (id) => { calls.push(`cancel ${id}`); ended.add(id); return { id, status: 'canceled' }; },
+    openCheckouts: async () => [],
+    expireCheckout: async (id) => ({ id, status: 'expired' }),
   };
   return { stripe, server, base };
 }
@@ -60,18 +64,20 @@ test('Phase 1 acceptance: from the home page to a paying customer, and out again
   const realOrigins = config.stripe.origins;
   config.stripe.origins = [fake.base];
   const app = createApp(db, { mail: async (m) => mail.push(m), stripe: fake.stripe });
-  const { server, base } = await listen(app);
-  appBase = base;
-  config.baseUrl = base;
-  const browser = await chromium.launch();
-  t.after(async () => {
-    await browser.close();
-    server.close();
+  // Clean-up is registered as each thing starts, so a browser that fails to launch
+  // still closes the servers and the test run ends instead of hanging.
+  t.after(() => {
     fake.server.close();
     Object.assign(config, { hosted: saved.hosted, baseUrl: saved.baseUrl });
     config.stripe.webhookSecret = saved.secret;
     config.stripe.origins = realOrigins;
   });
+  const { server, base } = await listen(app);
+  t.after(() => server.close());
+  appBase = base;
+  config.baseUrl = base;
+  const browser = await chromium.launch();
+  t.after(() => browser.close());
 
   // The operator's own account exists already; the public sources have notices.
   await createUser(db, { email: 'ops@operator.example', name: 'Ops', password: 'operator password 1', orgName: 'Operator', admin: true });
