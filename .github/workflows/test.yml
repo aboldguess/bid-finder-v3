@@ -18,6 +18,21 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm audit --omit=dev --audit-level=high
+      - name: Check the Pi install scripts parse
+        run: for f in deploy/pi/*.sh deploy/pi/bidfinder; do bash -n "$f"; done
+
+  acceptance:
+    # A real browser walks a customer from the home page to paying and deleting their account.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
 
   docker:
     runs-on: ubuntu-latest
