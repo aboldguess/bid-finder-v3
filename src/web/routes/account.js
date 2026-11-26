@@ -57,15 +57,28 @@ export function accountRoutes(app, ctx) {
       : null;
     if (error) return registerPage(req, res, { status: 400, error, form });
 
-    const created = await createUser(db, {
-      email: form.email, name: form.name, password,
-      termsAcceptedAt: config.hosted ? new Date().toISOString() : null,
-      // Self-hosted servers often have no email set up, so only hosted mode asks people to confirm their address.
-      verified: !config.hosted,
-      ...(invite ? { orgId: invite.org_id, role: 'member' } : { orgName: form.orgName }),
-    });
-    const userId = created.id;
+    // Take a place in the daily allowance before the slow password hash, so sign-ups sent
+    // in parallel cannot all pass the check first. It is given back if creation fails.
+    const full = limits.signupCreated.retryAfter(ip);
+    if (full) {
+      audit(req, 'signup.limited', ip);
+      return tooMany(res, full).render('error', { message: 'Too many sign-up attempts from your network. Try again later.' });
+    }
     limits.signupCreated.hit(ip);
+    let created;
+    try {
+      created = await createUser(db, {
+        email: form.email, name: form.name, password,
+        termsAcceptedAt: config.hosted ? new Date().toISOString() : null,
+        // Self-hosted servers often have no email set up, so only hosted mode asks people to confirm their address.
+        verified: !config.hosted,
+        ...(invite ? { orgId: invite.org_id, role: 'member' } : { orgName: form.orgName }),
+      });
+    } catch (err) {
+      limits.signupCreated.unhit(ip);
+      throw err;
+    }
+    const userId = created.id;
     const emailed = config.hosted && await ctx.sendVerification({ id: userId, email: created.email, name: created.name });
     if (invite) db.prepare('UPDATE invites SET used_at = ? WHERE token_hash = ?').run(new Date().toISOString(), invite.token_hash);
     audit(req, invite ? 'signup.invited' : 'signup', `${form.email}${invite ? '' : ` started ${form.orgName}`}`);
