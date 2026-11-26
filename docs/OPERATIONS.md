@@ -49,7 +49,7 @@ Logs go to standard output, one JSON object per line in production (`LOG_FORMAT=
 ## Security
 
 - **Accounts.** Passwords are hashed with bcrypt. Sessions are server-side, in HttpOnly, SameSite cookies that are marked Secure whenever `BASE_URL` is https. Repeated failed sign-ins are blocked for 15 minutes. Changing a password signs out every other session.
-- **Sign-up.** Open for the first account only, which becomes the administrator. Others join by single-use invite link that expires, or are created on the server with `bidfinder create-user`. Set `ALLOW_REGISTRATION=true` to let anyone create their own organisation. `bidfinder promote` and `bidfinder demote` change who is an administrator; the last one cannot be demoted.
+- **Sign-up.** Open for the first account only, which becomes the administrator. Others join by single-use invite link that expires, or are created on the server with `bidfinder create-user`. Set `ALLOW_REGISTRATION=true` to let anyone create their own organisation. Hosted mode (`HOSTED=true` or `bidfinder serve --hosted`) is for running one server for many customers: sign-up is always open, each new person must tick that they accept the terms (`/terms`) and privacy notice (`/privacy`), and when they did is stored on their account. `bidfinder promote` and `bidfinder demote` change who is an administrator; the last one cannot be demoted.
 - **Forms** carry anti-forgery tokens, and pages are served with a strict Content-Security-Policy and HSTS.
 - **API tokens** are shown once and stored only as a hash. Each is limited to 120 requests a minute and can be revoked on the Account page.
 - **Stored secrets** (portal logins, API keys, Slack and webhook addresses) are encrypted with AES-256-GCM.

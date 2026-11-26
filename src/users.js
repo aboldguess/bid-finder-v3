@@ -16,7 +16,7 @@ export const findUser = (db, email) => db.prepare('SELECT * FROM users WHERE ema
 // Creates a user. Give orgName to start a new organisation the user owns, or
 // orgId to add them to an existing one (as 'member' unless role says otherwise).
 // The first account on a server is always a platform administrator.
-export async function createUser(db, { email, name, password, orgName, orgId, role, admin = false }) {
+export async function createUser(db, { email, name, password, orgName, orgId, role, admin = false, termsAcceptedAt = null }) {
   email = String(email || '').trim().toLowerCase();
   name = String(name || '').trim();
   if (!validEmail(email)) throw new UserError(`"${email}" does not look like an email address.`);
@@ -31,7 +31,7 @@ export async function createUser(db, { email, name, password, orgName, orgId, ro
   return db.transaction(() => {
     const first = db.prepare('SELECT COUNT(*) AS n FROM users').get().n === 0;
     const isAdmin = first || Boolean(admin);
-    const id = Number(db.prepare('INSERT INTO users (email, name, password_hash, is_platform_admin) VALUES (?, ?, ?, ?)').run(email, name, hash, isAdmin ? 1 : 0).lastInsertRowid);
+    const id = Number(db.prepare('INSERT INTO users (email, name, password_hash, is_platform_admin, terms_accepted_at) VALUES (?, ?, ?, ?, ?)').run(email, name, hash, isAdmin ? 1 : 0, termsAcceptedAt).lastInsertRowid);
     let org = orgId;
     if (org == null) {
       org = Number(db.prepare(`INSERT INTO orgs (name, kind) VALUES (?, 'company')`).run(String(orgName).trim().slice(0, 200)).lastInsertRowid);
