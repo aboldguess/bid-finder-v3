@@ -118,8 +118,8 @@ export function adminRoutes(app, ctx) {
       if (full) throw new Error(`${org.name}: ${full.replace('Upgrade on the Billing page for more.', 'Move them to a plan with more first.')}`);
     }
     return {
-      org_id: orgId,
       ...source,
+      org_id: orgId,
       name: source.kind === 'builtin' ? source.name : String(b.name || '').trim().slice(0, 120),
       type: source.kind === 'builtin' ? source.type : (b.type === 'grant' ? 'grant' : 'tender'),
       config: JSON.stringify(values),
