@@ -1,0 +1,45 @@
+<%- include('partials/head', { title: 'Welcome' }) %>
+<section class="welcome">
+  <h1>Let's find your first bids</h1>
+  <p class="muted">Bid Finder is watching <%= total.toLocaleString('en-GB') %> open contracts and grants. Tell it what you do and it ranks every one for you. You can fine-tune everything later.</p>
+  <form method="post" action="/welcome" class="welcome-grid" id="welcome-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="stack">
+      <fieldset>
+        <legend><span class="step">1</span> What kind of work do you do?</legend>
+        <p class="muted">Pick everything that applies.</p>
+        <% [['Engineering', presets.filter((p) => !p.group)], ['Other sectors', presets.filter((p) => p.group === 'other')]].forEach(([heading, list]) => { %>
+          <h3 class="chips-heading"><%= heading %></h3>
+          <div class="chips">
+            <% list.forEach((p) => { %><label class="chip pick"><input type="checkbox" name="presets" value="<%= p.id %>"> <%= p.label %></label><% }) %>
+          </div>
+        <% }) %>
+      </fieldset>
+      <fieldset>
+        <legend><span class="step">2</span> Anything more specific? <span class="muted">(optional)</span></legend>
+        <label>Words that describe what you sell <input name="keywords" placeholder="e.g. test rigs, hydraulic systems, BIM" autocomplete="off"><small>Separate with commas. A match in a notice's title counts most.</small></label>
+      </fieldset>
+      <fieldset>
+        <legend><span class="step">3</span> Where, and what kind?</legend>
+        <div class="chips">
+          <label class="chip pick"><input type="radio" name="countries" value="GB" checked> UK</label>
+          <label class="chip pick"><input type="radio" name="countries" value="GB,IE"> UK and Ireland</label>
+          <label class="chip pick"><input type="radio" name="countries" value=""> Anywhere</label>
+        </div>
+        <div class="chips">
+          <label class="chip pick"><input type="checkbox" name="types" value="tender" checked> Contracts (tenders)</label>
+          <label class="chip pick"><input type="checkbox" name="types" value="grant" checked> Grants and competitions</label>
+        </div>
+      </fieldset>
+      <div class="row nowrap">
+        <button class="button">Show my feed</button>
+        <a href="/profile" class="muted">Or set up the full profile</a>
+      </div>
+    </div>
+    <aside class="panel preview" aria-live="polite" data-preview="/welcome/preview">
+      <p class="preview-n"><strong data-preview-total>–</strong> <span data-preview-label>pick a kind of work to see your matches</span></p>
+      <ol class="preview-list" data-preview-list></ol>
+    </aside>
+  </form>
+</section>
+<%- include('partials/foot') %>

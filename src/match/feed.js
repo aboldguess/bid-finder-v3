@@ -42,9 +42,10 @@ const SORTS = {
 
 export function getFeed(db, orgId, {
   q = '', type = '', source = '', view = 'matches', cpv = '', country = '', min_value = null, min_score = null,
-  sort = 'score', since = null, closingWithinDays = null, limit = 200, offset = 0, now = Date.now(),
+  sort = 'score', since = null, closingWithinDays = null, limit = 200, offset = 0, now = Date.now(), profile: draft = null,
 } = {}) {
-  const profile = getProfile(db, orgId);
+  // `profile` scores against a draft that is not saved yet (the welcome page's preview).
+  const profile = draft || getProfile(db, orgId);
   // The pipeline keeps bids that have closed (submitted, won, lost); other views show open ones.
   const where = view === 'pipeline' ? [] : ['(o.closes_at IS NULL OR o.closes_at > ?)'];
   const params = view === 'pipeline' ? [orgId] : [orgId, new Date(now).toISOString()];

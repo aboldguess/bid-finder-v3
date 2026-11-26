@@ -104,8 +104,9 @@ export function accountRoutes(app, ctx) {
     req.session.regenerate(() => {
       req.session.userId = userId;
       const check = emailed ? ` We have sent a link to ${created.email} to confirm your address.` : '';
-      flash(req, (invite ? `Welcome to ${invite.org_name}.` : 'Welcome. Tell us what you are looking for and every opportunity will be ranked for you.') + check);
-      res.redirect(invite ? '/dashboard' : '/profile');
+      flash(req, (invite ? `Welcome to ${invite.org_name}.` : (config.hosted ? 'Welcome. Three quick questions and your feed is ready.' : 'Welcome. Tell us what you are looking for and every opportunity will be ranked for you.')) + check);
+      // Hosted sign-ups go through the quick welcome set-up; self-hosted keeps the full profile page.
+      res.redirect(invite ? '/dashboard' : config.hosted ? '/welcome' : '/profile');
     });
   };
   app.post('/register', register);

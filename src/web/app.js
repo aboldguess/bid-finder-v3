@@ -16,6 +16,7 @@ import { SqliteStore, csrf } from './security.js';
 import { createContext } from './context.js';
 import { banner, entitlement } from '../billing/plans.js';
 import { billingRoutes, stripeWebhook } from './routes/billing.js';
+import { welcomeRoutes } from './routes/welcome.js';
 import { createStripe } from '../billing/stripe.js';
 import { VISIBLE, visibleSources } from '../match/visibility.js';
 import { fmt } from './format.js';
@@ -160,6 +161,7 @@ export function createApp(db, { mail, stripe } = {}) {
   emailRoutes(app, ctx);
   accountRoutes(app, ctx);
   opportunityRoutes(app, ctx);
+  welcomeRoutes(app, ctx);
   searchRoutes(app, ctx);
   adminRoutes(app, ctx);
   billingRoutes(app, ctx);

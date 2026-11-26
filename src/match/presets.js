@@ -1,6 +1,8 @@
-// Starting points for an engineering firm's profile: keywords and CPV
-// categories (Common Procurement Vocabulary, by leading digits) for common
-// disciplines. Picking one on the profile page adds to what is there.
+// Starting points for a firm's profile: keywords and CPV categories (Common
+// Procurement Vocabulary, by leading digits) for common disciplines. Picking
+// one on the profile or welcome page adds to what is there. Engineering comes
+// first; the general sectors after it are for other small firms on a hosted
+// service.
 export const presets = [
   { id: 'consultancy', label: 'Engineering design and consultancy', cpv: ['713'],
     keywords: ['engineering design', 'engineering services', 'technical consultancy', 'feasibility study', 'detailed design', 'design services'] },
@@ -22,4 +24,34 @@ export const presets = [
     keywords: ['defence', 'aerospace', 'MOD', 'Dstl', 'naval', 'uncrewed', 'space'] },
   { id: 'transport', label: 'Rail and transport', cpv: ['346', '4523', '349'],
     keywords: ['rail', 'rolling stock', 'signalling', 'electric vehicle', 'charging infrastructure', 'transport'] },
+  { id: 'construction', group: 'other', label: 'Construction and refurbishment', cpv: ['45'],
+    keywords: ['construction', 'refurbishment', 'building works', 'extension', 'roofing', 'groundworks', 'fit-out'] },
+  { id: 'facilities', group: 'other', label: 'Facilities and building maintenance', cpv: ['507', '5070', '797', '909', '4533'],
+    keywords: ['facilities management', 'building maintenance', 'planned maintenance', 'reactive maintenance', 'HVAC', 'cleaning services', 'grounds maintenance'] },
+  { id: 'it', group: 'other', label: 'IT services and telecoms', cpv: ['72', '48', '302', '322', '642'],
+    keywords: ['IT services', 'managed service', 'cyber security', 'cloud', 'network', 'telecommunications', 'software licence'] },
+  { id: 'management', group: 'other', label: 'Management and professional consultancy', cpv: ['794', '7941', '7942', '791', '792'],
+    keywords: ['consultancy', 'management consultancy', 'business support', 'evaluation', 'strategy', 'programme management'] },
+  { id: 'health', group: 'other', label: 'Health and social care', cpv: ['85', '331'],
+    keywords: ['health services', 'social care', 'domiciliary care', 'mental health', 'medical equipment', 'community services'] },
+  { id: 'training', group: 'other', label: 'Training and education', cpv: ['80'],
+    keywords: ['training', 'apprenticeship', 'education', 'learning', 'skills', 'e-learning'] },
+  { id: 'environment', group: 'other', label: 'Environmental and waste services', cpv: ['905', '9071', '9072', '904'],
+    keywords: ['waste management', 'recycling', 'environmental services', 'ecology', 'contaminated land', 'water treatment'] },
 ];
+
+// Adds each picked preset's keywords and CPV categories to a profile's lists,
+// keeping what is there and never repeating a line.
+export function mergePresets(ids, { keywords = '', cpv_codes = '' } = {}) {
+  const chosen = presets.filter((p) => ids.includes(p.id));
+  const add = (text, items) => {
+    const lines = String(text || '').split('\n').map((l) => l.trim()).filter(Boolean);
+    const seen = new Set(lines.map((l) => l.toLowerCase()));
+    for (const item of items) if (!seen.has(item.toLowerCase())) { seen.add(item.toLowerCase()); lines.push(item); }
+    return lines.join('\n');
+  };
+  return {
+    keywords: add(keywords, chosen.flatMap((p) => p.keywords)),
+    cpv_codes: add(cpv_codes, chosen.flatMap((p) => p.cpv)),
+  };
+}
