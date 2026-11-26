@@ -5,6 +5,7 @@
   <% if (error) { %><p class="error" role="alert"><%= error %></p><% } %>
   <form method="post" action="<%= inviteToken ? '/invite/' + inviteToken : '/register' %>" class="stack">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="hp" aria-hidden="true"><label>Leave this empty <input name="<%= honeypot %>" tabindex="-1" autocomplete="off"></label></div>
     <label>Your name <input name="name" required value="<%= form.name || '' %>" autocomplete="name"></label>
     <label>Work email <input type="email" name="email" required value="<%= form.email || '' %>" autocomplete="email"></label>
     <label>Password <input type="password" name="password" required minlength="10" autocomplete="new-password"><small>At least 10 characters.</small></label>
