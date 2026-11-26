@@ -18,6 +18,7 @@ export async function serve({ port = config.port, host = config.host, strictPort
   log.info(`Bid Finder ${config.version} is running at ${urls.local}`);
   if (urls.lan.length) log.info(`On your network: ${urls.lan.join(', ')}`);
   else if (host === '127.0.0.1' || host === 'localhost') log.info('Only this machine can connect. Use --lan to allow other devices on your network.');
+  if (config.hosted && !config.smtp.url) log.warn('Hosted mode is on but SMTP_URL is not set: sign-up confirmations, password resets and alerts cannot be emailed.');
   if (scheduler) await startScheduler(db);
 
   const stop = (signal) => {

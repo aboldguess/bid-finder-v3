@@ -50,6 +50,7 @@ export async function runDigests(db, { now = Date.now() } = {}) {
   const orgs = db.prepare(`
     SELECT o.*, p.digest_frequency FROM orgs o JOIN profiles p ON p.org_id = o.id
     WHERE o.plan != 'suspended'
+      AND EXISTS (SELECT 1 FROM memberships m JOIN users u ON u.id = m.user_id WHERE m.org_id = o.id AND u.email_verified_at IS NOT NULL)
   `).all();
   const results = [];
   for (const org of orgs) {

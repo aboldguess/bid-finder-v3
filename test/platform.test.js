@@ -303,6 +303,9 @@ function setupOrg(profile = {}) {
   const org = db.prepare(`INSERT INTO orgs (name) VALUES ('Northfield')`).run().lastInsertRowid;
   const p = { keywords: 'test rig', cpv_codes: '713', types: 'tender', min_score: 30, ...profile };
   db.prepare('INSERT INTO profiles (org_id, keywords, cpv_codes, types, min_score) VALUES (?, ?, ?, ?, ?)').run(org, p.keywords, p.cpv_codes, p.types, p.min_score);
+  // Alerts and digests only go to organisations with a confirmed email address.
+  const user = db.prepare(`INSERT INTO users (email, name, password_hash, email_verified_at) VALUES ('owner@northfield.example', 'Owner', 'x', datetime('now'))`).run().lastInsertRowid;
+  db.prepare(`INSERT INTO memberships (user_id, org_id, role) VALUES (?, ?, 'owner')`).run(user, org);
   return { db, org };
 }
 

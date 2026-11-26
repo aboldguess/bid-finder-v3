@@ -117,6 +117,24 @@ export const migrations = [
   `
   ALTER TABLE users ADD COLUMN terms_accepted_at TEXT;
   `,
+  // 3: email verification and password reset. Accounts that already exist
+  // count as verified, so upgrading changes nothing for them.
+  `
+  ALTER TABLE users ADD COLUMN email_verified_at TEXT;
+  UPDATE users SET email_verified_at = created_at;
+
+  -- Single-use links sent by email. Only a hash of the token is kept.
+  CREATE TABLE email_tokens (
+    token_hash TEXT PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    purpose TEXT NOT NULL CHECK (purpose IN ('verify', 'reset')),
+    email TEXT NOT NULL,                  -- the address it was sent to; a later email change voids it
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    expires_at TEXT NOT NULL,
+    used_at TEXT
+  );
+  CREATE INDEX idx_email_tokens_user ON email_tokens(user_id, purpose);
+  `,
 ];
 
 export function migrate(db) {

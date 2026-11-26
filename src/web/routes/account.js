@@ -57,17 +57,22 @@ export function accountRoutes(app, ctx) {
       : null;
     if (error) return registerPage(req, res, { status: 400, error, form });
 
-    const { id: userId } = await createUser(db, {
+    const created = await createUser(db, {
       email: form.email, name: form.name, password,
       termsAcceptedAt: config.hosted ? new Date().toISOString() : null,
+      // Self-hosted servers often have no email set up, so only hosted mode asks people to confirm their address.
+      verified: !config.hosted,
       ...(invite ? { orgId: invite.org_id, role: 'member' } : { orgName: form.orgName }),
     });
+    const userId = created.id;
     limits.signupCreated.hit(ip);
+    const emailed = config.hosted && await ctx.sendVerification({ id: userId, email: created.email, name: created.name });
     if (invite) db.prepare('UPDATE invites SET used_at = ? WHERE token_hash = ?').run(new Date().toISOString(), invite.token_hash);
     audit(req, invite ? 'signup.invited' : 'signup', `${form.email}${invite ? '' : ` started ${form.orgName}`}`);
     req.session.regenerate(() => {
       req.session.userId = userId;
-      flash(req, invite ? `Welcome to ${invite.org_name}.` : 'Welcome. Tell us what you are looking for and every opportunity will be ranked for you.');
+      const check = emailed ? ` We have sent a link to ${created.email} to confirm your address.` : '';
+      flash(req, (invite ? `Welcome to ${invite.org_name}.` : 'Welcome. Tell us what you are looking for and every opportunity will be ranked for you.') + check);
       res.redirect(invite ? '/dashboard' : '/profile');
     });
   };

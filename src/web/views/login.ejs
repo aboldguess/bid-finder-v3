@@ -9,6 +9,7 @@
     <label>Password <input type="password" name="password" required autocomplete="current-password"></label>
     <button class="button">Sign in</button>
   </form>
+  <p class="muted"><a href="/forgot">Forgotten your password?</a></p>
   <% if (canRegister) { %><p class="muted">First time here? <a href="/register"><%= hosted ? 'Create an account' : 'Create the first account' %></a></p>
   <% } else { %><p class="muted">Need an account? Ask your administrator for an invitation. Whoever runs the server can also create one with <code>bidfinder create-user</code>.</p><% } %>
 </section>
