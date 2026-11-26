@@ -2,7 +2,7 @@
 // plan and promotion settings. Card payments are added in the Stripe step.
 import { config } from '../../config.js';
 import { getPlan, getSetting, listPlans, pounds, setSetting, STATUSES } from '../../billing/plans.js';
-import { applyEvent, lineItem, verifyWebhook } from '../../billing/stripe.js';
+import { applyEvent, lineItem, secondSubscription, verifyWebhook } from '../../billing/stripe.js';
 import { log } from '../../log.js';
 
 const COLOUR = /^#[0-9a-f]{6}$/i;
@@ -74,6 +74,8 @@ export function billingRoutes(app, ctx) {
         customer = (await stripe.createCustomer({ email: req.user.email, name: org.name, metadata: { org_id: org.id } })).id;
         db.prepare('UPDATE orgs SET stripe_customer_id = ? WHERE id = ?').run(customer, org.id);
       }
+      // Only one checkout open at a time: one left open in another tab could otherwise start a second subscription.
+      for (const open of await stripe.openCheckouts(customer)) await stripe.expireCheckout(open.id);
       // Keep whatever is left of the free trial: the first charge comes when it ends (Stripe needs at least two days' notice).
       const trialEnd = org.billing_status === 'trialing' ? Math.floor(Date.parse(org.trial_ends_at || '') / 1000) : 0;
       const tax = config.stripe.tax;
@@ -201,8 +203,13 @@ export function billingRoutes(app, ctx) {
 
 // Stripe webhooks. Mounted in app.js before the body parsers, sessions and
 // CSRF, because the signature is over the exact bytes Stripe sent.
-export function stripeWebhook(db) {
-  return (req, res) => {
+//
+// Stripe does not promise to deliver events in order, so a subscription
+// update is never taken at face value: the subscription is fetched again and
+// its current state applied. A stale "active" arriving after the cancellation
+// therefore cannot bring a cancelled account back.
+export function stripeWebhook(db, stripe) {
+  return async (req, res) => {
     let event;
     try {
       event = verifyWebhook(req.body.toString('utf8'), req.get('stripe-signature'));
@@ -211,6 +218,15 @@ export function stripeWebhook(db) {
       return res.status(400).json({ error: 'bad signature' });
     }
     try {
+      if (stripe?.configured && event.type.startsWith('customer.subscription.') && event.type !== 'customer.subscription.deleted' && event.data?.object?.id) {
+        event = { ...event, data: { ...event.data, object: await stripe.getSubscription(event.data.object.id) } };
+      }
+      // Two checkouts completed for one organisation: keep the first subscription and cancel the other before it charges again.
+      const extra = secondSubscription(db, event);
+      if (extra && stripe?.configured) {
+        await stripe.cancelSubscription(extra);
+        log.warn(`Cancelled ${extra}: a second subscription for an organisation that already has one`);
+      }
       res.json({ received: true, result: applyEvent(db, event) });
     } catch (err) {
       log.error('Stripe webhook failed', err);

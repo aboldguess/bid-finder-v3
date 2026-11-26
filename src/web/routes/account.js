@@ -6,6 +6,8 @@ import { localPath, newToken, sha256, validEmail } from '../context.js';
 import { createUser, MIN_PASSWORD } from '../../users.js';
 import { entitlement, overLimit } from '../../billing/plans.js';
 
+class SeatError extends Error {}
+
 export function accountRoutes(app, ctx) {
   const { db, flash, requireUser, requireOwner, audit, limits } = ctx;
   const findInvite = (token) => token && db.prepare(`
@@ -29,13 +31,15 @@ export function accountRoutes(app, ctx) {
     const invite = findInvite(req.params.token);
     if (req.params.token && !invite) return registerPage(req, res);
     if (!invite && !ctx.registrationOpen(config)) return registerPage(req, res);
-    if (invite) {
-      // The invitation itself holds a seat, so only check that the team has not grown past the plan since.
+    // The invitation itself holds a seat, so only check that the team has not grown past the plan since.
+    const noSeat = () => {
       const org = db.prepare('SELECT * FROM orgs WHERE id = ?').get(invite.org_id);
-      const { limits, readOnly } = entitlement(db, org);
+      const { limits: plan, readOnly } = entitlement(db, org);
       const members = db.prepare('SELECT COUNT(*) AS n FROM memberships WHERE org_id = ?').get(org.id).n;
-      if (readOnly || overLimit(limits.seats, members, 'seats')) return res.status(403).render('error', { message: `${invite.org_name} has no free seats on its plan right now. Ask whoever invited you to upgrade or free a seat.` });
-    }
+      return readOnly || overLimit(plan.seats, members, 'seats');
+    };
+    const seatsFull = (res) => res.status(403).render('error', { message: `${invite.org_name} has no free seats on its plan right now. Ask whoever invited you to upgrade or free a seat.` });
+    if (invite && noSeat()) return seatsFull(res);
     const ip = req.ip || '';
     const wait = limits.signupAttempts.retryAfter(ip) || limits.signupCreated.retryAfter(ip);
     if (wait) {
@@ -65,18 +69,29 @@ export function accountRoutes(app, ctx) {
       : null;
     if (error) return registerPage(req, res, { status: 400, error, form });
 
-    const created = await createUser(db, {
-      email: form.email, name: form.name, password,
-      termsAcceptedAt: config.hosted ? new Date().toISOString() : null,
-      // Self-hosted servers often have no email set up, so only hosted mode asks people to confirm their address.
-      verified: !config.hosted,
-      trial: config.hosted,
-      ...(invite ? { orgId: invite.org_id, role: 'member' } : { orgName: form.orgName }),
-    });
+    let created;
+    try {
+      created = await createUser(db, {
+        email: form.email, name: form.name, password,
+        termsAcceptedAt: config.hosted ? new Date().toISOString() : null,
+        // Self-hosted servers often have no email set up, so only hosted mode asks people to confirm their address.
+        verified: !config.hosted,
+        trial: config.hosted,
+        ...(invite ? { orgId: invite.org_id, role: 'member' } : { orgName: form.orgName }),
+        // Checked again after the slow password hash, in the same transaction as the new membership,
+        // so two people accepting at once cannot both take the last seat or use one invitation twice.
+        beforeJoin: invite ? () => {
+          if (db.prepare('UPDATE invites SET used_at = ? WHERE token_hash = ? AND used_at IS NULL').run(new Date().toISOString(), invite.token_hash).changes !== 1) throw new SeatError();
+          if (noSeat()) throw new SeatError();
+        } : null,
+      });
+    } catch (err) {
+      if (err instanceof SeatError) return invite && findInvite(req.params.token) ? seatsFull(res) : registerPage(req, res);
+      throw err;
+    }
     const userId = created.id;
     limits.signupCreated.hit(ip);
     const emailed = config.hosted && await ctx.sendVerification({ id: userId, email: created.email, name: created.name });
-    if (invite) db.prepare('UPDATE invites SET used_at = ? WHERE token_hash = ?').run(new Date().toISOString(), invite.token_hash);
     audit(req, invite ? 'signup.invited' : 'signup', `${form.email}${invite ? '' : ` started ${form.orgName}`}`);
     req.session.regenerate(() => {
       req.session.userId = userId;
