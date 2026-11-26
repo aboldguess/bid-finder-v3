@@ -10,9 +10,14 @@
   <% } else { %>
     <p><strong><%= current ? current.name : 'Paid' %> plan</strong><%= access.status === 'past_due' ? ': your last payment failed. Please update your card.' : '' %></p>
   <% } %>
-  <p class="muted">Card payments open in the next update. Until then, ask us and we will set your plan up by hand.</p>
+  <% if (done) { %><p class="flash" role="status">Thank you. Your payment details are saved; it can take a few seconds for your plan to show here.</p><% } %>
+  <% if (!stripeReady) { %><p class="muted">Card payments are not set up on this server yet. Ask us and we will set your plan up by hand.</p>
+  <% } else if (org.role !== 'owner') { %><p class="muted">Only the owner of <%= org.name %> can change the plan or payment details.</p>
+  <% } else if (org.stripe_customer_id) { %>
+    <form method="post" action="/billing/portal"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="button ghost small">Update card, download invoices or cancel</button></form>
+  <% } %>
 </section>
 <% if (access.status !== 'comped') { %>
-  <%- include('partials/plan-cards', { plans, pounds, action: (p) => ({ form: '/billing/checkout', label: (current && current.key === p.key ? 'Current plan' : 'Choose ' + p.name), disabled: true }) }) %>
+  <%- include('partials/plan-cards', { plans, pounds, action: (p) => { const mine = current && current.key === p.key && ['active', 'past_due'].includes(access.status); return { form: '/billing/checkout', label: mine ? 'Switch billing period' : 'Choose ' + p.name, disabled: !canPay }; } }) %>
 <% } %>
 <%- include('partials/foot') %>

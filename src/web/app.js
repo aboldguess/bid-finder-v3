@@ -14,7 +14,8 @@ import { schedulerHealthy } from '../scheduler.js';
 import { SqliteStore, csrf } from './security.js';
 import { createContext } from './context.js';
 import { banner, entitlement } from '../billing/plans.js';
-import { billingRoutes } from './routes/billing.js';
+import { billingRoutes, stripeWebhook } from './routes/billing.js';
+import { createStripe } from '../billing/stripe.js';
 import { VISIBLE, visibleSources } from '../match/visibility.js';
 import { fmt } from './format.js';
 import { apiRouter } from './api.js';
@@ -25,9 +26,10 @@ import { opportunityRoutes } from './routes/opportunities.js';
 import { searchRoutes } from './routes/searches.js';
 import { adminRoutes } from './routes/admin.js';
 
-export function createApp(db, { mail } = {}) {
+export function createApp(db, { mail, stripe } = {}) {
   ensureSources(db);
   const ctx = createContext(db, { mail });
+  ctx.stripe = stripe || createStripe();
   const app = express();
   app.set('view engine', 'ejs');
   app.set('views', path.join(import.meta.dirname, 'views'));
@@ -76,11 +78,12 @@ export function createApp(db, { mail } = {}) {
   });
 
   app.use(helmet({
-    contentSecurityPolicy: { directives: { 'upgrade-insecure-requests': null, 'form-action': ["'self'"] } },
+    contentSecurityPolicy: { directives: { 'upgrade-insecure-requests': null, 'form-action': ["'self'", ...(config.hosted ? config.stripe.origins : [])] } },
     hsts: config.secureCookies,
     referrerPolicy: { policy: 'same-origin' },
   }));
   app.use('/api/v1', apiRouter(ctx));
+  if (config.hosted) app.post('/stripe/webhook', express.raw({ type: '*/*', limit: '1mb' }), stripeWebhook(db, ctx.stripe));
 
   app.use('/static', express.static(path.join(import.meta.dirname, 'public'), { maxAge: '1h' }));
   app.use(express.urlencoded({ extended: false, limit: '100kb' }));

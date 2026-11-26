@@ -2,6 +2,8 @@
 // plan and promotion settings. Card payments are added in the Stripe step.
 import { config } from '../../config.js';
 import { getPlan, getSetting, listPlans, pounds, setSetting, STATUSES } from '../../billing/plans.js';
+import { applyEvent, lineItem, secondSubscription, verifyWebhook } from '../../billing/stripe.js';
+import { log } from '../../log.js';
 
 const COLOUR = /^#[0-9a-f]{6}$/i;
 const penceFrom = (value, { optional = false } = {}) => {
@@ -27,7 +29,7 @@ const dateFrom = (value) => {
 };
 
 export function billingRoutes(app, ctx) {
-  const { db, flash, requireUser, requireAdmin, audit } = ctx;
+  const { db, flash, requireUser, requireAdmin, requireOwner, audit, stripe } = ctx;
   const guard = [requireUser, requireAdmin];
   const hostedOnly = (req, res, next) => (config.hosted ? next() : res.status(404).render('error', { message: 'Page not found.' }));
 
@@ -36,7 +38,73 @@ export function billingRoutes(app, ctx) {
   });
 
   app.get('/billing', hostedOnly, requireUser, (req, res) => {
-    res.render('billing', { plans: listPlans(db, { publicOnly: true }), pounds, current: req.org.plan_key ? getPlan(db, req.org.plan_key) : null });
+    res.render('billing', {
+      plans: listPlans(db, { publicOnly: true }), pounds, current: req.org.plan_key ? getPlan(db, req.org.plan_key) : null,
+      canPay: stripe.configured && req.org.role === 'owner', stripeReady: stripe.configured, done: req.query.done === '1',
+    });
+  });
+
+  const back = (req, res, message) => { flash(req, message); res.redirect(303, '/billing'); };
+
+  // Start paying, or switch plan. A first payment goes through Stripe Checkout;
+  // a change to an existing subscription is made directly, with proration.
+  app.post('/billing/checkout', hostedOnly, requireUser, requireOwner, async (req, res) => {
+    if (!stripe.configured) return back(req, res, 'Card payments are not set up on this server yet.');
+    const plan = getPlan(db, String(req.body.plan || ''));
+    const period = req.body.period === 'annual' ? 'annual' : 'monthly';
+    if (!plan || !plan.public) return back(req, res, 'Choose one of the plans below.');
+    const org = db.prepare('SELECT * FROM orgs WHERE id = ?').get(req.org.id);
+    if (org.billing_status === 'comped') return back(req, res, 'Your account is complimentary, so there is nothing to pay.');
+    const meta = { org_id: org.id, plan_key: plan.key, period };
+    try {
+      if (org.stripe_subscription_id && ['active', 'past_due'].includes(org.billing_status)) {
+        const sub = await stripe.getSubscription(org.stripe_subscription_id);
+        const product = await stripe.createProduct({ name: lineItem(plan, period).price_data.product_data.name, metadata: { plan_key: plan.key } });
+        const { product_data: _unused, ...priceData } = lineItem(plan, period).price_data;
+        await stripe.updateSubscription(sub.id, {
+          items: [{ id: sub.items.data[0].id, price_data: { ...priceData, product: product.id } }],
+          metadata: meta, proration_behavior: 'create_prorations',
+        });
+        db.prepare('UPDATE orgs SET plan_key = ?, billing_period = ? WHERE id = ?').run(plan.key, period, org.id);
+        audit(req, 'billing.changed', `${plan.key} ${period}`);
+        return back(req, res, `You are now on ${plan.name}, billed ${period === 'annual' ? 'yearly' : 'monthly'}. The difference is prorated on your next invoice.`);
+      }
+      let customer = org.stripe_customer_id;
+      if (!customer) {
+        customer = (await stripe.createCustomer({ email: req.user.email, name: org.name, metadata: { org_id: org.id } })).id;
+        db.prepare('UPDATE orgs SET stripe_customer_id = ? WHERE id = ?').run(customer, org.id);
+      }
+      // Only one checkout open at a time: one left open in another tab could otherwise start a second subscription.
+      for (const open of await stripe.openCheckouts(customer)) await stripe.expireCheckout(open.id);
+      // Keep whatever is left of the free trial: the first charge comes when it ends (Stripe needs at least two days' notice).
+      const trialEnd = org.billing_status === 'trialing' ? Math.floor(Date.parse(org.trial_ends_at || '') / 1000) : 0;
+      const tax = config.stripe.tax;
+      const session = await stripe.createCheckout({
+        mode: 'subscription', customer, client_reference_id: org.id, metadata: meta,
+        line_items: [lineItem(plan, period)],
+        subscription_data: { metadata: meta, ...(trialEnd > Date.now() / 1000 + 2 * 86400 ? { trial_end: trialEnd } : {}) },
+        success_url: `${config.baseUrl}/billing?done=1`, cancel_url: `${config.baseUrl}/billing`,
+        billing_address_collection: 'required', allow_promotion_codes: true,
+        ...(tax ? { automatic_tax: { enabled: true }, tax_id_collection: { enabled: true }, customer_update: { address: 'auto', name: 'auto' } } : {}),
+      });
+      audit(req, 'billing.checkout', `${plan.key} ${period}`);
+      res.redirect(303, session.url);
+    } catch (err) {
+      log.error(`Checkout for org ${org.id} failed: ${err.message}`);
+      back(req, res, 'We could not reach the payment provider. Nothing has been charged. Please try again in a minute.');
+    }
+  });
+
+  // Update the card, see invoices, or cancel: Stripe's own Customer Portal.
+  app.post('/billing/portal', hostedOnly, requireUser, requireOwner, async (req, res) => {
+    const org = db.prepare('SELECT stripe_customer_id FROM orgs WHERE id = ?').get(req.org.id);
+    if (!stripe.configured || !org.stripe_customer_id) return back(req, res, 'There are no card details on file yet.');
+    try {
+      res.redirect(303, (await stripe.createPortal({ customer: org.stripe_customer_id, return_url: `${config.baseUrl}/billing` })).url);
+    } catch (err) {
+      log.error(`Billing portal for org ${req.org.id} failed: ${err.message}`);
+      back(req, res, 'We could not reach the payment provider. Please try again in a minute.');
+    }
   });
 
   // --- Platform administration: plans and promotions --------------------------
@@ -131,4 +199,38 @@ export function billingRoutes(app, ctx) {
     }
     res.redirect('/admin#orgs');
   });
+}
+
+// Stripe webhooks. Mounted in app.js before the body parsers, sessions and
+// CSRF, because the signature is over the exact bytes Stripe sent.
+//
+// Stripe does not promise to deliver events in order, so a subscription
+// update is never taken at face value: the subscription is fetched again and
+// its current state applied. A stale "active" arriving after the cancellation
+// therefore cannot bring a cancelled account back.
+export function stripeWebhook(db, stripe) {
+  return async (req, res) => {
+    let event;
+    try {
+      event = verifyWebhook(req.body.toString('utf8'), req.get('stripe-signature'));
+    } catch (err) {
+      log.warn(`Stripe webhook rejected: ${err.message}`);
+      return res.status(400).json({ error: 'bad signature' });
+    }
+    try {
+      if (stripe?.configured && event.type.startsWith('customer.subscription.') && event.type !== 'customer.subscription.deleted' && event.data?.object?.id) {
+        event = { ...event, data: { ...event.data, object: await stripe.getSubscription(event.data.object.id) } };
+      }
+      // Two checkouts completed for one organisation: keep the first subscription and cancel the other before it charges again.
+      const extra = secondSubscription(db, event);
+      if (extra && stripe?.configured) {
+        await stripe.cancelSubscription(extra);
+        log.warn(`Cancelled ${extra}: a second subscription for an organisation that already has one`);
+      }
+      res.json({ received: true, result: applyEvent(db, event) });
+    } catch (err) {
+      log.error('Stripe webhook failed', err);
+      res.status(500).json({ error: 'failed' }); // Stripe retries
+    }
+  };
 }

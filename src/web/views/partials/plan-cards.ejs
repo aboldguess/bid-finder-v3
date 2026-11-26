@@ -23,7 +23,8 @@
         <ul class="plan-features"><% p.features.forEach(f => { %><li><%= f %></li><% }) %></ul>
         <% if (act.form) { %>
           <form method="post" action="<%= act.form %>"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="plan" value="<%= p.key %>">
-            <button class="button" name="period" value="monthly" <%= act.disabled ? 'disabled' : '' %>><%= act.label %></button></form>
+            <button class="button only-monthly" name="period" value="monthly" <%= act.disabled ? 'disabled' : '' %>><%= act.label %></button>
+            <button class="button only-annual" name="period" value="annual" <%= act.disabled ? 'disabled' : '' %>><%= act.label %> yearly</button></form>
         <% } else { %>
           <a class="button<%= p.badge ? '' : ' ghost' %>" href="<%= act.href %>"><%= act.label %></a>
         <% } %>

@@ -200,6 +200,19 @@ Priority support', 3);
   ALTER TABLE orgs ADD COLUMN billing_status TEXT NOT NULL DEFAULT 'trialing';
   UPDATE orgs SET billing_status = 'comped';
   `,
+  // 6: Stripe. Which customer and subscription belong to each organisation,
+  // and which webhook events have been handled (Stripe can send one twice).
+  `
+  ALTER TABLE orgs ADD COLUMN stripe_customer_id TEXT;
+  ALTER TABLE orgs ADD COLUMN stripe_subscription_id TEXT;
+  ALTER TABLE orgs ADD COLUMN billing_period TEXT;
+  CREATE UNIQUE INDEX idx_orgs_stripe_customer ON orgs(stripe_customer_id);
+  CREATE TABLE stripe_events (
+    id TEXT PRIMARY KEY,
+    type TEXT NOT NULL,
+    received_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  `,
 ];
 
 export function migrate(db) {
